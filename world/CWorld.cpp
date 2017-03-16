@@ -463,15 +463,9 @@ void cWorld::computeLocalInteraction(const cVector3d& a_toolPos,
 //! This method computes the interaction between 2 objects in this world
 
 //The setting parameterdetermines the traversal algoritm used and is defined in CGenericCollision.h
-<<<<<<< HEAD
-bool cWorld::computeCollision(cGenericObject *A, cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte) {
-	if (A == NULL || B == NULL) return false;
-	return A->computeCollision(B, setting, collisionfeedback, maxdiepte);
-=======
 bool cWorld::computeCollision(cGenericObject *A, cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie) {
 	if (A == NULL || B == NULL) return false;
 	return A->computeCollision(B, setting, collisionfeedback, maxdiepte, positie);
->>>>>>> origin/IST
 }
 
 //------------------------------------------------------------------------------

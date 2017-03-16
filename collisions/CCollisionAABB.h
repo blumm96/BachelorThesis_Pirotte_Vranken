@@ -51,10 +51,7 @@
 #include "collisions/CGenericCollision.h"
 #include "collisions/CCollisionAABBTree.h"
 #include "world/CGenericObject.h"
-<<<<<<< HEAD
-=======
 #include "collisions/Voxel.h"
->>>>>>> origin/IST
 //------------------------------------------------------------------------------
 #include <vector>
 //------------------------------------------------------------------------------
@@ -145,22 +142,14 @@ public:
 	std::vector<cCollisionAABBNode*> getNodes(int diepte);
 	inline int getRoot() { return m_rootIndex; };
 	inline std::vector<cCollisionAABBNode> getNodes() { return m_nodes; };
-<<<<<<< HEAD
 	virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::AABB; };
-	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal);
 	std::vector<cCollisionAABBNode> getChildren(cCollisionAABBNode* A);
 	virtual int aantalNodesTotDiepte(int diepte);
 	std::vector<cCollisionAABBNode> getNodesTotDiepte(int diepte);
-=======
 	inline cGenericArrayPtr getElements() { return m_elements; };
 	inline int getNumElements() { return m_numElements; };
-	virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::AABB; };
 	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
-	std::vector<cCollisionAABBNode> getChildren(cCollisionAABBNode* A);
-	virtual int aantalNodesTotDiepte(int diepte);
-	std::vector<cCollisionAABBNode> getNodesTotDiepte(int diepte);
 	std::vector<Voxel> maakVoxels();
->>>>>>> origin/IST
 
 	//! List of nodes.
 	std::vector<cCollisionAABBNode> m_nodes;

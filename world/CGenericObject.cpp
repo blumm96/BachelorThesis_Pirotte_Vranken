@@ -2520,20 +2520,12 @@ cVector3d cGenericObject::computeInteractions(const cVector3d& a_toolPos,
 
 //UHAS implement
 //Compute a collision between this object and an other object.
-<<<<<<< HEAD
-bool cGenericObject::computeCollision(cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte) {
-=======
 bool cGenericObject::computeCollision(cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie) {
->>>>>>> origin/IST
 	//Sanity check
 	if (B == NULL) return false;
 	if (this->getCollisionDetector() == NULL) return false;
 
-<<<<<<< HEAD
-	return this->getCollisionDetector()->computeCollision(B->getCollisionDetector(), setting, collisionfeedback, maxdiepte, this->getLocalPos(), B->getLocalPos());
-=======
 	return this->getCollisionDetector()->computeCollision(B->getCollisionDetector(), setting, collisionfeedback, maxdiepte, this->getLocalPos(), B->getLocalPos(), positie);
->>>>>>> origin/IST
 }
 
 

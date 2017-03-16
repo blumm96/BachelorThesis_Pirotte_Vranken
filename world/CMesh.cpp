@@ -1854,11 +1854,7 @@ void cEdge::set(cMesh* a_parent,
 //This method prints the AABB box tree for this mesh
 void cMesh::printAABBCollisionTree(int maxDiepte) {
 	if (m_collisionDetector != NULL) {
-<<<<<<< HEAD
-		m_collisionDetector->printAABBCollisionTree(maxDiepte);
-=======
 		//m_collisionDetector->printAABBCollisionTree(maxDiepte);
->>>>>>> origin/IST
 	}
 }
 

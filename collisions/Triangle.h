@@ -44,8 +44,8 @@ POSSIBILITY OF SUCH DAMAGE.
 //+++++++++++++UHAS IMPLEMENTED+++++++++++++++++++++++++++++++++++++++++++++++++
 
 //------------------------------------------------------------------------------
-#ifndef VoxelizerH
-#define VoxelizerH
+#ifndef TRIANGLEH
+#define TRIANGLEH
 //------------------------------------------------------------------------------
 #include "math/CVector3d.h"
 

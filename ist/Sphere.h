@@ -9,21 +9,13 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-<<<<<<< HEAD
-=======
 #include "collisions/CGenericCollision.h"
 #include "math/CVector3d.h"
 
->>>>>>> origin/IST
 #include <vector>
 
 namespace chai3d {
 
-<<<<<<< HEAD
-	class Sphere {
-	private:
-		std::vector<Sphere*> children;
-=======
 	// Describes where the sphere is located whithin the inner sphere tree.
 	enum sphereState
 	{
@@ -70,7 +62,6 @@ namespace chai3d {
 		Sphere* getParent();
 		// Get the state of the sphere within the innerspheretree.
 		sphereState getState();
->>>>>>> origin/IST
 	};
 }
 #endif

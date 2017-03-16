@@ -92,14 +92,10 @@ struct cCollisionAABBBox
 public:
 
     //! Default constructor of cCollisionAABBBox.
-<<<<<<< HEAD
-    cCollisionAABBBox() { setEmpty(); };
-=======
     cCollisionAABBBox() { 
 		setEmpty(); 
 		draw = false;
 	};
->>>>>>> origin/IST
 
     //! Constructor of cCollisionAABBBox.
     cCollisionAABBBox(const cVector3d& a_min, 
@@ -134,8 +130,6 @@ public:
         return (m_center);
     }
 
-<<<<<<< HEAD
-=======
 	/*
 		\brief
 		This methods returns if the box should be drawn.
@@ -149,8 +143,6 @@ public:
 	inline bool isDraw() {
 		return (draw);
 	}
-
->>>>>>> origin/IST
 
     //--------------------------------------------------------------------------
     /*!
@@ -185,8 +177,6 @@ public:
         m_center = a_center;
     }
 
-<<<<<<< HEAD
-=======
 	/*
 		\brief
 		This methods sets if the box should be drawn. 
@@ -200,8 +190,6 @@ public:
 	inline void setDraw(bool a_draw) {
 		draw = a_draw;
 	}
-
->>>>>>> origin/IST
 
     //--------------------------------------------------------------------------
     /*!
@@ -497,10 +485,7 @@ public:
     {
         const double C_INFINITY = 1.0e50;
         m_center.zero();
-<<<<<<< HEAD
-=======
 		draw = true;
->>>>>>> origin/IST
         m_extent = cVector3d(-C_INFINITY,-C_INFINITY,-C_INFINITY);
         m_min.set( C_INFINITY, C_INFINITY, C_INFINITY);
         m_max.set(-C_INFINITY,-C_INFINITY,-C_INFINITY);
@@ -650,54 +635,23 @@ public:
     //--------------------------------------------------------------------------
     inline void render()
     {
-<<<<<<< HEAD
-        cDrawWireBox(m_min(0), m_max(0), m_min(1), m_max(1), m_min(2), m_max(2));
-
-=======
 		cDrawWireBox(m_min(0), m_max(0), m_min(1), m_max(1), m_min(2), m_max(2));
->>>>>>> origin/IST
     }
 
 	//UHAS implement
 	//print de box af
 	inline void print() {
-<<<<<<< HEAD
-		std::cout << "minwaardes:" << getLowerX() << ", " << getLowerY() << ", " << getLowerZ() <<
-			"; en maxwaardes:" << getUpperX() << ", " << getUpperY() << ", " << getUpperZ() << "; " << std::endl;
-	}
-
-	//calculate the distance between 2 boxes
-	inline double distance(cCollisionAABBBox *a_box, cVector3d myLocal, cVector3d BLocal) {
-=======
 		std::cout << "minwaardes:" << (getLowerX()) << ", " << getLowerY() << ", " << getLowerZ() <<
 			"; en maxwaardes:" << getUpperX() << ", " << getUpperY() << ", " << getUpperZ() << "; " << "en centers: " << getCenter() << std::endl;
 	}
 
 	//calculate the distance between 2 boxes
 	inline double distance(cCollisionAABBBox* a_box, cVector3d myLocal, cVector3d BLocal) {
->>>>>>> origin/IST
 		cVector3d* x_dist = new cVector3d();
 		cVector3d* y_dist = new cVector3d();
 		cVector3d* z_dist = new cVector3d();
 
 		cVector3d* zero = new cVector3d(0.0, 0.0, 0.0);
-<<<<<<< HEAD
-		
-		//calculate the x_difference
-		if ((getUpperX()+ myLocal.x()) < (a_box->getLowerX()+BLocal.x())) x_dist->set(a_box->getLowerX()-getUpperX() + BLocal.x()- myLocal.x(), 0.0, 0.0);
-		else if ((getLowerX() + myLocal.x()) > (a_box->getUpperX() + BLocal.x())) x_dist->set(-a_box->getUpperX() - BLocal.x() + myLocal.x() + getLowerX(), 0.0, 0.0);
-		else x_dist->set(0.0, 0.0, 0.0);
-		//std::cout << "x: " << (a_box.getLowerX() + BLocal.x()) << "---" << (getLowerX() + myLocal.x()) << std::endl;
-		//calculate the y_difference
-		if ((getUpperY() + myLocal.y()) < (a_box->getLowerY()+ BLocal.y())) y_dist->set(0.0, a_box->getLowerY() - getUpperY() -myLocal.y() + BLocal.y(), 0.0);
-		else if ((getLowerY() + myLocal.y()) > (a_box->getUpperY()+ BLocal.y())) y_dist->set(0.0, -a_box->getUpperY() + getLowerY() + myLocal.y() - BLocal.y(), 0.0);
-		else y_dist->set(0.0, 0.0, 0.0);
-		//calculate the z_difference
-		if ((getUpperZ()+ myLocal.z()) < (a_box->getLowerZ() + BLocal.z())) z_dist->set(0.0, 0.0, a_box->getLowerZ() - getUpperZ() - myLocal.z() + BLocal.z());
-		else if ((getLowerZ() + myLocal.z()) > (a_box->getUpperZ()+BLocal.z())) z_dist->set(0.0, 0.0, -a_box->getUpperZ() + getLowerZ() + myLocal.z() - BLocal.z());
-		else z_dist->set(0.0, 0.0, 0.0);
-
-=======
 
 		cVector3d positie1 =  cVector3d();
 		cVector3d positie2 = cVector3d();
@@ -737,19 +691,14 @@ public:
 		//else if ((getLowerZ()) > (a_box.getUpperZ())) z_dist->set(0.0, 0.0, -a_box.getUpperZ() + getLowerZ());
 		//else z_dist->set(0.0, 0.0, 0.0);
 
-
->>>>>>> origin/IST
 		//Make the sum of these vectors = total distance vector
 		cVector3d *min_dist = new cVector3d(0.0,0.0,0.0);
 		min_dist->add(*x_dist);
 		min_dist->add(*y_dist);
 		min_dist->add(*z_dist);
 
-<<<<<<< HEAD
 		double test = (a_box->getLowerX() - getUpperX() + BLocal.x() - myLocal.x());
 
-=======
->>>>>>> origin/IST
 		//delete all dynamic reserved mem
 		delete(x_dist);
 		delete(y_dist);
@@ -761,10 +710,6 @@ public:
 		delete(zero);
 
 		//return the mindist between the 2 boxes
-<<<<<<< HEAD
-		//std::cout << "mindist: " << mindist << std::endl;
-=======
->>>>>>> origin/IST
 		return mindist;
 		//return 1;
 	}
@@ -778,12 +723,9 @@ public:
     //! The center of the boundary box.
     cVector3d m_center;
 
-<<<<<<< HEAD
-=======
 	//The box only needs to be drawn when it hits another one.
 	bool draw;
 
->>>>>>> origin/IST
     //! The extent (half the width) of the boundary box.
     cVector3d m_extent;
 

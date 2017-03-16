@@ -111,11 +111,7 @@ public:
 
 	//UHAS implemented
 	inline virtual CollisionTreeType getCollisionTreeType() { return CollisionTreeType::UNDEFINED; };
-<<<<<<< HEAD
-	inline virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal) { return false; };
-=======
 	inline virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie) { return false; };
->>>>>>> origin/IST
 
     //--------------------------------------------------------------------------
     // MEMBERS:

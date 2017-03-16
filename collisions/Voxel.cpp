@@ -104,12 +104,9 @@ namespace chai3d {
 		pos = new cVector3d(x, y, z);
 	}
 
-<<<<<<< HEAD
 	void Voxel::setMinDist(float dist) { minDist = dist; }
 
 
-=======
->>>>>>> origin/IST
 	  //------------------------------------------------------------------------------
 }	  // namespace chai3d
 	  //------------------------------------------------------------------------------

@@ -20,16 +20,11 @@ Algorithm sources:
 #include "collisions/CCollisionAABBTree.h"
 #include "collisions/CCollisionAABBBox.h"
 #include "collisions/CGenericCollision.h"
-<<<<<<< HEAD
-#include "math/CMaths.h"
-#include <iostream>
-=======
 #include "ist/Sphere.h"
 #include "ist/InnerSphereTree.h"
 #include "math/CMaths.h"
 #include <iostream>
 #include <limits>
->>>>>>> origin/IST
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -65,17 +60,6 @@ namespace chai3d {
 	//////////////////////////////////////////////////////////////////////
 
 	//De waarde van mindist gaat recursief worden aangepast door deze functie.
-<<<<<<< HEAD
-	void checkDistance(cCollisionAABBNode* A, 
-		cCollisionAABBNode* B, 
-		double &mindist, 
-		cCollisionAABB* tree_A,
-		cCollisionAABB* tree_B,
-		int maxdiepte, 
-		int &huidigeDiepte, 
-		cVector3d myLocal,
-		cVector3d BLocal)
-=======
 	//Dit is voor AABB
 	void checkDistance(cCollisionAABBNode* A,
 		cCollisionAABBNode* B,
@@ -87,29 +71,10 @@ namespace chai3d {
 		cVector3d myLocal,
 		cVector3d BLocal,
 		cVector3d& positie)
->>>>>>> origin/IST
 	{
 		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
 		if ((A->m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF && B->m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) || A->m_depth == maxdiepte) {
 			mindist = cMin(mindist, A->m_bbox.distance(&(B->m_bbox), myLocal, BLocal));
-<<<<<<< HEAD
-		}
-		//recursion
-		std::vector<cCollisionAABBNode> children_A = tree_A->getChildren(A);
-		std::vector<cCollisionAABBNode> children_B = tree_B->getChildren(B);
-
-		std::vector<cCollisionAABBNode>::iterator itA, itB;
-		itA = children_A.begin(); itB = children_B.begin();
-		for (itA; itA < children_A.end(); itA++) {
-			for (itB; itB < children_B.end(); itB++) {
-				cCollisionAABBNode newA = (*itA);
-				cCollisionAABBNode newB = (*itB);
-				if (newA.m_bbox.distance(&(newB.m_bbox), myLocal, BLocal) < mindist) {
-					checkDistance(&newA, &newB, mindist, tree_A, tree_B, maxdiepte, huidigeDiepte, myLocal, BLocal);
-				}
-			}
-		}
-=======
 			if (mindist == 0.0f) {
 				positie = (A->m_bbox.getCenter() + myLocal);
 			}
@@ -203,8 +168,6 @@ namespace chai3d {
 		}
 
 		einde: return afstand;
-
->>>>>>> origin/IST
 	}
 
 	//Help functions

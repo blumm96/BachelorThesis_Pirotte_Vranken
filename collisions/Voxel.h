@@ -103,10 +103,7 @@ namespace chai3d {
 
 		//setters
 		void setPos(const double &x, const double &y, const double &z);
-<<<<<<< HEAD
 		void setMinDist(float dist);
-=======
->>>>>>> origin/IST
 
 	protected:
 		//--------------------------------------------------------------------------
@@ -114,10 +111,6 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		cVector3d* pos;
 		float minDist;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/IST
 	};
 	//------------------------------------------------------------------------------
 }	  // namespace chai3d

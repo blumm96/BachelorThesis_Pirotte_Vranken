@@ -44,25 +44,18 @@ POSSIBILITY OF SUCH DAMAGE.
 //+++++++++++++UHAS IMPLEMENTED+++++++++++++++++++++++++++++++++++++++++++++++++
 
 //------------------------------------------------------------------------------
-<<<<<<< HEAD
 #include "math/CVector3d.h"
-=======
 #include "collisions/CCollisionAABB.h"
->>>>>>> origin/IST
 #include "collisions/Voxel.h"
 #include "collisions/Voxelizer.h"
 #include "math/CMaths.h"
+#include "Triangle.h"
 //------------------------------------------------------------------------------
 #include <vector>
-<<<<<<< HEAD
 #include <limits>
 //------------------------------------------------------------------------------
 
 using namespace std;
-=======
-//------------------------------------------------------------------------------
-
->>>>>>> origin/IST
 //------------------------------------------------------------------------------
 namespace chai3d {
 	//------------------------------------------------------------------------------
@@ -100,13 +93,12 @@ namespace chai3d {
 		// METHODS:
 		//--------------------------------------------------------------------------
 
-<<<<<<< HEAD
 		void Voxelizer::mapDistances() {
 			// Process each voxel on our list, one
 			// at a time...
 
 			std::vector<Voxel*>::iterator iter = voxels.begin();
-			while (iter != voxels.end) {
+			while (iter != voxels.end()) {
 				// Grab the next voxel
 				Voxel* v = (*iter);
 
@@ -156,10 +148,6 @@ namespace chai3d {
 		
 		}
 
-		void Voxelizer::process_node(cCollisionAABBNode * n, Voxel * v)
-		{
-		}
-
 		// Examine the given node and decide whether 
 		// we can discard it or whether we need to 
 		// visit his children. If it’s a leaf, 
@@ -170,7 +158,7 @@ namespace chai3d {
 			bool is_leaf = false;
 			if (n->m_nodeType == C_AABB_NODE_LEAF) is_leaf = true;
 
-			
+
 			if (is_leaf) {
 				// compute the distance to this triangle
 				float d_sq;
@@ -183,26 +171,27 @@ namespace chai3d {
 				// Is this the shortest distance so far? 
 				if (d_sq < low_dist_sq) {
 					// Mark him as the closest we’ve seen 
-					low_dist_sq = d_sq; 
-					closest_point = closest_pt_on_triangle; 
-					closest_point_node = n; 
-					
+					low_dist_sq = d_sq;
+					closest_point = closest_pt_on_triangle;
+					closest_point_node = n;
+
 					// Also mark him as the "lowest upper bound", because any future boxes 
 					// whose lower bound is greater than this value should be discarded. 
-					lowest_upper_dist_sq = d_sq; }
-				
+					lowest_upper_dist_sq = d_sq;
+				}
+
 				// This was a leaf and we’re done with him whether he was useful or not.
 				return;
 			}
 			//if this node was not a leaf
 			// Computing lower- and upper-bound distances to an axis-aligned bounding 
 			// box is extremely fast; we just take the farthest plane on each axis 
-			float best_dist = 0; 
+			float best_dist = 0;
 			float worst_dist = 0;
 
 			// If I'm below the x range, my lowest x distance uses the minimum x, and 
 			// my highest uses the maximum x 
-			if (v->getPos()->x() < n->m_bbox.getLowerX()) { 
+			if (v->getPos()->x() < n->m_bbox.getLowerX()) {
 				best_dist += n->m_bbox.getLowerX() - v->getPos()->x();
 				worst_dist += n->m_bbox.getUpperX() - v->getPos()->x();
 			}
@@ -217,10 +206,10 @@ namespace chai3d {
 
 			// If I'm _in_ the x range, x doesn't affect my lowest distance, and my 
 			// highest-case distance goes to the _farther_ of the two x distances 
-			else { 
+			else {
 				float dmin = fabs(n->m_bbox.getLowerX() - v->getPos()->x());
 				float dmax = fabs(n->m_bbox.getUpperX() - v->getPos()->x());
-				double d_worst = (dmin>dmax) ? dmin : dmax;
+				double d_worst = (dmin > dmax) ? dmin : dmax;
 				worst_dist += d_worst;
 			}
 
@@ -239,12 +228,10 @@ namespace chai3d {
 			else {
 				float dmin = fabs(n->m_bbox.getLowerY() - v->getPos()->y());
 				float dmax = fabs(n->m_bbox.getUpperY() - v->getPos()->y());
-				double d_worst = (dmin>dmax) ? dmin : dmax;
+				double d_worst = (dmin > dmax) ? dmin : dmax;
 				worst_dist += d_worst;
 			}
 		}
-=======
->>>>>>> origin/IST
 
 	//------------------------------------------------------------------------------
 } // namespace chai3d
