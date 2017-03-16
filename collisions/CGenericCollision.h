@@ -166,7 +166,11 @@ public:
 	virtual void printAABBCollisionTree(int maxDiepte) {};
 	//collisionfeedback is a simple collisionrecorder
 	//Er wordt gechecked als de 2 objecten niet 0 zijn
+<<<<<<< HEAD
 	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal) = 0;
+=======
+	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie) = 0;
+>>>>>>> origin/IST
 	virtual CollisionTreeType getCollisionTreeType() = 0;
 		
 

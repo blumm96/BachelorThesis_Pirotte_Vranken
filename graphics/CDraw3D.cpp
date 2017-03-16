@@ -332,7 +332,10 @@ void cDrawWireBox(const double& a_xMin, const double& a_xMax,
 
     // render lines for each edge of the box
     glBegin(GL_LINES);
+<<<<<<< HEAD
 		
+=======
+>>>>>>> origin/IST
         glVertex3d(a_xMin, a_yMin, a_zMin);
         glVertex3d(a_xMax, a_yMin, a_zMin);
         glVertex3d(a_xMin, a_yMax, a_zMin);

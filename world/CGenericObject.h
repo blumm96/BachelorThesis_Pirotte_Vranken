@@ -143,7 +143,11 @@ public:
 	//get the type of the collision detector
 	//inline CollisionTreeType getCollisionTreeType() { return this->getCollisionDetector()->getCollisionTreeType(); };
 	//Compute a collision between this object and an other object.
+<<<<<<< HEAD
 	bool computeCollision(cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte);
+=======
+	bool computeCollision(cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie);
+>>>>>>> origin/IST
 
     //-----------------------------------------------------------------------
     // PUBLIC METHODS - COPY:

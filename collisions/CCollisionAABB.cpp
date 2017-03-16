@@ -47,6 +47,10 @@
 #include "collisions/CCollisionAABB.h"
 #include "collisions/CGenericCollision.h"
 #include "collisions/CollisionDetectionAlgorithms.h"
+<<<<<<< HEAD
+=======
+#include "collisions/Voxel.h"
+>>>>>>> origin/IST
 #include <limits>
 //------------------------------------------------------------------------------
 #include <iostream>
@@ -274,6 +278,10 @@ int cCollisionAABB::buildTree(const int a_indexFirstNode, const int a_indexLastN
 
     // create a box to enclose all the leafs below this internal node
     node.m_bbox.setEmpty();
+<<<<<<< HEAD
+=======
+	node.m_bbox.setDraw(false);
+>>>>>>> origin/IST
     for (int i=a_indexFirstNode; i<=a_indexLastNode; i++)
     {
         node.m_bbox.enclose(m_nodes[i].m_bbox);
@@ -642,7 +650,11 @@ vector<cCollisionAABBNode*> cCollisionAABB::getNodes(int diepte) {
 
 //collisionfeedback is a simple collisionrecorder
 //Not yet implemented
+<<<<<<< HEAD
 bool cCollisionAABB::computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal) {
+=======
+bool cCollisionAABB::computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie) {
+>>>>>>> origin/IST
 	//sanity check
 	if (B == NULL) return false;
 	if (this->getCollisionTreeType() != B->getCollisionTreeType()) return false;
@@ -654,8 +666,13 @@ bool cCollisionAABB::computeCollision(cGenericCollision* B, traversalSetting set
 		cCollisionAABB* AABB_B = dynamic_cast<cCollisionAABB*> (B);
 		cCollisionAABB* AABB_A = this;
 
+<<<<<<< HEAD
 		vector<cCollisionAABBNode> root_A = (AABB_A->getNodesTotDiepte(maxdiepte));
 		vector<cCollisionAABBNode> root_B = (AABB_B->getNodesTotDiepte(maxdiepte));
+=======
+		vector<cCollisionAABBNode> root_A = (AABB_A->getNodesTotDiepte(0));
+		vector<cCollisionAABBNode> root_B = (AABB_B->getNodesTotDiepte(0));
+>>>>>>> origin/IST
 
 		/*cCollisionAABBNode* nodeA = &root_A[AABB_A->getRoot()];
 		cCollisionAABBNode* nodeB = &root_B[AABB_B->getRoot()];*/
@@ -663,9 +680,17 @@ bool cCollisionAABB::computeCollision(cGenericCollision* B, traversalSetting set
 		cCollisionAABBNode* nodeA = &root_A[0];
 		cCollisionAABBNode* nodeB = &root_B[0];
 
+<<<<<<< HEAD
 		double mindist = std::numeric_limits<double>::max();
 		int huidige = 0;
 		checkDistance(nodeA, nodeB, mindist, AABB_A, AABB_B, maxdiepte, huidige, myLocal, BLocal);
+=======
+		double mindist = std::numeric_limits<double>::infinity();
+		int huidige = 0;
+
+		// Komt uit CollisionDetectionAlgoritmes
+		checkDistance(nodeA, nodeB, mindist, AABB_A, AABB_B, maxdiepte, huidige, myLocal, BLocal, positie);
+>>>>>>> origin/IST
 
 		collisionfeedback = mindist;
 
@@ -690,6 +715,30 @@ std::vector<cCollisionAABBNode> cCollisionAABB::getChildren(cCollisionAABBNode* 
 	}
 	return output;
 }
+<<<<<<< HEAD
+=======
+
+/*
+
+	\brief This method generates a vector of voxels.
+
+	\detail This method generates a vector of voxels used to generate the inner sphere tree (IST).
+	The size of the AABBBoxes used to generate the voxels, is NOT taken into account.
+
+	\return	The list of voxels.
+
+*/
+std::vector<Voxel> cCollisionAABB::maakVoxels() {
+	std::vector<Voxel> voxels;
+	for (unsigned int i = 0; i < m_nodes.size(); i++) {
+		if (m_nodes[i].m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) {
+			Voxel v = Voxel();
+			v.setPos(m_nodes[i].m_bbox.getCenter().x, m_nodes[i].m_bbox.getCenter().y, m_nodes[i].m_bbox.getCenter().z);
+		}
+	}
+}
+
+>>>>>>> origin/IST
 //------------------------------------------------------------------------------
 } // namespace chai3d
 //------------------------------------------------------------------------------

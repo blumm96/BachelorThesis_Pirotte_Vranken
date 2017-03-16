@@ -48,6 +48,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define VoxelizerH
 //------------------------------------------------------------------------------
 #include "collisions/CCollisionAABB.h"
+<<<<<<< HEAD
 #include "collisions/CCollisionAABBTree.h"
 #include "collisions/Voxel.h"
 #include "math/CMaths.h"
@@ -55,6 +56,12 @@ POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 #include <vector>
 #include <list>
+=======
+#include "collisions/Voxel.h"
+#include "math/CMaths.h"
+//------------------------------------------------------------------------------
+#include <vector>
+>>>>>>> origin/IST
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -97,11 +104,14 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		// METHODS:
 		//--------------------------------------------------------------------------
+<<<<<<< HEAD
 		inline void setObject(cCollisionAABB* object) { this->object = object; };
 		inline void addVoxel(Voxel* v) { voxels.push_back(v); };
 		void mapDistances();
 
 		cVector3d* find_closest_point(Voxel* v);
+=======
+>>>>>>> origin/IST
 
 	public:
 		//--------------------------------------------------------------------------
@@ -121,6 +131,7 @@ namespace chai3d {
 		cCollisionAABB* object;
 		//2
 		//In the class voxel we can set a mindist parameter
+<<<<<<< HEAD
 		std::vector<Voxel*> voxels;	
 
 		//algorithm vars
@@ -154,6 +165,9 @@ namespace chai3d {
 		void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
 		void closest_point_triangle(Voxel* v, Triangle* t, float &dst, cVector3d *closest_point);
+=======
+		std::vector<Voxel*> voxels;		
+>>>>>>> origin/IST
 	};
 
 	//------------------------------------------------------------------------------

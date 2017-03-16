@@ -179,15 +179,37 @@ void cCollisionAABBNode::fitBBox(double a_radius,
                      If a_depth < 0 render all nodes up to this level.
 */
 //==============================================================================
+<<<<<<< HEAD
 //void cCollisionAABBNode::render(int a_depth)
 //{
 //#ifdef C_USE_OPENGL
 //    if ( ((a_depth < 0) && (abs(a_depth) >= m_depth)) || (a_depth == m_depth))
+=======
+void cCollisionAABBNode::render(int a_depth)
+{
+#ifdef C_USE_OPENGL
+   /* if ( ((a_depth < 0) && (abs(a_depth) >= m_depth)) || (a_depth == m_depth))
+    {
+		if (m_bbox.isDraw()) {
+			m_bbox.render();
+		}
+    }*/
+	if (m_bbox.isDraw()) {
+		m_bbox.render();
+	}
+#endif
+}
+//void cCollisionAABBNode::render(int a_depth)
+//{
+//#ifdef C_USE_OPENGL
+//    if (m_depth<=a_depth)
+>>>>>>> origin/IST
 //    {
 //        m_bbox.render();
 //    }
 //#endif
 //}
+<<<<<<< HEAD
 void cCollisionAABBNode::render(int a_depth)
 {
 #ifdef C_USE_OPENGL
@@ -197,6 +219,8 @@ void cCollisionAABBNode::render(int a_depth)
     }
 #endif
 }
+=======
+>>>>>>> origin/IST
 
 
 //------------------------------------------------------------------------------
