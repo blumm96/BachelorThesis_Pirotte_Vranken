@@ -79,7 +79,6 @@ namespace chai3d {
 	sphereState Sphere::getState() {
 		return state;
 	}
-
 	/*
 		
 		Returns the depth of the sphere in the innersphere tree.
@@ -91,4 +90,15 @@ namespace chai3d {
 		return depth;
 	}
 
+	void Sphere::setRadius(float r) {
+		radius = r;
+	}
+
+	void Sphere::setPosition(cVector3d pos) {
+		position = pos;
+	}
+
+	void Sphere::setState(sphereState nstate) {
+		state = nstate;
+	}
 }

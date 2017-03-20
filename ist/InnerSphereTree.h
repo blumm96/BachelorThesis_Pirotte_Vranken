@@ -41,7 +41,7 @@ namespace chai3d {
 		Sphere* rootSphere;
 
 	// PROTECTED FUNCTIONS
-	protected:
+	public:
 
 		// This method is used to recursively build the collision tree.
 		int buildTree(std::vector<Sphere*> leafs, const int a_depth);

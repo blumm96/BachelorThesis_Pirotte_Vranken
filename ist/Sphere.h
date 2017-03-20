@@ -66,6 +66,9 @@ namespace chai3d {
 		sphereState getState();
 		// Get the depth of the sphere in the innersphere tree.
 		int getDepth();
+		void setRadius(float r);
+		void setPosition(cVector3d pos);
+		void setState(sphereState nstate);
 	};
 }
 #endif
