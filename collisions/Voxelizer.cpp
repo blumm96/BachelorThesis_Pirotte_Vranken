@@ -71,6 +71,13 @@ namespace chai3d {
 	Implements the voxelizer algorithm by Morris specified in his paper:
 	Algorithms and Data Structures for Haptic Rendering: Curve Constraints, Distance Maps, and Data Logging.
 	By Dan Morris
+
+	How to use this class:
+		1. create a voxelizer with the constructor
+		2. set the object which needs to be voxelized (setObject())
+		3. map from the voxel to the distances to each voxel (mapDistances())
+		4. BuildInnerTree
+		5. delete the voxelizer
 	*/
 	//==============================================================================
 
@@ -112,13 +119,12 @@ namespace chai3d {
 			voxels = object->maakVoxels();
 		}
 
-		//distance between 2 voxels
 		double Voxelizer::distance(Voxel* v1, Voxel* v2) {
 			return (*(v1->getPos()) - *(v2->getPos())).length();
 		}
 
 		//most important method of this class
-		//
+		//creates the inne
 		void Voxelizer::mapDistances() {
 			// Process each voxel on our list, one
 			// at a time...
@@ -138,7 +144,7 @@ namespace chai3d {
 				// these are the values that should be 
 				// associated with v in our output => distance map
 				
-				map_distances(v); 
+				map_distance_to_voxel(v); 
 				
 				// Exploit spatial coherence by giving the next voxel 
 				// a "hint" about where to start looking in the tree. 
@@ -150,7 +156,7 @@ namespace chai3d {
 
 		}
 
-		InnerSphereTree* Voxelizer::buildInnerTree()
+		InnerSphereTree* Voxelizer::buildInnerTree(int diepte)
 		{
 			//build inner sphere structure
 
@@ -212,7 +218,7 @@ namespace chai3d {
 			
 			//IST hierarchy
 			InnerSphereTree* tree = new InnerSphereTree();
-			tree->buildTree(innerspheres, 5);
+			tree->buildTree(innerspheres, diepte);
 			return tree;
 		}
 
@@ -230,7 +236,8 @@ namespace chai3d {
 			}
 		}
 
-		void Voxelizer::map_distances(Voxel* v) {
+		
+		void Voxelizer::map_distance_to_voxel(Voxel* v) {
 			v->setMinDist(sqrt(low_dist_sq));
 			priorityList.push_front(v);
 		}

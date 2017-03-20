@@ -100,7 +100,7 @@ namespace chai3d {
 		// METHODS:
 		//--------------------------------------------------------------------------
 		void mapDistances();
-		InnerSphereTree* buildInnerTree();
+		InnerSphereTree* buildInnerTree(int diepte);
 
 		void find_closest_point(Voxel* v);
 		void setObject(cCollisionAABB* c);
@@ -111,10 +111,6 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 
 	protected:
-
-		//Inputs
-		//1)AABB tree structure with in the leafs pointers to the contained triangles
-		//2)Voxel point array of the object -> implement a method which calculates this vector with use of the object bounding box
 
 		//Output
 		//A mapping of the voxel point vector (2) to a float value of closest distance to the object
@@ -155,17 +151,18 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		// HELPMETHODS:
 		//--------------------------------------------------------------------------
-		void map_distances(Voxel* v);
+		void map_distance_to_voxel(Voxel* v);
 		//void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
 		void closest_point_triangle(Voxel* v, Triangle* t, float &dst, cVector3d *closest_point);
 		void initialize();
-
+		double Voxelizer::nearestpoint(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* closest);
+		double distance(Voxel* v1, Voxel* v2);
+		//--------------------------------------------------------------------------
+		// HELPMEMBERS:
+		//--------------------------------------------------------------------------
 		std::vector<cCollisionAABBNode> object_nodes;
 		int root_index;
-		double distance(Voxel* v1, Voxel* v2);
-		double Voxelizer::nearestpoint(
-			cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* closest);
 	};
 
 	//------------------------------------------------------------------------------
