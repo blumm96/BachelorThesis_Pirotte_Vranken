@@ -55,4 +55,8 @@ namespace chai3d {
 	Sphere* InnerSphereTree::getRootSphere() {
 		return rootSphere;
 	}
+	int InnerSphereTree::buildTree(std::vector<Sphere*> leafs, const int a_depth)
+	{
+		return 0;
+	}
 }
