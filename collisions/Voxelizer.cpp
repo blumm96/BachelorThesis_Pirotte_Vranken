@@ -102,6 +102,7 @@ namespace chai3d {
 			for (int i = 0; i < voxels->size(); i++) {
 				delete(&voxels[i]);
 			}
+			delete(closest_point);
 		}
 
 		void Voxelizer::setObject(cCollisionAABB* c){
@@ -189,6 +190,8 @@ namespace chai3d {
 				s->setPosition(*(v->getPos()));
 				s->setRadius(v->getMinDist());
 				s->setState(sphereState::SPHERE_LEAF);
+				s->setTriangle(closest_triangle);
+				//Hier moet nog worden geset als de sphere aan de buitenkant van het object ligt of niet
 
 				innerspheres.push_back(s);
 
@@ -239,6 +242,7 @@ namespace chai3d {
 		
 		void Voxelizer::map_distance_to_voxel(Voxel* v) {
 			v->setMinDist(sqrt(low_dist_sq));
+			v->setTriangle(closest_triangle);
 			priorityList.push_front(v);
 		}
 		
@@ -276,7 +280,7 @@ namespace chai3d {
 				cVector3d* closest_pt_on_triangle;
 
 				//find the closest point on the triangle
-				closest_point_triangle(v, NULL, d_sq, closest_pt_on_triangle);
+				closest_point_triangle(v, n->m_bbox.triangle, d_sq, closest_pt_on_triangle);
 
 				// Is this the shortest distance so far? 
 				if (d_sq < low_dist_sq) {
@@ -284,6 +288,7 @@ namespace chai3d {
 					low_dist_sq = d_sq;
 					closest_point = closest_pt_on_triangle;
 					closest_point_node = n;
+					closest_triangle = n->m_bbox.triangle;
 
 					// Also mark him as the "lowest upper bound", because any future boxes 
 					// whose lower bound is greater than this value should be discarded. 

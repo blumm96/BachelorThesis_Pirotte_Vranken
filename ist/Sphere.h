@@ -11,6 +11,7 @@
 
 #include "collisions/CGenericCollision.h"
 #include "math/CVector3d.h"
+#include "collisions/Triangle.h"
 
 #include <vector>
 
@@ -69,9 +70,12 @@ namespace chai3d {
 		sphereState getState();
 		// Get the depth of the sphere in the innersphere tree.
 		int getDepth();
+		Triangle* getTriangle();
+
 		void setRadius(float r);
 		void setPosition(cVector3d pos);
 		void setState(sphereState nstate);
+		void setTriangle(Triangle* setT);
 
 		void render();
 	};

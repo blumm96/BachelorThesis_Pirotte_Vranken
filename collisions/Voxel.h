@@ -49,6 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 //------------------------------------------------------------------------------
 #include "math/CMaths.h"
 #include "math/CVector3d.h"
+#include "collisions/Triangle.h"
 //------------------------------------------------------------------------------
 #include <vector>
 //------------------------------------------------------------------------------
@@ -104,6 +105,7 @@ namespace chai3d {
 		//setters
 		void setPos(const double &x, const double &y, const double &z);
 		void setMinDist(float dist);
+		inline void setTriangle(Triangle* setT) { t = setT; }
 
 	public:
 		//--------------------------------------------------------------------------
@@ -111,6 +113,7 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		cVector3d* pos;
 		float minDist;
+		Triangle* t;
 
 	public:
 		inline bool operator <(const Voxel* voxel1) {

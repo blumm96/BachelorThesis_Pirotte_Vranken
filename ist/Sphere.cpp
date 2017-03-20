@@ -93,6 +93,11 @@ namespace chai3d {
 		return depth;
 	}
 
+		Triangle * Sphere::getTriangle()
+		{
+			return triangle;
+		}
+
 	void Sphere::setRadius(float r) {
 		radius = r;
 	}
@@ -103,6 +108,11 @@ namespace chai3d {
 
 	void Sphere::setState(sphereState nstate) {
 		state = nstate;
+	}
+
+	void Sphere::setTriangle(Triangle * setT)
+	{
+		triangle = setT;
 	}
 
 	void Sphere::render() {

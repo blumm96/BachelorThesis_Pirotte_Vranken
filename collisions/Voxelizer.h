@@ -128,8 +128,11 @@ namespace chai3d {
 		//The smallest square distance to the object so far
 		float low_dist_sq = FLT_MAX;
 
-		//The point associated with this lowest disctance
+		//The point associated with this lowest distance
 		cVector3d* closest_point = new cVector3d(0.0f, 0.0f, 0.0f);
+
+		//The triangle assaociated with the lowest distance
+		Triangle* closest_triangle;
 
 		// The tree node associated with the closest
 		// point. We store this to help us exploit
