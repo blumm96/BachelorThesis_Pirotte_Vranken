@@ -62,6 +62,9 @@ namespace chai3d {
 		Sphere* getParent();
 		// Get the state of the sphere within the innerspheretree.
 		sphereState getState();
+		void setRadius(float r);
+		void setPosition(cVector3d pos);
+		void setState(sphereState nstate);
 	};
 }
 #endif

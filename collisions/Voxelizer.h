@@ -53,6 +53,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "math/CMaths.h"
 #include "collisions/Triangle.h"
 #include "Triangle.h"
+#include "ist/InnerSphereTree.h"
 //------------------------------------------------------------------------------
 #include <vector>
 #include <list>
@@ -101,8 +102,9 @@ namespace chai3d {
 		inline void setObject(cCollisionAABB* object) { this->object = object; };
 		inline void addVoxel(Voxel* v) { voxels.push_back(v); };
 		void mapDistances();
+		InnerSphereTree* buildInnerTree();
 
-		cVector3d* find_closest_point(Voxel* v);
+		void find_closest_point(Voxel* v);
 
 	public:
 		//--------------------------------------------------------------------------
@@ -147,14 +149,22 @@ namespace chai3d {
 		// current voxel.
 		float lowest_upper_dist_sq = FLT_MAX;
 
+		//priority que->stores voxels from far to closest
+		std::list<Voxel*> priorityList;
+
 	private:
 		//--------------------------------------------------------------------------
 		// HELPMETHODS:
 		//--------------------------------------------------------------------------
-		void map_distances();
-		void seed_next_voxel_search();
+		void map_distances(Voxel* v);
+		//void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
 		void closest_point_triangle(Voxel* v, Triangle* t, float &dst, cVector3d *closest_point);
+		void initialize();
+
+		std::vector<cCollisionAABBNode> object_nodes;
+		int root_index;
+		double distance(Voxel* v1, Voxel* v2);
 	};
 
 	//------------------------------------------------------------------------------

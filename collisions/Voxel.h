@@ -105,12 +105,17 @@ namespace chai3d {
 		void setPos(const double &x, const double &y, const double &z);
 		void setMinDist(float dist);
 
-	protected:
+	public:
 		//--------------------------------------------------------------------------
 		// MEMBERS:
 		//--------------------------------------------------------------------------
 		cVector3d* pos;
 		float minDist;
+
+	public:
+		inline bool operator <(const Voxel* voxel1) {
+			return this->minDist > voxel1->minDist;
+		}
 	};
 	//------------------------------------------------------------------------------
 }	  // namespace chai3d

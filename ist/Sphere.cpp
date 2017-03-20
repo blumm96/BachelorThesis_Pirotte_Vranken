@@ -80,4 +80,15 @@ namespace chai3d {
 		return state;
 	}
 
+	void Sphere::setRadius(float r) {
+		radius = r;
+	}
+
+	void Sphere::setPosition(cVector3d pos) {
+		position = pos;
+	}
+
+	void Sphere::setState(sphereState nstate) {
+		state = nstate;
+	}
 }
