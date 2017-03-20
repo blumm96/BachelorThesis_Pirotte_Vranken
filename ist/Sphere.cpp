@@ -80,4 +80,15 @@ namespace chai3d {
 		return state;
 	}
 
+	/*
+		
+		Returns the depth of the sphere in the innersphere tree.
+
+		\return The depth of the sphere.
+
+	*/
+	int Sphere::getDepth() {
+		return depth;
+	}
+
 }

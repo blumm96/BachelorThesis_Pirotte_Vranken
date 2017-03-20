@@ -85,22 +85,6 @@ namespace chai3d {
 			std::vector<cCollisionAABBNode> children_A = tree_A->getChildren(A);
 			std::vector<cCollisionAABBNode> children_B = tree_B->getChildren(B);
 
-			//std::cout << "kinders: " << children_A.size() << std::endl;
-
-			//huidigeDiepte++;
-
-			/*std::vector<cCollisionAABBNode>::iterator itA, itB;
-			itA = children_A.begin(); itB = children_B.begin();
-			for (itA; itA < children_A.end(); itA++) {
-				for (itB; itB < children_B.end(); itB++) {
-					cCollisionAABBNode newA = (*itA);
-					cCollisionAABBNode newB = (*itB);
-					if (newA.m_bbox.distance(&(newB.m_bbox), myLocal, BLocal) < mindist) {
-						checkDistance(&newA, &newB, mindist, tree_A, tree_B, maxdiepte, huidigeDiepte, myLocal, BLocal);
-				}
-			}*/
-
-
 			for (int i = 0; i < children_A.size(); i++) {
 				for (int j = 0; j < children_B.size(); j++) {
 					cCollisionAABBNode newA = children_A[i];
@@ -130,20 +114,25 @@ namespace chai3d {
 		InnerSphereTree* tree1,
 		InnerSphereTree* tree2,
 		int maxdiepte,
-		int &huidigeDiepte) {
+		bool& stop) {
 
-		if (huidigeDiepte > maxdiepte) return sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
-		huidigeDiepte++;
+		// Return the distance between 2 spheres when we went deeper in the tree than specified.
+		// This results in worse accuracy and should ideally never be called.
+		if ((sphereA->getDepth() > maxdiepte)||(sphereB->getDepth()>maxdiepte)) return sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
 
+		// Calculate the distance between the 2 spheres. 
+		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
 		float afstand = sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
 		if (afstand > 0) return afstand;
 
+		// If the 2 spheres collide and we are not at the maximum depth yet, continue the recursion.
 		afstand = std::numeric_limits<float>::infinity();
 
-		//recursion
+		// Every sphere can have multiple children.
 		std::vector<Sphere*> children_A = sphereA->getChildren();
 		std::vector<Sphere*> children_B = sphereB->getChildren();
 
+		// Iterate through all of the 2 sphere's children.
 		std::vector<Sphere*>::iterator itA, itB;
 		itA = children_A.begin(); itB = children_B.begin();
 		for (itA; itA < children_A.end(); itA++) {
@@ -151,18 +140,26 @@ namespace chai3d {
 				Sphere* newA = (*itA);
 				Sphere* newB = (*itB);
 				
+				if (stop) goto einde;
+
+				// If the children aren't leaf nodes, continue the recursion.
 				if ((newA->getState() != sphereState::SPHERE_LEAF) && (newB->getState() != sphereState::SPHERE_LEAF)) {
-					afstand = cMin(checkDistance(newA, newB, tree1, tree2, maxdiepte, huidigeDiepte), afstand);
+					afstand = cMin(checkDistance(newA, newB, tree1, tree2, maxdiepte, stop), afstand);
 				}
+				// If both children are leaf nodes, calculate the distance.
+				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
 				else if ((newA->getState() == sphereState::SPHERE_LEAF) && (newB->getState() == sphereState::SPHERE_LEAF)) {
 					afstand = newA->distance(newB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
-					goto einde;
+					if (afstand <= 0) {
+						stop = true;
+						goto einde;
+					}
 				}
 				else if (newB->getState() == sphereState::SPHERE_LEAF) {
-					afstand = cMin(checkDistance(newA, sphereB, tree1, tree2, maxdiepte, huidigeDiepte), afstand);
+					afstand = cMin(checkDistance(newA, sphereB, tree1, tree2, maxdiepte, stop), afstand);
 				}
 				else if (newA->getState() == sphereState::SPHERE_LEAF) {
-					afstand = cMin(checkDistance(sphereA, newB, tree1, tree2, maxdiepte, huidigeDiepte), afstand);
+					afstand = cMin(checkDistance(sphereA, newB, tree1, tree2, maxdiepte, stop), afstand);
 				}
 			}
 		}

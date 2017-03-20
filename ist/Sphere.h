@@ -39,6 +39,8 @@ namespace chai3d {
 		cVector3d position;
 		// The state of the sphere within the innerspheretree.
 		sphereState state;
+		// The depth of the sphere in the innersphere tree.
+		int depth;
 
 	// CONCSTRUCTOR - DESTRUCTOR
 	public:
@@ -62,6 +64,8 @@ namespace chai3d {
 		Sphere* getParent();
 		// Get the state of the sphere within the innerspheretree.
 		sphereState getState();
+		// Get the depth of the sphere in the innersphere tree.
+		int getDepth();
 	};
 }
 #endif
