@@ -100,7 +100,6 @@ namespace chai3d {
 		// METHODS:
 		//--------------------------------------------------------------------------
 		inline void setObject(cCollisionAABB* object) { this->object = object; };
-		inline void addVoxel(Voxel* v) { voxels.push_back(v); };
 		void mapDistances();
 		InnerSphereTree* buildInnerTree();
 
@@ -124,7 +123,7 @@ namespace chai3d {
 		cCollisionAABB* object;
 		//2
 		//In the class voxel we can set a mindist parameter
-		std::vector<Voxel*> voxels;	
+		std::vector<Voxel*>* voxels;	
 
 		//algorithm vars
 		//Boxes still to descend by the algorithm

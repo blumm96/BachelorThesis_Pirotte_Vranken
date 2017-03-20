@@ -149,7 +149,7 @@ public:
 	inline cGenericArrayPtr getElements() { return m_elements; };
 	inline int getNumElements() { return m_numElements; };
 	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
-	std::vector<Voxel> maakVoxels();
+	std::vector<Voxel*>* maakVoxels();
 
 	//! List of nodes.
 	std::vector<cCollisionAABBNode> m_nodes;

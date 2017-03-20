@@ -100,6 +100,7 @@ namespace chai3d {
 		void Voxelizer::initialize() {
 			vector<cCollisionAABBNode> object_nodes = object->getNodes();
 			int root_index = object->getRoot();
+			voxels = object->maakVoxels();
 		}
 
 		//distance between 2 voxels
@@ -112,8 +113,8 @@ namespace chai3d {
 			// Process each voxel on our list, one
 			// at a time...
 
-			std::vector<Voxel*>::iterator iter = voxels.begin();
-			while (iter != voxels.end()) {
+			std::vector<Voxel*>::iterator iter = (*voxels).begin();
+			while (iter != (*voxels).end()) {
 				// Grab the next voxel
 				Voxel* v = (*iter);
 
