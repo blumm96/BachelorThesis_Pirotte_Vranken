@@ -48,6 +48,7 @@
 #include "collisions/CGenericCollision.h"
 #include "collisions/CollisionDetectionAlgorithms.h"
 #include "collisions/Voxel.h"
+#include "collisions/Triangle.h"
 #include <limits>
 //------------------------------------------------------------------------------
 #include <iostream>
@@ -209,12 +210,16 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, const double 
                 cVector3d vertex1 = m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 1));
                 cVector3d vertex2 = m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 2));
 
+				Triangle* triangle = new Triangle(&vertex0, &vertex1, &vertex2);
+
                 // create leaf node
                 cCollisionAABBNode leaf;
 
                 leaf.fitBBox(m_radius, vertex0, vertex1, vertex2);
                 leaf.m_leftSubTree = i;
                 leaf.m_nodeType = C_AABB_NODE_LEAF;
+
+				leaf.m_bbox.triangle = triangle;
 
                 // add leaf to list
                 m_nodes.push_back(leaf);
