@@ -94,6 +94,7 @@ public:
     //! Default constructor of cCollisionAABBBox.
     cCollisionAABBBox() { 
 		setEmpty(); 
+		triangle = NULL;
 		draw = false;
 	};
 
@@ -714,6 +715,41 @@ public:
 		//return 1;
 	}
 
+	/*
+	
+		Calculate the fitting triangle for this box.
+		If no triangle is contained by this box, no triangle is assigned to the box.
+
+		\param triangles	A vector of all the possible triangles in the model.
+
+	*/
+	inline void calculateFittingTriangle(vector<Triangle*> triangles) {
+		vector<Triangle*> mogelijkheden;
+		for (int i = 0; i < triangles.size(); i++) {
+			if (contains(*(triangles[i]->getCenter()))) {
+				mogelijkheden.push_back(triangles[i]);
+			}
+		}
+
+		if (mogelijkheden.empty()) {
+			return;
+		}
+		float afstand = distance(*(mogelijkheden[0]->getCenter()), m_center);
+		Triangle *theOne = mogelijkheden[0];
+
+		for (int i = 1; i < mogelijkheden.size(); i++) {
+			float nieuweAfstand = distance(*(mogelijkheden[1]->getCenter()), m_center);
+			if (nieuweAfstand < afstand) {
+				Triangle *theOne = mogelijkheden[i];
+			}
+		}
+	}
+
+	inline float distance(cVector3d point1, cVector3d point2) {
+		point2.sub(point1);
+		return point2.length();
+	}
+
     //--------------------------------------------------------------------------
     // PUBLIC MEMBERS:
     //--------------------------------------------------------------------------
@@ -734,6 +770,8 @@ public:
 
     //! The maximum point (along each axis) of the boundary box.
     cVector3d m_max;
+
+	Triangle *triangle;
 };
 
 

@@ -52,6 +52,7 @@
 #include "collisions/CCollisionAABBTree.h"
 #include "world/CGenericObject.h"
 #include "collisions/Voxel.h"
+#include "collisions/Triangle.h"
 //------------------------------------------------------------------------------
 #include <vector>
 //------------------------------------------------------------------------------
@@ -185,6 +186,8 @@ protected :
 
     //! Maximum depth of tree.
     int m_maxDepth;
+
+	vector<Triangle*> triangles;
 };
 
 //------------------------------------------------------------------------------

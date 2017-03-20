@@ -42,6 +42,9 @@ namespace chai3d {
 		// The depth of the sphere in the innersphere tree.
 		int depth;
 
+		// The triangle that goes with this sphere.
+		Triangle* triangle;
+
 	// CONCSTRUCTOR - DESTRUCTOR
 	public:
 
