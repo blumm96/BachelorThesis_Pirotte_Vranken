@@ -72,7 +72,7 @@ namespace chai3d {
 		glColor4fv(cColorf(1.0, 0, 0).getData());
 		
 		for (int i = 0; i < spheres.size(); i++) {
-			spheres[i].render();
+			spheres[i]->render();
 		}
 
 		glEnable(GL_LIGHTING);

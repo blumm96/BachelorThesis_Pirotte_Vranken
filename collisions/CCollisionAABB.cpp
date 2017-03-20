@@ -711,7 +711,6 @@ std::vector<Voxel*>* cCollisionAABB::maakVoxels() {
 			Voxel* v = new Voxel();
 			v->setPos(m_nodes[i].m_bbox.getCenter().x(), m_nodes[i].m_bbox.getCenter().y(), m_nodes[i].m_bbox.getCenter().z());
 			voxels.push_back(v);
-			delete(v);
 		}
 	}
 	return &voxels;

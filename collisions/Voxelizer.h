@@ -99,11 +99,11 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		// METHODS:
 		//--------------------------------------------------------------------------
-		inline void setObject(cCollisionAABB* object) { this->object = object; };
 		void mapDistances();
 		InnerSphereTree* buildInnerTree();
 
 		void find_closest_point(Voxel* v);
+		void setObject(cCollisionAABB* c);
 
 	public:
 		//--------------------------------------------------------------------------
@@ -164,6 +164,8 @@ namespace chai3d {
 		std::vector<cCollisionAABBNode> object_nodes;
 		int root_index;
 		double distance(Voxel* v1, Voxel* v2);
+		double Voxelizer::nearestpoint(
+			cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* closest);
 	};
 
 	//------------------------------------------------------------------------------

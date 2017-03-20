@@ -391,7 +391,7 @@ void cDrawSphere(const double& a_radius,
 
     // set normal-rendering mode
     gluQuadricNormals (quadObj, GLU_SMOOTH);
-	glTranslatef(positie.x, positie.y, positie.z);
+	glTranslatef(positie.x(), positie.y(), positie.z());
 
     // render a sphere
     gluSphere(quadObj, a_radius, a_numSlices, a_numStacks);

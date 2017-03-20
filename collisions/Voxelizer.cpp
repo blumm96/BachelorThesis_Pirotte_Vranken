@@ -91,12 +91,21 @@ namespace chai3d {
 		}
 
 		//! Destructor of Voxelizer.
-		Voxelizer::~Voxelizer() {}
+		Voxelizer::~Voxelizer() {
+			for (int i = 0; i < voxels->size(); i++) {
+				delete(&voxels[i]);
+			}
+		}
+
+		void Voxelizer::setObject(cCollisionAABB* c){
+			object = c;
+		}
 
 		//--------------------------------------------------------------------------
 		// METHODS:
 		//--------------------------------------------------------------------------
 
+		//INITIALIZATIE VAN DE VOXELIZER
 		void Voxelizer::initialize() {
 			vector<cCollisionAABBNode> object_nodes = object->getNodes();
 			int root_index = object->getRoot();
@@ -109,6 +118,7 @@ namespace chai3d {
 		}
 
 		//most important method of this class
+		//
 		void Voxelizer::mapDistances() {
 			// Process each voxel on our list, one
 			// at a time...
@@ -201,9 +211,9 @@ namespace chai3d {
 			}
 			
 			//IST hierarchy
-			//InnerSphereTree* tree = new InnerSphereTree();
-			//tree->buildTree(innerspheres, 5);
-			return NULL;
+			InnerSphereTree* tree = new InnerSphereTree();
+			tree->buildTree(innerspheres, 5);
+			return tree;
 		}
 
 		// Find the closest point in our mesh to the sample point v
@@ -385,6 +395,276 @@ namespace chai3d {
 		//find the closes point to a triangle
 		void Voxelizer::closest_point_triangle(Voxel * v, Triangle * t, float & dst, cVector3d * closest_point)
 		{
+			// taken from
+			// http://www.geometrictools.com/Foundation/Distance/Wm3DistVector3Triangle3.cpp
+			//
+			// Geometric Tools, Inc.
+			// http://www.geometrictools.com
+			// Copyright (c) 1998-2006. All Rights Reserved
+			//
+			// The Wild Magic Library (WM3) source code is supplied under the terms of
+			// the license agreement
+			// http://www.geometrictools.com/License/WildMagic3License.pdf
+			// and may not be copied or disclosed except in accordance with the terms
+			// of that agreement.
+			
+			dst = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closest_point);
+			
+		}
+
+
+		/**
+		* Finds the nearest distance between a point and a triangle.
+		*
+		* @param v0
+		* The first vertice.
+		* @param v1
+		* The second vertice.
+		* @param v2
+		* The third vertice.
+		* @param p
+		* The point to measure from.
+		* @param closest
+		* The closest point to p on the triangle.
+		* @param uv
+		* The barycentric coordinates of the nearest point where u and v are the
+		* weights for vertices 1 and 2 respectively.
+		* @return The distance from point p to the nearest point on triangle v0, v1
+		* and v2.
+		*/
+		double Voxelizer::nearestpoint(
+			cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* cl_point)
+		{
+			//uv is eigenlijk een 2D vector
+
+			cVector3d* kDiff = new cVector3d();
+			cVector3d* kEdge0 = new cVector3d();
+			cVector3d* kEdge1 = new cVector3d();
+
+			cVector3d* closest = new cVector3d();
+			
+			kDiff->sub(*v0);
+			kDiff->sub(*p);
+
+			kEdge0->sub(*v1);
+			kEdge0->sub(*v0);
+
+			kEdge1->sub(*v2);
+			kEdge1->sub(*v0);
+
+			double fA00 = kEdge0->lengthsq();
+			double fA01 = kEdge0->dot(*kEdge1);
+			double fA11 = kEdge1->lengthsq();
+			double fB0 = kDiff->dot(*kEdge0);
+			double fB1 = kDiff->dot(*kEdge1);
+			double fC = kDiff->lengthsq();
+			double fDet = abs(fA00 * fA11 - fA01 * fA01);
+			double fS = fA01 * fB1 - fA11 * fB0;
+			double fT = fA01 * fB0 - fA00 * fB1;
+			double fSqrDistance;
+
+			if (fS + fT <= fDet) {
+				if (fS < (double)0.0) {
+					if (fT < (double)0.0) // region 4
+					{
+						if (fB0 < (double)0.0) {
+							fT = (double)0.0;
+							if (-fB0 >= fA00) {
+								fS = (double)1.0;
+								fSqrDistance = fA00 + ((double)2.0) * fB0 + fC;
+							}
+							else {
+								fS = -fB0 / fA00;
+								fSqrDistance = fB0 * fS + fC;
+							}
+						}
+						else {
+							fS = (double)0.0;
+							if (fB1 >= (double)0.0) {
+								fT = (double)0.0;
+								fSqrDistance = fC;
+							}
+							else if (-fB1 >= fA11) {
+								fT = (double)1.0;
+								fSqrDistance = fA11 + ((double)2.0) * fB1 + fC;
+							}
+							else {
+								fT = -fB1 / fA11;
+								fSqrDistance = fB1 * fT + fC;
+							}
+						}
+					}
+					else
+						// region 3
+					{
+						fS = (double)0.0;
+						if (fB1 >= (double)0.0) {
+							fT = (double)0.0;
+							fSqrDistance = fC;
+						}
+						else if (-fB1 >= fA11) {
+							fT = (double)1.0;
+							fSqrDistance = fA11 + ((double)2.0) * fB1 + fC;
+						}
+						else {
+							fT = -fB1 / fA11;
+							fSqrDistance = fB1 * fT + fC;
+						}
+					}
+				}
+				else if (fT < (double)0.0) // region 5
+				{
+					fT = (double)0.0;
+					if (fB0 >= (double)0.0) {
+						fS = (double)0.0;
+						fSqrDistance = fC;
+					}
+					else if (-fB0 >= fA00) {
+						fS = (double)1.0;
+						fSqrDistance = fA00 + ((double)2.0) * fB0 + fC;
+					}
+					else {
+						fS = -fB0 / fA00;
+						fSqrDistance = fB0 * fS + fC;
+					}
+				}
+				else
+					// region 0
+				{
+					// minimum at interior point
+					double fInvDet = ((double)1.0) / fDet;
+					fS *= fInvDet;
+					fT *= fInvDet;
+					fSqrDistance =
+						fS * (fA00 * fS + fA01 * fT + ((double)2.0) * fB0) + fT
+						* (fA01 * fS + fA11 * fT + ((double)2.0) * fB1) + fC;
+				}
+			}
+			else {
+				double fTmp0, fTmp1, fNumer, fDenom;
+
+				if (fS < (double)0.0) // region 2
+				{
+					fTmp0 = fA01 + fB0;
+					fTmp1 = fA11 + fB1;
+					if (fTmp1 > fTmp0) {
+						fNumer = fTmp1 - fTmp0;
+						fDenom = fA00 - 2.0f * fA01 + fA11;
+						if (fNumer >= fDenom) {
+							fS = (double)1.0;
+							fT = (double)0.0;
+							fSqrDistance = fA00 + ((double)2.0) * fB0 + fC;
+						}
+						else {
+							fS = fNumer / fDenom;
+							fT = (double)1.0 - fS;
+							fSqrDistance =
+								fS * (fA00 * fS + fA01 * fT + 2.0f * fB0) + fT
+								* (fA01 * fS + fA11 * fT + ((double)2.0) * fB1) + fC;
+						}
+					}
+					else {
+						fS = (double)0.0;
+						if (fTmp1 <= (double)0.0) {
+							fT = (double)1.0;
+							fSqrDistance = fA11 + ((double)2.0) * fB1 + fC;
+						}
+						else if (fB1 >= (double)0.0) {
+							fT = (double)0.0;
+							fSqrDistance = fC;
+						}
+						else {
+							fT = -fB1 / fA11;
+							fSqrDistance = fB1 * fT + fC;
+						}
+					}
+				}
+				else if (fT < (double)0.0) // region 6
+				{
+					fTmp0 = fA01 + fB1;
+					fTmp1 = fA00 + fB0;
+					if (fTmp1 > fTmp0) {
+						fNumer = fTmp1 - fTmp0;
+						fDenom = fA00 - ((double)2.0) * fA01 + fA11;
+						if (fNumer >= fDenom) {
+							fT = (double)1.0;
+							fS = (double)0.0;
+							fSqrDistance = fA11 + ((double)2.0) * fB1 + fC;
+						}
+						else {
+							fT = fNumer / fDenom;
+							fS = (double)1.0 - fT;
+							fSqrDistance =
+								fS * (fA00 * fS + fA01 * fT + ((double)2.0) * fB0) + fT
+								* (fA01 * fS + fA11 * fT + ((double)2.0) * fB1) + fC;
+						}
+					}
+					else {
+						fT = (double)0.0;
+						if (fTmp1 <= (double)0.0) {
+							fS = (double)1.0;
+							fSqrDistance = fA00 + ((double)2.0) * fB0 + fC;
+						}
+						else if (fB0 >= (double)0.0) {
+							fS = (double)0.0;
+							fSqrDistance = fC;
+						}
+						else {
+							fS = -fB0 / fA00;
+							fSqrDistance = fB0 * fS + fC;
+						}
+					}
+				}
+				else
+					// region 1
+				{
+					fNumer = fA11 + fB1 - fA01 - fB0;
+					if (fNumer <= (double)0.0) {
+						fS = (double)0.0;
+						fT = (double)1.0;
+						fSqrDistance = fA11 + ((double)2.0) * fB1 + fC;
+					}
+					else {
+						fDenom = fA00 - 2.0f * fA01 + fA11;
+						if (fNumer >= fDenom) {
+							fS = (double)1.0;
+							fT = (double)0.0;
+							fSqrDistance = fA00 + ((double)2.0) * fB0 + fC;
+						}
+						else {
+							fS = fNumer / fDenom;
+							fT = (double)1.0 - fS;
+							fSqrDistance =
+								fS * (fA00 * fS + fA01 * fT + ((double)2.0) * fB0) + fT
+								* (fA01 * fS + fA11 * fT + ((double)2.0) * fB1) + fC;
+						}
+					}
+				}
+			}
+
+			// // account for numerical round-off error
+			// if (fSqrDistance < (double) 0.0)
+			// {
+			// fSqrDistance = (double) 0.0;
+			// }
+
+			// m_kClosestPoint0 = m_rkVector;
+			if (!closest->equals(NULL)) {
+				closest->zero();
+				kEdge0->mul(fS);
+				kEdge1->mul(fT);
+				closest->add(*kEdge1);
+				closest->add(*kEdge1);
+				closest->add(*v0);
+				// m_kClosestPoint1 = v0 + fS*kEdge0 + fT*kEdge1;
+			}
+
+			cl_point = closest;
+
+			if (fSqrDistance < 0)
+				return 0;
+			else
+				return sqrt(fSqrDistance);
 		}
 
 	//------------------------------------------------------------------------------
