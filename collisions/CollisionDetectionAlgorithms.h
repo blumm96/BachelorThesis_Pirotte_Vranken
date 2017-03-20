@@ -63,7 +63,7 @@ namespace chai3d {
 	//Dit is voor AABB
 	void checkDistance(cCollisionAABBNode* A,
 		cCollisionAABBNode* B,
-		double &mindist,
+		double& mindist,
 		cCollisionAABB* tree_A,
 		cCollisionAABB* tree_B,
 		int maxdiepte,
@@ -90,7 +90,8 @@ namespace chai3d {
 					cCollisionAABBNode newA = children_A[i];
 					cCollisionAABBNode newB = children_B[j];
 					float afstand = newA.m_bbox.distance(&(newB.m_bbox), myLocal, BLocal);
-					if ((afstand < mindist)&&(afstand == 0.0f)) checkDistance(&newA, &newB, mindist, tree_A, tree_B, maxdiepte, huidigeDiepte, myLocal, BLocal, positie);
+					if ((afstand == 0.0f)) checkDistance(&newA, &newB, mindist, tree_A, tree_B, maxdiepte, huidigeDiepte, myLocal, BLocal, positie);
+					else mindist = cMin((float)mindist, afstand);
 				}
 			}
 		}
