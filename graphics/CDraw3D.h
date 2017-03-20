@@ -95,7 +95,8 @@ void cDrawWireBox(const double& a_xMin, const double& a_xMax,
 //! This function draws a sphere.
 void cDrawSphere(const double& a_radius,
     const unsigned int a_numSlices=10, 
-    const unsigned int a_numStacks=10);
+    const unsigned int a_numStacks=10,
+	const cVector3d positie = cVector3d(0,0,0));
 
 //! This function draws an arrow on the z-axis using a cone and a cylinder.
 void cDrawArrow(const cVector3d& a_arrowStart, 

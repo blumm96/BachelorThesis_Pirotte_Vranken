@@ -31,6 +31,8 @@ namespace chai3d {
 		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte);
 		// Get the type of tree. In this case IST.
 		virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::IST; };
+		// Render the leaf nodes.
+		virtual void render(cRenderOptions& a_options);
 		// Get the rootsphere of this inner sphere tree.
 		Sphere* getRootSphere();
 
@@ -40,11 +42,16 @@ namespace chai3d {
 		// The rootsphere
 		Sphere* rootSphere;
 
+		std::vector<Sphere*> spheres;
+
 	// PROTECTED FUNCTIONS
 	public:
 
 		// This method is used to recursively build the collision tree.
 		int buildTree(std::vector<Sphere*> leafs, const int a_depth);
+
+		inline std::vector<Sphere*> getSpheres() { return spheres; }
+
 	};
 }
 

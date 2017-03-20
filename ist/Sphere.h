@@ -69,6 +69,8 @@ namespace chai3d {
 		void setRadius(float r);
 		void setPosition(cVector3d pos);
 		void setState(sphereState nstate);
+
+		void render();
 	};
 }
 #endif
