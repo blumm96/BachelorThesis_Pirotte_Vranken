@@ -377,7 +377,8 @@ void cDrawWireBox(const double& a_xMin, const double& a_xMax,
 //==============================================================================
 void cDrawSphere(const double& a_radius,
                  const unsigned int a_numSlices, 
-                 const unsigned int a_numStacks)
+                 const unsigned int a_numStacks,
+				 const cVector3d positie)
 {
 #ifdef C_USE_OPENGL
 
@@ -390,6 +391,7 @@ void cDrawSphere(const double& a_radius,
 
     // set normal-rendering mode
     gluQuadricNormals (quadObj, GLU_SMOOTH);
+	glTranslatef(positie.x, positie.y, positie.z);
 
     // render a sphere
     gluSphere(quadObj, a_radius, a_numSlices, a_numStacks);

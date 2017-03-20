@@ -1,5 +1,7 @@
 #include "ist/InnerSphereTree.h"
 
+using namespace std;
+
 namespace chai3d {
 
 	/*
@@ -59,4 +61,20 @@ namespace chai3d {
 	{
 		return 0;
 	}
+
+	void InnerSphereTree::render(cRenderOptions& a_options) {
+#ifdef C_USE_OPENGL
+		
+		glDisable(GL_LIGHTING);
+		glLineWidth(1.0);
+		glColor4fv(cColorf(1.0, 0, 0).getData());
+		
+		for (int i = 0; i < spheres.size(); i++) {
+			spheres[i].render();
+		}
+
+		glEnable(GL_LIGHTING);
+#endif
+	}
+
 }

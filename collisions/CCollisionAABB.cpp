@@ -704,16 +704,16 @@ std::vector<cCollisionAABBNode> cCollisionAABB::getChildren(cCollisionAABBNode* 
 	\return	The list of voxels.
 
 */
-//std::vector<Voxel> cCollisionAABB::maakVoxels() {
-//	std::vector<Voxel> voxels;
-//	for (unsigned int i = 0; i < m_nodes.size(); i++) {
-//		if (m_nodes[i].m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) {
-//			Voxel v = Voxel();
-//			v.setPos(m_nodes[i].m_bbox.getCenter().x(), m_nodes[i].m_bbox.getCenter().y(), m_nodes[i].m_bbox.getCenter().z());
-//		}
-//	}
-//	return voxels;
-//}
+std::vector<Voxel> cCollisionAABB::maakVoxels() {
+	std::vector<Voxel> voxels;
+	for (unsigned int i = 0; i < m_nodes.size(); i++) {
+		if (m_nodes[i].m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) {
+			Voxel v = Voxel();
+			v.setPos(m_nodes[i].m_bbox.getCenter().x(), m_nodes[i].m_bbox.getCenter().y(), m_nodes[i].m_bbox.getCenter().z());
+		}
+	}
+	return voxels;
+}
 //------------------------------------------------------------------------------
 } // namespace chai3d
 //------------------------------------------------------------------------------

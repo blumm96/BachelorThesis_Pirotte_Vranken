@@ -2,6 +2,8 @@
 
 #include "math/CVector3d.h"
 
+#include "graphics/CDraw3D.h"
+
 namespace chai3d {
 
 	/*
@@ -100,5 +102,11 @@ namespace chai3d {
 
 	void Sphere::setState(sphereState nstate) {
 		state = nstate;
+	}
+
+	void Sphere::render() {
+		if (state == sphereState::SPHERE_LEAF) {
+			cDrawSphere(radius, 10, 10, position);
+		}
 	}
 }
