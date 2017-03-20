@@ -7,7 +7,9 @@ namespace chai3d {
 	/*
 		Constructor of an inner sphere tree.
 	*/
-	InnerSphereTree::InnerSphereTree() {}
+	InnerSphereTree::InnerSphereTree() {
+		
+	}
 
 	/*
 		Destructor of the inner sphere tree.
@@ -26,7 +28,7 @@ namespace chai3d {
 
 		\return If to inner sphere trees have collided.
 	*/
-	bool InnerSphereTree::computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte) {
+	bool InnerSphereTree::computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie) {
 		// Sanity check
 		if (ist2 == NULL) return false;
 		if (this->getCollisionTreeType() != ist2->getCollisionTreeType()) return false;

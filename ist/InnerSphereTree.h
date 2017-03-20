@@ -22,19 +22,33 @@ namespace chai3d {
 		InnerSphereTree();
 
 		// Destructor of the inner sphere tree.
-		~InnerSphereTree();
+		virtual ~InnerSphereTree();
 
 	// PUBLIC METHODS
 	public:
 
 		// Computes the collision between 2 inner sphere trees.
-		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte);
+		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
 		// Get the type of tree. In this case IST.
 		virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::IST; };
 		// Render the leaf nodes.
 		virtual void render(cRenderOptions& a_options);
 		// Get the rootsphere of this inner sphere tree.
 		Sphere* getRootSphere();
+		//! This method computes all collisions between a segment passed as argument and the attributed 3D object.
+		virtual bool computeCollision(cGenericObject* a_object,
+			cVector3d& a_segmentPointA,
+			cVector3d& a_segmentPointB,
+			cCollisionRecorder& a_recorder,
+			cCollisionSettings& a_settings)
+		{
+			return (false);
+		}
+
+		virtual void update();
+		//UHAS implemented
+		//This method prints the AABB box tree for this mesh
+		virtual void printAABBCollisionTree(int maxDiepte) {};
 
 	// DATA MEMBERS
 	private:
