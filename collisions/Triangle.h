@@ -88,7 +88,7 @@ namespace chai3d {
 		};
 
 		//! Destructor of Voxelizer.
-		~Triangle();
+		inline ~Triangle() {};
 
 		inline cVector3d* getCenter() {
 			cVector3d* vector = new cVector3d(0, 0, 0);

@@ -187,7 +187,7 @@ protected :
     //! Maximum depth of tree.
     int m_maxDepth;
 
-	vector<Triangle*> triangles;
+	std::vector<Triangle*> triangles;
 };
 
 //------------------------------------------------------------------------------

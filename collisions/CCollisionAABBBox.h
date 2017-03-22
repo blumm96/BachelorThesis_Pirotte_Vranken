@@ -54,6 +54,7 @@
 #include <iostream>
 //------------------------------------------------------------------------------
 #include <vector>
+#include"Triangle.h"
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -723,9 +724,9 @@ public:
 		\param triangles	A vector of all the possible triangles in the model.
 
 	*/
-	inline void calculateFittingTriangle(vector<Triangle*> triangles) {
-		vector<Triangle*> mogelijkheden;
-		for (int i = 0; i < triangles.size(); i++) {
+	inline void calculateFittingTriangle(std::vector<Triangle*> triangles) {
+		std::vector<Triangle*> mogelijkheden;
+		for (unsigned int i = 0; i < triangles.size(); i++) {
 			if (contains(*(triangles[i]->getCenter()))) {
 				mogelijkheden.push_back(triangles[i]);
 			}
@@ -737,7 +738,7 @@ public:
 		float afstand = distance(*(mogelijkheden[0]->getCenter()), m_center);
 		Triangle *theOne = mogelijkheden[0];
 
-		for (int i = 1; i < mogelijkheden.size(); i++) {
+		for (unsigned int i = 1; i < mogelijkheden.size(); i++) {
 			float nieuweAfstand = distance(*(mogelijkheden[1]->getCenter()), m_center);
 			if (nieuweAfstand < afstand) {
 				Triangle *theOne = mogelijkheden[i];
