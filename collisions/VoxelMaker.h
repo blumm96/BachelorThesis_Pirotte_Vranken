@@ -7,7 +7,7 @@
 
 namespace chai3d {
 
-	int triangle_intersection(cVector3d V1,  // Triangle vertices
+	int static triangle_intersection(cVector3d V1,  // Triangle vertices
 		cVector3d   V2,
 		cVector3d   V3,
 		cVector3d    O,  //Ray origin

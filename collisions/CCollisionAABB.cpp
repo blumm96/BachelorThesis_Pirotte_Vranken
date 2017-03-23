@@ -94,6 +94,10 @@ cCollisionAABB::cCollisionAABB()
 //==============================================================================
 cCollisionAABB::~cCollisionAABB()
 {
+
+	for (int i = 0; i < triangles.size(); i++) {
+		delete triangles[i];
+	}
     // clear all nodes
     m_nodes.clear();
 }
@@ -223,6 +227,8 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, const double 
 
                 // add leaf to list
                 m_nodes.push_back(leaf);
+
+				triangles.push_back(triangle);
             }
             break;
         }

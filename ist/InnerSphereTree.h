@@ -48,7 +48,7 @@ namespace chai3d {
 		inline virtual void update() {}
 		//UHAS implemented
 		//This method prints the AABB box tree for this mesh
-		virtual void printAABBCollisionTree(int maxDiepte) {};
+		virtual void printAABBCollisionTree(int maxDiepte);
 
 	// DATA MEMBERS
 	private:

@@ -751,6 +751,14 @@ public:
 		return point2.length();
 	}
 
+	inline cVector3d getMin() {
+		return m_min;
+	}
+
+	inline cVector3d getMax() {
+		return m_max;
+	}
+
     //--------------------------------------------------------------------------
     // PUBLIC MEMBERS:
     //--------------------------------------------------------------------------

@@ -52,6 +52,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "Triangle.h"
 #include "ist/Sphere.h"
 #include "ist/InnerSphereTree.h"
+#include "collisions/VoxelMaker.h"
 //------------------------------------------------------------------------------
 #include <vector>
 #include <list>
@@ -94,7 +95,7 @@ namespace chai3d {
 
 		//! Constructor of Voxelizer.
 		Voxelizer::Voxelizer() {
-			initialize();
+			
 		}
 
 		//! Destructor of Voxelizer.
@@ -107,6 +108,7 @@ namespace chai3d {
 
 		void Voxelizer::setObject(cCollisionAABB* c){
 			object = c;
+			initialize();
 		}
 
 		//--------------------------------------------------------------------------
@@ -116,12 +118,45 @@ namespace chai3d {
 		//INITIALIZATIE VAN DE VOXELIZER
 		void Voxelizer::initialize() {
 			vector<cCollisionAABBNode> object_nodes = object->getNodes();
+			
+			cVector3d max = object_nodes[object->getRoot()].m_bbox.getMax();
+			cVector3d min = object_nodes[object->getRoot()].m_bbox.getMin();
 			int root_index = object->getRoot();
-			voxels = object->maakVoxels();
+			voxels = &(maakVoxels(&max, &min, object->getTriangles()));
+			mapDistances();
 		}
 
 		double Voxelizer::distance(Voxel* v1, Voxel* v2) {
 			return (*(v1->getPos()) - *(v2->getPos())).length();
+		}
+
+		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles)
+		{
+			std::vector<Voxel*> voxels;
+
+			for (float x = min->x(); x <= max->x(); x += 0.1) {
+				for (float y = min->y(); y <= max->y(); y += 0.1) {
+					for (float z = min->z(); z <= max->z(); z += 0.1) {
+						Voxel* voxel = new Voxel();
+						voxel->setPos(x, y, z);
+
+						int intersecties = 0;
+
+						for (int i = 0; i < triangles.size(); i++) {
+							float waarde = 0;
+							int raakt = triangle_intersection(*(triangles[i]->p1), *(triangles[i]->p2), *(triangles[i]->p3), *(voxel->getPos()), cVector3d(1, 0, 0), &waarde);
+							if (raakt == 1) intersecties++;
+						}
+
+						cout << intersecties << endl;
+
+						if (intersecties % 2 != 0) voxels.push_back(voxel);
+						else delete voxel;
+					}
+				}
+			}
+
+			return voxels;
 		}
 
 		//most important method of this class
@@ -129,6 +164,8 @@ namespace chai3d {
 		void Voxelizer::mapDistances() {
 			// Process each voxel on our list, one
 			// at a time...
+
+			cout << "Mapping distances." << endl;
 
 			std::vector<Voxel*>::iterator iter = (*voxels).begin();
 			while (iter != (*voxels).end()) {
@@ -678,6 +715,8 @@ namespace chai3d {
 			else
 				return sqrt(fSqrDistance);
 		}
+
+
 
 	//------------------------------------------------------------------------------
 } // namespace chai3d

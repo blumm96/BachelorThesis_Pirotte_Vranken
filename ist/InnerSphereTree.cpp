@@ -1,4 +1,5 @@
 #include "ist/InnerSphereTree.h"
+#include <iostream>
 
 using namespace std;
 
@@ -16,6 +17,13 @@ namespace chai3d {
 	*/
 	InnerSphereTree::~InnerSphereTree() {
 		delete rootSphere;
+	}
+
+	void InnerSphereTree::printAABBCollisionTree(int diepte) {
+		cout << "INNER SPHERE TREE" << endl;
+		for (int i = 0; i < spheres.size(); i++) {
+			cout << "Sphere: " << spheres[i]->getPosition() << endl;
+		}
 	}
 
 	/*
