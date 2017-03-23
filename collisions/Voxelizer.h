@@ -166,7 +166,7 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		std::vector<cCollisionAABBNode> object_nodes;
 		int root_index;
-		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, std::vector<Triangle*> triangles);
+		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, std::vector<Triangle*> triangles, cVector3d* pos);
 	};
 
 	//------------------------------------------------------------------------------

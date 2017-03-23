@@ -53,6 +53,7 @@
 #include "world/CGenericObject.h"
 #include "collisions/Voxel.h"
 #include "collisions/Triangle.h"
+#include "math/CVector3d.h"
 //------------------------------------------------------------------------------
 #include <vector>
 //------------------------------------------------------------------------------
@@ -133,7 +134,7 @@ public:
     virtual void render(cRenderOptions& a_options);
 
     //! This method initializes and builds the AABB collision tree.
-    void initialize(const cGenericArrayPtr a_elements,
+    void initialize(const cGenericArrayPtr a_elements, cVector3d* pos,
                     const double a_radius = 0.0);
 
 	//UHAS implemented
@@ -152,7 +153,7 @@ public:
 	virtual bool computeCollision(cGenericCollision* B, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
 	std::vector<Voxel*>* maakVoxels();
 	inline std::vector<Triangle*> getTriangles() { return triangles; };
-
+	inline cVector3d* getPos() { return pos; };
 	//! List of nodes.
 	std::vector<cCollisionAABBNode> m_nodes;
 
@@ -189,6 +190,8 @@ protected :
     int m_maxDepth;
 
 	std::vector<Triangle*> triangles;
+
+	cVector3d* pos;
 };
 
 //------------------------------------------------------------------------------

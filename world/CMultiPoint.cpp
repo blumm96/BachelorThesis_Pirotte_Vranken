@@ -617,7 +617,7 @@ void cMultiPoint::createAABBCollisionDetector(const double a_radius)
 
     // create AABB collision detector
     cCollisionAABB* collisionDetector = new cCollisionAABB();
-    collisionDetector->initialize(m_points, a_radius);
+    collisionDetector->initialize(m_points, &(this->getLocalPos()), a_radius);
 
     // assign new collision detector
     m_collisionDetector = collisionDetector;

@@ -1026,7 +1026,7 @@ void cMesh::createAABBCollisionDetector(const double a_radius)
 
     // create AABB and initialize collision detector 
     cCollisionAABB* collisionDetector = new cCollisionAABB();
-    collisionDetector->initialize(m_triangles, a_radius);
+    collisionDetector->initialize(m_triangles, &(this->getLocalPos()), a_radius);
 
     // assign new collision detector
     m_collisionDetector = collisionDetector;

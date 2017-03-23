@@ -122,7 +122,7 @@ namespace chai3d {
 			cVector3d max = object_nodes[object->getRoot()].m_bbox.getMax();
 			cVector3d min = object_nodes[object->getRoot()].m_bbox.getMin();
 			int root_index = object->getRoot();
-			voxels = &(maakVoxels(&max, &min, object->getTriangles()));
+			voxels = &(maakVoxels(&max, &min, object->getTriangles(), object->getPos()));
 			mapDistances();
 		}
 
@@ -130,7 +130,7 @@ namespace chai3d {
 			return (*(v1->getPos()) - *(v2->getPos())).length();
 		}
 
-		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles)
+		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles, cVector3d* pos)
 		{
 			std::vector<Voxel*> voxels;
 
@@ -144,11 +144,11 @@ namespace chai3d {
 
 						for (int i = 0; i < triangles.size(); i++) {
 							float waarde = 0;
-							int raakt = triangle_intersection(*(triangles[i]->p1), *(triangles[i]->p2), *(triangles[i]->p3), *(voxel->getPos()), cVector3d(1, 0, 0), &waarde);
+							int raakt = triangle_intersection(*(triangles[i]->p1), *(triangles[i]->p2), *(triangles[i]->p3), *(voxel->getPos()), cVector3d(1, 0, 0), &waarde, *pos);
 							if (raakt == 1) intersecties++;
 						}
 
-						cout << intersecties << endl;
+						//cout << intersecties << endl;
 
 						if (intersecties % 2 != 0) voxels.push_back(voxel);
 						else delete voxel;

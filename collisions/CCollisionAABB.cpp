@@ -118,11 +118,15 @@ cCollisionAABB::~cCollisionAABB()
     \param  a_radius    Bounding radius to add around each elements.
 */
 //==============================================================================
-void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, const double a_radius)
+void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, cVector3d* pos, const double a_radius)
 {
     ////////////////////////////////////////////////////////////////////////////
     // INITIALIZATION
     ////////////////////////////////////////////////////////////////////////////
+	if (pos == nullptr) {
+		m_rootIndex = -1;
+		return;
+	}
 
     // sanity check
     if (a_elements == nullptr)
@@ -130,6 +134,8 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, const double 
         m_rootIndex = -1;
         return;
     }
+	this->pos = pos;
+
     m_elements = a_elements;
 
     // store radius
@@ -261,7 +267,7 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, const double 
 //==============================================================================
 void cCollisionAABB::update()
 {
-    initialize(m_elements, m_radius);
+    initialize(m_elements, pos, m_radius);
 }
 
 

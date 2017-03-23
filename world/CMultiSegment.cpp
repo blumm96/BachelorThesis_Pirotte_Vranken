@@ -641,7 +641,7 @@ void cMultiSegment::createAABBCollisionDetector(const double a_radius)
 
     // create AABB collision detector
     cCollisionAABB* collisionDetector = new cCollisionAABB();
-    collisionDetector->initialize(m_segments, a_radius);
+    collisionDetector->initialize(m_segments, &(this->getLocalPos()) ,a_radius);
 
     // assign new collision detector
     m_collisionDetector = collisionDetector;

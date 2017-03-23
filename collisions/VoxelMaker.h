@@ -2,6 +2,7 @@
 #define VOXELMAKER_H
 
 #include "math/CVector3d.h"
+#include <iostream>
 
 #define EPSILON 0.000001
 
@@ -12,12 +13,23 @@ namespace chai3d {
 		cVector3d   V3,
 		cVector3d    O,  //Ray origin
 		cVector3d    D,  //Ray direction
-		float* out)
-	{
+		float* out,
+		cVector3d pos)
+	{	
+
 		cVector3d e1, e2;  //Edge1, Edge2
 		cVector3d P, Q, T;
 		float det, inv_det, u, v;
 		float t;
+
+		V1.add(pos);
+		V2.add(pos);
+		V3.add(pos);
+
+		std::cout << "pos: "<<  pos << std::endl;
+		std::cout << V1 << std::endl;
+		std::cout << V2 << std::endl;
+		std::cout << V3 << std::endl;
 
 		//Find vectors for two edges sharing V1
 		e1 = V2 - V1;
@@ -35,8 +47,11 @@ namespace chai3d {
 
 		//calculate distance from V1 to ray origin
 		//SUB(T, O, V1);
-		T = O;
-		T.sub(V1);
+		T = O - V1;
+
+		//std::cout << "O :" << O << std::endl;
+		//std::cout << "V1 :" << V1 << std::endl;
+		//std::cout << "T :" << T << std::endl;
 
 		//Calculate u parameter and test bound
 		u = T.dot(P) * inv_det;
