@@ -26,10 +26,9 @@ namespace chai3d {
 		V2.add(pos);
 		V3.add(pos);
 
-		std::cout << "pos: "<<  pos << std::endl;
-		std::cout << V1 << std::endl;
-		std::cout << V2 << std::endl;
-		std::cout << V3 << std::endl;
+		//std::cout << V1 << std::endl;
+		/*std::cout << V2 << std::endl;
+		std::cout << V3 << std::endl;*/
 
 		//Find vectors for two edges sharing V1
 		e1 = V2 - V1;

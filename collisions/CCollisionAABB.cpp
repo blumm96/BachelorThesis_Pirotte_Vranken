@@ -53,6 +53,7 @@
 //------------------------------------------------------------------------------
 #include <iostream>
 #include <cmath>
+#include <vector>
 //------------------------------------------------------------------------------
 using namespace std;
 //------------------------------------------------------------------------------
@@ -216,16 +217,17 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, cVector3d* po
             for (int i=0; i<m_numElements; ++i)
             {
                 // get position of vertices
-                cVector3d vertex0 = m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 0));
-                cVector3d vertex1 = m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 1));
-                cVector3d vertex2 = m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 2));
-
-				Triangle* triangle = new Triangle(&vertex0, &vertex1, &vertex2);
-
+				cVector3d* vertex0 = new cVector3d();
+				*vertex0 = (m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 0)));
+				cVector3d* vertex1 = new cVector3d();
+				*vertex1 = (m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 1)));
+				cVector3d* vertex2 = new cVector3d();
+				*vertex2 = (m_elements->m_vertices->getLocalPos(m_elements->getVertexIndex(i, 2)));
+				Triangle* triangle = new Triangle(vertex0, vertex1, vertex2);
                 // create leaf node
                 cCollisionAABBNode leaf;
 
-                leaf.fitBBox(m_radius, vertex0, vertex1, vertex2);
+                leaf.fitBBox(m_radius, *vertex0, *vertex1, *vertex2);
                 leaf.m_leftSubTree = i;
                 leaf.m_nodeType = C_AABB_NODE_LEAF;
 
@@ -233,13 +235,11 @@ void cCollisionAABB::initialize(const cGenericArrayPtr a_elements, cVector3d* po
 
                 // add leaf to list
                 m_nodes.push_back(leaf);
-
 				triangles.push_back(triangle);
             }
             break;
         }
     }
-
 
     ////////////////////////////////////////////////////////////////////////////
     // CREATE TREE

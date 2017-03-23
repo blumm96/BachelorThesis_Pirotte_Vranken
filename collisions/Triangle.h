@@ -81,14 +81,18 @@ namespace chai3d {
 	public:
 
 		//! Constructor of Voxelizer.
-		inline Triangle(cVector3d* p1, cVector3d* p2, cVector3d* p3) {
-			this->p1 = p1;
-			this->p2 = p2;
-			this->p3 = p3;
+		inline Triangle(cVector3d* px, cVector3d* py, cVector3d* pz) {
+			this->p1 = px;
+			this->p2 = py;
+			this->p3 = pz;
 		};
 
 		//! Destructor of Voxelizer.
-		inline ~Triangle() {};
+		inline ~Triangle() {
+			delete p1;
+			delete p2;
+			delete p3;
+		};
 
 		inline cVector3d* getCenter() {
 			cVector3d* vector = new cVector3d(0, 0, 0);

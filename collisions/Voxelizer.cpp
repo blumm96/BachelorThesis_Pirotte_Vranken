@@ -101,7 +101,7 @@ namespace chai3d {
 		//! Destructor of Voxelizer.
 		Voxelizer::~Voxelizer() {
 			for (int i = 0; i < voxels->size(); i++) {
-				delete(&voxels[i]);
+				delete((*voxels)[i]);
 			}
 			delete(closest_point);
 		}
@@ -133,7 +133,6 @@ namespace chai3d {
 		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles, cVector3d* pos)
 		{
 			std::vector<Voxel*> voxels;
-
 			for (float x = min->x(); x <= max->x(); x += 0.1) {
 				for (float y = min->y(); y <= max->y(); y += 0.1) {
 					for (float z = min->z(); z <= max->z(); z += 0.1) {
@@ -171,7 +170,7 @@ namespace chai3d {
 			while (iter != (*voxels).end()) {
 				// Grab the next voxel
 				Voxel* v = (*iter);
-
+				cout << "voxel " << *(v->getPos()) << endl;
 				// Now we’re going to find the closest 
 				// point in the tree (tree_root) to v... 
 

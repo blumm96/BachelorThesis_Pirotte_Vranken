@@ -15,10 +15,11 @@ namespace chai3d {
 		The destructor of a sphere.
 	*/
 	Sphere::~Sphere() {
-		for (int i = 0; i < children.size(); i++) {
-			delete children[i];
-		}
-		delete triangle;
+		//if (state == sphereState::SPHERE_LEAF) return;
+		//for (int i = 0; i < children.size(); i++) {
+			//delete children[i];
+		//}
+		//delete triangle;
 	}
 
 	/*
