@@ -121,10 +121,18 @@ namespace chai3d {
 			
 			cVector3d max = object_nodes[object->getRoot()].m_bbox.getMax();
 			cVector3d min = object_nodes[object->getRoot()].m_bbox.getMin();
-			int root_index = object->getRoot();
-			voxels = (maakVoxels(&max, &min, object->getTriangles(), object->getPos()));
-			cout << "test voxels " << (voxels).size() << endl;
+			root_index = object->getRoot();
+			cout << "Voxels worden berekend." << endl;
+			cVector3d vec(0,0,0);
+			voxels = (maakVoxels(&max, &min, object->getTriangles(), &vec));
 			mapDistances();
+
+			cout << voxels.size() << endl;
+
+			for (int i = 0; i < voxels.size(); i++) {
+				cout << "Voxel: " << *(voxels[i]->getPos()) << endl;
+			}
+
 		}
 
 		double Voxelizer::distance(Voxel* v1, Voxel* v2) {
@@ -134,9 +142,10 @@ namespace chai3d {
 		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles, cVector3d* pos)
 		{
 			std::vector<Voxel*> voxels;
-			for (float x = min->x(); x <= max->x(); x += 0.1) {
-				for (float y = min->y(); y <= max->y(); y += 0.1) {
-					for (float z = min->z(); z <= max->z(); z += 0.1) {
+			for (float x = min->x(); x <= max->x(); x += 0.1f) {
+				cout << "=";
+				for (float y = min->y(); y <= max->y(); y += 0.1f) {
+					for (float z = min->z(); z <= max->z(); z += 0.1f) {
 						Voxel* voxel = new Voxel();
 						voxel->setPos(x, y, z);
 
@@ -148,13 +157,13 @@ namespace chai3d {
 							if (raakt == 1) intersecties++;
 						}
 
-						//cout << intersecties << endl;
-
 						if (intersecties % 2 != 0) voxels.push_back(voxel);
 						else delete voxel;
 					}
 				}
 			}
+
+			cout << endl;
 
 			return voxels;
 		}
@@ -182,6 +191,8 @@ namespace chai3d {
 				// associated with v in our output => distance map
 				
 				map_distance_to_voxel(v); 
+
+				iter++;
 				
 				// Exploit spatial coherence by giving the next voxel 
 				// a "hint" about where to start looking in the tree. 
@@ -209,7 +220,7 @@ namespace chai3d {
 
 			//check the comparison
 			for (int i = 0; i < priorityList.size(); i++) {
-				std::cout << priorityList.front()->getMinDist() << " - ";
+				cout << priorityList.front()->getMinDist() << " - ";
 				priorityList.pop_front();
 			}
 
@@ -267,7 +278,10 @@ namespace chai3d {
 			// Start with the root of the tree 
 			toDescend.push_back(&object_nodes[root_index]);
 
-			while (!toDescend.empty()) { 
+			lowest_upper_dist_sq = std::numeric_limits<float>::infinity();
+			low_dist_sq = std::numeric_limits<float>::infinity();
+
+			while (toDescend.size()!=0) { 
 				cCollisionAABBNode* node = toDescend.front();
 				toDescend.pop_front();
 				//Process each node
@@ -313,16 +327,16 @@ namespace chai3d {
 				// compute the distance to this triangle
 				float d_sq;
 				//closest point on the triangle
-				cVector3d* closest_pt_on_triangle;
+				cVector3d closest_pt_on_triangle;
 
 				//find the closest point on the triangle
-				closest_point_triangle(v, n->m_bbox.triangle, d_sq, closest_pt_on_triangle);
+				d_sq = closest_point_triangle(v, n->m_bbox.triangle, &closest_pt_on_triangle);
 
 				// Is this the shortest distance so far? 
 				if (d_sq < low_dist_sq) {
 					// Mark him as the closest we’ve seen 
 					low_dist_sq = d_sq;
-					closest_point = closest_pt_on_triangle;
+					closest_point = &closest_pt_on_triangle;
 					closest_point_node = n;
 					closest_triangle = n->m_bbox.triangle;
 
@@ -436,12 +450,13 @@ namespace chai3d {
 			// results in a breadth-first search. A
 			// more formal analysis of this tradeoff
 			// will follow in section 3.4.
+			
 			toDescend.push_front(&object_nodes[n->m_leftSubTree]);
 			toDescend.push_front(&object_nodes[n->m_rightSubTree]);
 		}
 
 		//find the closes point to a triangle
-		void Voxelizer::closest_point_triangle(Voxel * v, Triangle * t, float & dst, cVector3d * closest_point)
+		float Voxelizer::closest_point_triangle(Voxel * v, Triangle * t, cVector3d * closest_point)
 		{
 			// taken from
 			// http://www.geometrictools.com/Foundation/Distance/Wm3DistVector3Triangle3.cpp
@@ -456,7 +471,7 @@ namespace chai3d {
 			// and may not be copied or disclosed except in accordance with the terms
 			// of that agreement.
 			
-			dst = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closest_point);
+			return nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closest_point);
 			
 		}
 
@@ -485,11 +500,11 @@ namespace chai3d {
 		{
 			//uv is eigenlijk een 2D vector
 
-			cVector3d* kDiff = new cVector3d();
-			cVector3d* kEdge0 = new cVector3d();
-			cVector3d* kEdge1 = new cVector3d();
+			cVector3d* kDiff = new cVector3d(0,0,0);
+			cVector3d* kEdge0 = new cVector3d(0,0,0);
+			cVector3d* kEdge1 = new cVector3d(0,0,0);
 
-			cVector3d* closest = new cVector3d();
+			cVector3d* closest = new cVector3d(0,0,0);
 			
 			kDiff->sub(*v0);
 			kDiff->sub(*p);
@@ -708,6 +723,11 @@ namespace chai3d {
 			}
 
 			cl_point = closest;
+
+			delete kEdge0;
+			delete kEdge1;
+			delete kDiff;
+			delete closest;
 
 			if (fSqrDistance < 0)
 				return 0;
