@@ -100,8 +100,8 @@ namespace chai3d {
 
 		//! Destructor of Voxelizer.
 		Voxelizer::~Voxelizer() {
-			for (int i = 0; i < voxels->size(); i++) {
-				delete((*voxels)[i]);
+			for (int i = 0; i < voxels.size(); i++) {
+				delete(voxels[i]);
 			}
 			delete(closest_point);
 		}
@@ -117,12 +117,13 @@ namespace chai3d {
 
 		//INITIALIZATIE VAN DE VOXELIZER
 		void Voxelizer::initialize() {
-			vector<cCollisionAABBNode> object_nodes = object->getNodes();
+			object_nodes = object->getNodes();
 			
 			cVector3d max = object_nodes[object->getRoot()].m_bbox.getMax();
 			cVector3d min = object_nodes[object->getRoot()].m_bbox.getMin();
 			int root_index = object->getRoot();
-			voxels = &(maakVoxels(&max, &min, object->getTriangles(), object->getPos()));
+			voxels = (maakVoxels(&max, &min, object->getTriangles(), object->getPos()));
+			cout << "test voxels " << (voxels).size() << endl;
 			mapDistances();
 		}
 
@@ -166,11 +167,10 @@ namespace chai3d {
 
 			cout << "Mapping distances." << endl;
 
-			std::vector<Voxel*>::iterator iter = (*voxels).begin();
-			while (iter != (*voxels).end()) {
+			std::vector<Voxel*>::iterator iter = voxels.begin();
+			while (iter != voxels.end()) {
 				// Grab the next voxel
 				Voxel* v = (*iter);
-				cout << "voxel " << *(v->getPos()) << endl;
 				// Now we’re going to find the closest 
 				// point in the tree (tree_root) to v... 
 
