@@ -170,6 +170,11 @@ namespace chai3d {
 		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, std::vector<Triangle*> triangles, cVector3d* pos);
 	};
 
+	//help function for comparing two voxels
+	struct compare {
+		bool operator()(Voxel* v1,Voxel* v2) { return ((v1->getMinDist()) > (v2->getMinDist())); }
+	};
+
 	//------------------------------------------------------------------------------
 } // namespace chai3d
   //------------------------------------------------------------------------------

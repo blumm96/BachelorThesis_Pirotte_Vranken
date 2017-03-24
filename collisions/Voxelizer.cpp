@@ -219,13 +219,16 @@ namespace chai3d {
 			//check the comparison
 			int i = 0;
 			list<Voxel*>::iterator it = priorityList.begin();
+			
 
+			//test sorting algo
+			//priorityList.sort(compare());
 			//print prioritylist
-			for (it; it != priorityList.end(); ++it) {
+			/*for (it; it != priorityList.end(); ++it) {
 				Voxel* v = *(it);
 				cout << "print prior node " << i+1 << " - " << v->getMinDist() << endl;
 				i++;
-			}
+			}*/
 
 			//Then, all
 			//voxels whose centers are contained in this sphere are deleted
@@ -233,7 +236,7 @@ namespace chai3d {
 			std::vector<Sphere*> innerspheres;
 
 			while (!priorityList.empty()) {
-				priorityList.sort();
+				priorityList.sort(compare());
 				Voxel* v = priorityList.front();
 				priorityList.pop_front();
 
@@ -302,7 +305,6 @@ namespace chai3d {
 		
 		void Voxelizer::map_distance_to_voxel(Voxel* v) {
 			v->setMinDist(sqrt(low_dist_sq));
-			cout << "gesette distance per node " << sqrt(low_dist_sq) << endl;
 			v->setTriangle(closest_triangle);
 			priorityList.push_front(v);
 		}
