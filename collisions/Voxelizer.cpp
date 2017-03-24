@@ -215,20 +215,18 @@ namespace chai3d {
 			volume of the object should be approximated well by the
 			spheres, while their number should be small.In a second step,
 			we create a hierarchy over this set of spheres.*/
-
-			//check the comparison
-			int i = 0;
-			list<Voxel*>::iterator it = priorityList.begin();
 			
 
 			//test sorting algo
-			//priorityList.sort(compare());
+			priorityList.sort(compare());
+			int i = 0;
+			list<Voxel*>::iterator it = priorityList.begin();
 			//print prioritylist
-			/*for (it; it != priorityList.end(); ++it) {
+			for (it; it != priorityList.end(); ++it) {
 				Voxel* v = *(it);
-				cout << "print prior node " << i+1 << " - " << v->getMinDist() << endl;
+				cout << "print voxel " << i+1 << " :position - " << *(v->getPos()) << " :min_distance - " << v->getMinDist() << endl;
 				i++;
-			}*/
+			}
 
 			//Then, all
 			//voxels whose centers are contained in this sphere are deleted
@@ -278,6 +276,7 @@ namespace chai3d {
 			tree->buildTree(innerspheres, diepte);
 
 			//print inner spheres
+			cout << endl;
 			for (int i = 0; i < innerspheres.size(); i++) {
 				cout << "sphere " << i + 1 << " - position " << innerspheres[i]->getPosition() << " - radius " << innerspheres[i]->getRadius() << endl;
 			}
