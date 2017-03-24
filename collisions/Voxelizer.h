@@ -130,7 +130,7 @@ namespace chai3d {
 		float low_dist_sq = std::numeric_limits<float>::infinity();
 
 		//The point associated with this lowest distance
-		cVector3d* closest_point = new cVector3d(0.0f, 0.0f, 0.0f);
+		//cVector3d* closest_point;
 
 		//The triangle assaociated with the lowest distance
 		Triangle* closest_triangle;
@@ -158,7 +158,7 @@ namespace chai3d {
 		void map_distance_to_voxel(Voxel* v);
 		//void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
-		float closest_point_triangle(Voxel* v, Triangle* t, cVector3d *closest_point);
+		float closest_point_triangle(Voxel* v, Triangle* t);
 		void initialize();
 		double Voxelizer::nearestpoint(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* closest);
 		double distance(Voxel* v1, Voxel* v2);

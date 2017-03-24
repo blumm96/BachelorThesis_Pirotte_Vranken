@@ -69,6 +69,9 @@ namespace chai3d {
 	}
 	int InnerSphereTree::buildTree(std::vector<Sphere*> leafs, const int a_depth)
 	{
+		for (int i = 0; i < leafs.size(); i++) {
+			spheres.push_back(leafs[i]);
+		}
 		return 0;
 	}
 
@@ -78,9 +81,9 @@ namespace chai3d {
 		glDisable(GL_LIGHTING);
 		glLineWidth(1.0);
 		glColor4fv(cColorf(1.0, 0, 0).getData());
-		
 		for (int i = 0; i < spheres.size(); i++) {
 			spheres[i]->render();
+			cout << i << endl;
 		}
 
 		glEnable(GL_LIGHTING);

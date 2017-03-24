@@ -45,6 +45,8 @@
 //------------------------------------------------------------------------------
 #include "graphics/CDraw3D.h"
 #include "materials/CMaterial.h"
+
+#include <iostream>
 //------------------------------------------------------------------------------
 #ifdef C_USE_OPENGL
 #ifdef MACOSX
@@ -392,7 +394,7 @@ void cDrawSphere(const double& a_radius,
     // set normal-rendering mode
     gluQuadricNormals (quadObj, GLU_SMOOTH);
 	glTranslatef(positie.x(), positie.y(), positie.z());
-
+	std::cout << "radius " << a_radius << std::endl;
     // render a sphere
     gluSphere(quadObj, a_radius, a_numSlices, a_numStacks);
 

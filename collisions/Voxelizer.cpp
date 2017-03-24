@@ -103,7 +103,6 @@ namespace chai3d {
 			for (int i = 0; i < voxels.size(); i++) {
 				delete(voxels[i]);
 			}
-			delete(closest_point);
 		}
 
 		void Voxelizer::setObject(cCollisionAABB* c){
@@ -129,9 +128,10 @@ namespace chai3d {
 
 			cout << voxels.size() << endl;
 
-			for (int i = 0; i < voxels.size(); i++) {
-				cout << "Voxel: " << *(voxels[i]->getPos()) << endl;
-			}
+			//print all voxels
+			//for (int i = 0; i < voxels.size(); i++) {
+				//cout << "Voxel: " << *(voxels[i]->getPos()) << endl;
+			//}
 
 		}
 
@@ -177,12 +177,12 @@ namespace chai3d {
 			cout << "Mapping distances." << endl;
 
 			std::vector<Voxel*>::iterator iter = voxels.begin();
+
 			while (iter != voxels.end()) {
 				// Grab the next voxel
 				Voxel* v = (*iter);
 				// Now we’re going to find the closest 
 				// point in the tree (tree_root) to v... 
-
 				find_closest_point(v);
 
 				// Now output or do something useful 
@@ -216,12 +216,15 @@ namespace chai3d {
 			spheres, while their number should be small.In a second step,
 			we create a hierarchy over this set of spheres.*/
 
-			priorityList.sort();
-
 			//check the comparison
-			for (int i = 0; i < priorityList.size(); i++) {
-				cout << priorityList.front()->getMinDist() << " - ";
-				priorityList.pop_front();
+			int i = 0;
+			list<Voxel*>::iterator it = priorityList.begin();
+
+			//print prioritylist
+			for (it; it != priorityList.end(); ++it) {
+				Voxel* v = *(it);
+				cout << "print prior node " << i+1 << " - " << v->getMinDist() << endl;
+				i++;
 			}
 
 			//Then, all
@@ -230,6 +233,7 @@ namespace chai3d {
 			std::vector<Sphere*> innerspheres;
 
 			while (!priorityList.empty()) {
+				priorityList.sort();
 				Voxel* v = priorityList.front();
 				priorityList.pop_front();
 
@@ -269,6 +273,12 @@ namespace chai3d {
 			//IST hierarchy
 			InnerSphereTree* tree = new InnerSphereTree();
 			tree->buildTree(innerspheres, diepte);
+
+			//print inner spheres
+			for (int i = 0; i < innerspheres.size(); i++) {
+				cout << "sphere " << i + 1 << " - position " << innerspheres[i]->getPosition() << " - radius " << innerspheres[i]->getRadius() << endl;
+			}
+
 			return tree;
 		}
 
@@ -280,7 +290,7 @@ namespace chai3d {
 
 			lowest_upper_dist_sq = std::numeric_limits<float>::infinity();
 			low_dist_sq = std::numeric_limits<float>::infinity();
-
+			
 			while (toDescend.size()!=0) { 
 				cCollisionAABBNode* node = toDescend.front();
 				toDescend.pop_front();
@@ -292,6 +302,7 @@ namespace chai3d {
 		
 		void Voxelizer::map_distance_to_voxel(Voxel* v) {
 			v->setMinDist(sqrt(low_dist_sq));
+			cout << "gesette distance per node " << sqrt(low_dist_sq) << endl;
 			v->setTriangle(closest_triangle);
 			priorityList.push_front(v);
 		}
@@ -327,16 +338,17 @@ namespace chai3d {
 				// compute the distance to this triangle
 				float d_sq;
 				//closest point on the triangle
-				cVector3d closest_pt_on_triangle;
+				//cVector3d closest_pt_on_triangle;
 
 				//find the closest point on the triangle
-				d_sq = closest_point_triangle(v, n->m_bbox.triangle, &closest_pt_on_triangle);
+				d_sq = closest_point_triangle(v, n->m_bbox.triangle);
 
+				
 				// Is this the shortest distance so far? 
 				if (d_sq < low_dist_sq) {
 					// Mark him as the closest we’ve seen 
 					low_dist_sq = d_sq;
-					closest_point = &closest_pt_on_triangle;
+					//closest_point = &closest_pt_on_triangle;
 					closest_point_node = n;
 					closest_triangle = n->m_bbox.triangle;
 
@@ -364,7 +376,7 @@ namespace chai3d {
 			// If I'm above the x range, my lowest x 
 			// distance uses the maximum x, and my 
 			// highest uses the minimum x 
-			else if (v->getPos()->x() < n->m_bbox.getUpperX()) {
+			else if (v->getPos()->x() > n->m_bbox.getUpperX()) {
 				best_dist_x += v->getPos()->x() - n->m_bbox.getUpperX();
 				worst_dist_x += v->getPos()->x() - n->m_bbox.getLowerX();
 			}
@@ -387,7 +399,7 @@ namespace chai3d {
 				worst_dist_y += n->m_bbox.getUpperY() - v->getPos()->y();
 			}
 
-			else if (v->getPos()->y() < n->m_bbox.getUpperY()) {
+			else if (v->getPos()->y() > n->m_bbox.getUpperY()) {
 				best_dist_y += v->getPos()->y() - n->m_bbox.getUpperY();
 				worst_dist_y += v->getPos()->y() - n->m_bbox.getLowerY();
 			}
@@ -408,7 +420,7 @@ namespace chai3d {
 				worst_dist_z += n->m_bbox.getUpperZ() - v->getPos()->z();
 			}
 
-			else if (v->getPos()->z() < n->m_bbox.getUpperZ()) {
+			else if (v->getPos()->z() > n->m_bbox.getUpperZ()) {
 				best_dist_z += v->getPos()->z() - n->m_bbox.getUpperZ();
 				worst_dist_z += v->getPos()->z() - n->m_bbox.getLowerZ();
 			}
@@ -423,13 +435,19 @@ namespace chai3d {
 			// Convert to squared distances
 			float lower_dsq = best_dist_x * best_dist_x + best_dist_y * best_dist_y + best_dist_z * best_dist_z;
 			float upper_dsq = worst_dist_x * worst_dist_x + worst_dist_y * worst_dist_y + worst_dist_z * worst_dist_z;
+			
+			//cout << "upper - " << upper_dsq << " from " << worst_dist_x << " - " << worst_dist_y << " - " << worst_dist_z << endl;
+			//cout << "upper - " << lower_dsq << " from " << best_dist_x << " - " << best_dist_y << " - " << best_dist_z << endl;
 
 			// If his lower-bound squared distance
 			// is greater than lowest_upper_dist_sq,
 			// he can’t possibly hold the closest
 			// point, so we can discard this box and
 			// his children.
-			if (lower_dsq > lowest_upper_dist_sq) return;
+			if (lower_dsq > lowest_upper_dist_sq) {
+				//cout << "returned " << endl << "lower_dsq " <<  lower_dsq << " - lowest_upper_dist_sq " << lowest_upper_dist_sq << endl;
+				return;
+			}
 
 			// Check whether I’m the lowest
 			// upper-bound that we’ve seen so far,
@@ -456,7 +474,7 @@ namespace chai3d {
 		}
 
 		//find the closes point to a triangle
-		float Voxelizer::closest_point_triangle(Voxel * v, Triangle * t, cVector3d * closest_point)
+		float Voxelizer::closest_point_triangle(Voxel * v, Triangle * t)
 		{
 			// taken from
 			// http://www.geometrictools.com/Foundation/Distance/Wm3DistVector3Triangle3.cpp
@@ -471,8 +489,10 @@ namespace chai3d {
 			// and may not be copied or disclosed except in accordance with the terms
 			// of that agreement.
 			
-			return nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closest_point);
-			
+			cVector3d* closestPoint = new cVector3d();
+			float out = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closestPoint);
+			delete closestPoint;
+			return out;
 		}
 
 
