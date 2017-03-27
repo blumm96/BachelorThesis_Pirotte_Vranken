@@ -123,7 +123,7 @@ namespace chai3d {
 			root_index = object->getRoot();
 			cout << "Voxels worden berekend." << endl;
 			cVector3d vec(0,0,0);
-			voxels = (maakVoxels(&max, &min, object->getTriangles(), &vec));
+			voxels = (maakVoxels(&max, &min, &(object_nodes[object->getRoot()]), object,&vec,20));
 			mapDistances();
 
 			cout << voxels.size() << endl;
@@ -139,23 +139,33 @@ namespace chai3d {
 			return (*(v1->getPos()) - *(v2->getPos())).length();
 		}
 
-		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles, cVector3d* pos)
+		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, 
+			cVector3d * min, 
+			cCollisionAABBNode* node,
+			cCollisionAABB* tree,
+			cVector3d* pos,
+			float accuraatheid)
 		{
+			float lengteX = max->x() - min->x();
+			float lengteY = max->y() - min->y();
+			float lengteZ = max->z() - min->z();
 			std::vector<Voxel*> voxels;
-			for (float x = min->x(); x <= max->x(); x += 5) {
+			for (float x = min->x(); x <= max->x(); x += (float) (lengteX/accuraatheid)) {
 				cout << "=";
-				for (float y = min->y(); y <= max->y(); y += 5) {
-					for (float z = min->z(); z <= max->z(); z += 5) {
+				for (float y = min->y(); y <= max->y(); y += (float)(lengteY/accuraatheid)) {
+					for (float z = min->z(); z <= max->z(); z += (float)(lengteZ/accuraatheid)) {
 						Voxel* voxel = new Voxel();
 						voxel->setPos(x, y, z);
 
 						int intersecties = 0;
 
-						for (int i = 0; i < triangles.size(); i++) {
+						/*for (int i = 0; i < triangles.size(); i++) {
 							float waarde = 0;
 							int raakt = triangle_intersection(*(triangles[i]->p1), *(triangles[i]->p2), *(triangles[i]->p3), *(voxel->getPos()), cVector3d(1, 0, 0), &waarde, *pos);
 							if (raakt == 1) intersecties++;
-						}
+						}*/
+
+						rayBoxIntersection(node, tree, voxel->getPos(), intersecties);
 
 						if (intersecties % 2 != 0) voxels.push_back(voxel);
 						else delete voxel;
