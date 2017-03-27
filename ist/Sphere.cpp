@@ -133,9 +133,9 @@ namespace chai3d {
 		spherePoints.clear();
 
 		// Iterate through phi, theta then convert r,theta,phi to  XYZ
-		for (double phi = 0.; phi < 2 * PI; phi += PI / 10.) // Azimuth [0, 2PI]
+		for (double phi = 0.; phi < 2 * PI; phi += PI / 15.) // Azimuth [0, 2PI]
 		{
-			for (double theta = 0.; theta < PI; theta += PI / 10.) // Elevation [0, PI]
+			for (double theta = 0.; theta < PI; theta += PI / 15.) // Elevation [0, PI]
 			{
 				cVector3d point;
 				double x, y, z;
@@ -145,6 +145,22 @@ namespace chai3d {
 				point.set(x, y, z);
 				spherePoints.push_back(point);
 			}
+		}
+		// Iterate through phi, theta then convert r,theta,phi to  XYZ in outher direction
+		
+		for (double theta = 0.; theta < 2*PI; theta += PI / 15.)
+		{
+			for (double phi = 0.; phi < PI; phi += PI / 15.)
+			{
+				cVector3d point;
+				double x, y, z;
+				x = r * cos(phi) * sin(theta) + center.x();
+				y = r * sin(phi) * sin(theta) + center.y();
+				z = r            * cos(theta) + center.z();
+				point.set(x, y, z);
+				spherePoints.push_back(point);
+			}
+
 		}
 		return;
 	}
