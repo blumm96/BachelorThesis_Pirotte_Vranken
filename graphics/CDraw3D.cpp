@@ -411,7 +411,7 @@ void cDrawSphere(const double& a_radius,
 void cDrawSphere(std::vector<cVector3d> draw)
 {
 #ifdef C_USE_OPENGL
-	glBegin(GL_LINES_ADJACENCY);
+	glBegin(GL_TRIANGLE_STRIP);
 	for (int i = 0; i < draw.size(); i++) {
 		glVertex3d(draw[i].x(), draw[i].y(), draw[i].z());
 	}

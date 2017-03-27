@@ -273,14 +273,14 @@ namespace chai3d {
 				on the hull.Their di must now be set to the
 				new free radius.*/
 				
-				/*list<Voxel*>::iterator it = priorityList.begin();
+				list<Voxel*>::iterator it = priorityList.begin();
 				for (it; it != priorityList.end(); it++) {
 					Voxel* check = *(it);
 					double dist = distance(v, check);
-					if (check->getMinDist() < (dist-v->getMinDist())) {
+					if (check->getMinDist() > (dist - v->getMinDist())) {
 						check->setMinDist(dist - (v->getMinDist()));
 					}
-				}*/
+				}
 			}
 			
 			//IST hierarchy
