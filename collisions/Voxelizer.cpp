@@ -142,10 +142,10 @@ namespace chai3d {
 		std::vector<Voxel*> Voxelizer::maakVoxels(cVector3d * max, cVector3d * min, std::vector<Triangle*> triangles, cVector3d* pos)
 		{
 			std::vector<Voxel*> voxels;
-			for (float x = min->x(); x <= max->x(); x += 0.1f) {
+			for (float x = min->x(); x <= max->x(); x += 5) {
 				cout << "=";
-				for (float y = min->y(); y <= max->y(); y += 0.1f) {
-					for (float z = min->z(); z <= max->z(); z += 0.1f) {
+				for (float y = min->y(); y <= max->y(); y += 5) {
+					for (float z = min->z(); z <= max->z(); z += 5) {
 						Voxel* voxel = new Voxel();
 						voxel->setPos(x, y, z);
 
@@ -267,7 +267,9 @@ namespace chai3d {
 				for (it; it != priorityList.end(); it++) {
 					Voxel* check = *(it);
 					double dist = distance(v, check);
-					if (dist < (2 * v->getMinDist())) check->setMinDist(dist - (v->getMinDist()));
+					if ((dist < (2 * v->getMinDist())) && (check->getMinDist() < v->getMinDist())) {
+						check->setMinDist(dist - (v->getMinDist()));
+					}
 				}
 			}
 			
@@ -491,9 +493,19 @@ namespace chai3d {
 			// of that agreement.
 			
 			cVector3d* closestPoint = new cVector3d();
-			float out = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closestPoint);
+			//float out = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closestPoint);
+			float out = (float)(nearestpoint2(t->p1, t->p2, t->p3, v->getPos()));
 			delete closestPoint;
 			return out;
+		}
+
+		double Voxelizer::nearestpoint2(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p) {
+			double help1 = (*v0 - *p).length();
+			double help2 = (*v1 - *p).length();
+			double help3 = (*v2 - *p).length();
+
+			double min2 = (help1 + help2 + help3) / 3;
+			return min2 * min2;
 		}
 
 
