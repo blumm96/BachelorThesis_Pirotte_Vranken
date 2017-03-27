@@ -158,9 +158,9 @@ namespace chai3d {
 		void map_distance_to_voxel(Voxel* v);
 		//void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
-		float closest_point_triangle(Voxel* v, Triangle* t);
+		double closest_point_triangle(Voxel* v, Triangle* t);
 		void initialize();
-		double nearestpoint(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* closest);
+		double nearestpoint(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p);
 		double nearestpoint2(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p);
 		double distance(Voxel* v1, Voxel* v2);
 		//--------------------------------------------------------------------------

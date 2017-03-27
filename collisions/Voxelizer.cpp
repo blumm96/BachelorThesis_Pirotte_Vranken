@@ -486,25 +486,14 @@ namespace chai3d {
 		}
 
 		//find the closes point to a triangle
-		float Voxelizer::closest_point_triangle(Voxel * v, Triangle * t)
-		{
-			// taken from
-			// http://www.geometrictools.com/Foundation/Distance/Wm3DistVector3Triangle3.cpp
-			//
-			// Geometric Tools, Inc.
-			// http://www.geometrictools.com
-			// Copyright (c) 1998-2006. All Rights Reserved
-			//
-			// The Wild Magic Library (WM3) source code is supplied under the terms of
-			// the license agreement
-			// http://www.geometrictools.com/License/WildMagic3License.pdf
-			// and may not be copied or disclosed except in accordance with the terms
-			// of that agreement.
-			
-			//cVector3d* closestPoint = new cVector3d();
-			//float out = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closestPoint);
-			float out = (float)(nearestpoint2(t->p1, t->p2, t->p3, v->getPos()));
-			//delete closestPoint;
+		double Voxelizer::closest_point_triangle(Voxel * v, Triangle * t)
+		{	
+			double out = nearestpoint(t->p1, t->p2, t->p3, v->getPos());
+			//float out = (float)(nearestpoint2(t->p1, t->p2, t->p3, v->getPos()));
+
+			//compare
+			//cout << "working: " << out << " - test: " << outTest << endl;
+			//equal to 4 digits after point
 			return out;
 		}
 
@@ -518,7 +507,18 @@ namespace chai3d {
 			return min2*min2;
 		}
 
-
+		// taken from
+		// http://www.geometrictools.com/Foundation/Distance/Wm3DistVector3Triangle3.cpp
+		//
+		// Geometric Tools, Inc.
+		// http://www.geometrictools.com
+		// Copyright (c) 1998-2006. All Rights Reserved
+		//
+		// The Wild Magic Library (WM3) source code is supplied under the terms of
+		// the license agreement
+		// http://www.geometrictools.com/License/WildMagic3License.pdf
+		// and may not be copied or disclosed except in accordance with the terms
+		// of that agreement.
 		/**
 		* Finds the nearest distance between a point and a triangle.
 		*
@@ -538,8 +538,9 @@ namespace chai3d {
 		* @return The distance from point p to the nearest point on triangle v0, v1
 		* and v2.
 		*/
+		//returns the squared distance to a triangle
 		double Voxelizer::nearestpoint(
-			cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p, cVector3d* cl_point)
+			cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p)
 		{
 			//uv is eigenlijk een 2D vector
 
@@ -549,13 +550,14 @@ namespace chai3d {
 
 			cVector3d* closest = new cVector3d(0,0,0);
 			
-			kDiff->sub(*v0);
+			//kDiff = v0-p
+			kDiff->add(*v0);
 			kDiff->sub(*p);
-
-			kEdge0->sub(*v1);
+			//kEdge0 = v1-v0
+			kEdge0->add(*v1);
 			kEdge0->sub(*v0);
-
-			kEdge1->sub(*v2);
+			//kEdge1 = v2-v0
+			kEdge1->add(*v2);
 			kEdge1->sub(*v0);
 
 			double fA00 = kEdge0->lengthsq();
@@ -748,24 +750,11 @@ namespace chai3d {
 				}
 			}
 
-			// // account for numerical round-off error
-			// if (fSqrDistance < (double) 0.0)
-			// {
-			// fSqrDistance = (double) 0.0;
-			// }
-
-			// m_kClosestPoint0 = m_rkVector;
-			if (!closest->equals(NULL)) {
-				closest->zero();
-				kEdge0->mul(fS);
-				kEdge1->mul(fT);
-				closest->add(*kEdge1);
-				closest->add(*kEdge1);
-				closest->add(*v0);
-				// m_kClosestPoint1 = v0 + fS*kEdge0 + fT*kEdge1;
-			}
-
-			cl_point = closest;
+			 // account for numerical round-off error
+			 if (fSqrDistance < (double) 0.0)
+			 {
+			 fSqrDistance = (double) 0.0;
+			 }
 
 			delete kEdge0;
 			delete kEdge1;
@@ -775,7 +764,7 @@ namespace chai3d {
 			if (fSqrDistance < 0)
 				return 0;
 			else
-				return sqrt(fSqrDistance);
+				return fSqrDistance;
 		}
 
 
