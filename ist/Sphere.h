@@ -46,6 +46,9 @@ namespace chai3d {
 		// The triangle that goes with this sphere.
 		Triangle* triangle;
 
+		//Help vector for drawing the sphere
+		std::vector<cVector3d> spherePoints;
+
 	// CONCSTRUCTOR - DESTRUCTOR
 	public:
 
@@ -76,6 +79,8 @@ namespace chai3d {
 		void setPosition(cVector3d pos);
 		void setState(sphereState nstate);
 		void setTriangle(Triangle* setT);
+
+		void make_Sphere(cVector3d center, double r, std::vector<cVector3d> &spherePoints);
 
 		void render();
 	};

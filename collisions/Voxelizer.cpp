@@ -263,14 +263,14 @@ namespace chai3d {
 				on the hull.Their di must now be set to the
 				new free radius.*/
 				
-				list<Voxel*>::iterator it = priorityList.begin();
+				/*list<Voxel*>::iterator it = priorityList.begin();
 				for (it; it != priorityList.end(); it++) {
 					Voxel* check = *(it);
 					double dist = distance(v, check);
-					if ((dist < (2 * v->getMinDist())) && (check->getMinDist() < v->getMinDist())) {
+					if (check->getMinDist() < (dist-v->getMinDist())) {
 						check->setMinDist(dist - (v->getMinDist()));
 					}
-				}
+				}*/
 			}
 			
 			//IST hierarchy
@@ -345,7 +345,6 @@ namespace chai3d {
 
 				//find the closest point on the triangle
 				d_sq = closest_point_triangle(v, n->m_bbox.triangle);
-
 				
 				// Is this the shortest distance so far? 
 				if (d_sq < low_dist_sq) {
@@ -492,10 +491,10 @@ namespace chai3d {
 			// and may not be copied or disclosed except in accordance with the terms
 			// of that agreement.
 			
-			cVector3d* closestPoint = new cVector3d();
+			//cVector3d* closestPoint = new cVector3d();
 			//float out = nearestpoint(t->p1, t->p2, t->p3, v->getPos(), closestPoint);
 			float out = (float)(nearestpoint2(t->p1, t->p2, t->p3, v->getPos()));
-			delete closestPoint;
+			//delete closestPoint;
 			return out;
 		}
 
@@ -504,8 +503,9 @@ namespace chai3d {
 			double help2 = (*v1 - *p).length();
 			double help3 = (*v2 - *p).length();
 
-			double min2 = (help1 + help2 + help3) / 3;
-			return min2 * min2;
+			double min1 = cMin(help1, help2);
+			double min2 = cMin(min1, help3);
+			return min2*min2;
 		}
 
 

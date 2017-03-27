@@ -118,7 +118,34 @@ namespace chai3d {
 
 	void Sphere::render() {
 		if (state == sphereState::SPHERE_LEAF) {
-			cDrawSphere(radius, 10, 10, position);
+			make_Sphere(position, radius, spherePoints);
+			cDrawSphere(spherePoints);
 		}
+	}
+
+	// Input arguments
+	// in  - VERTEX center                 : defines the center of the sphere, all points will be offset from this
+	// in  - double r                      : defines the radius of the sphere
+	// out - vector<VERTEX> & spherePoints : vector containing the points of the sphere
+	void Sphere::make_Sphere(cVector3d center, double r, std::vector<cVector3d> &spherePoints)
+	{
+		const double PI = 3.141592653589793238462643383279502884197;
+		spherePoints.clear();
+
+		// Iterate through phi, theta then convert r,theta,phi to  XYZ
+		for (double phi = 0.; phi < 2 * PI; phi += PI / 10.) // Azimuth [0, 2PI]
+		{
+			for (double theta = 0.; theta < PI; theta += PI / 10.) // Elevation [0, PI]
+			{
+				cVector3d point;
+				double x, y, z;
+				x = r * cos(phi) * sin(theta) + center.x();
+				y = r * sin(phi) * sin(theta) + center.y();
+				z = r            * cos(theta) + center.z();
+				point.set(x, y, z);
+				spherePoints.push_back(point);
+			}
+		}
+		return;
 	}
 }

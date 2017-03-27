@@ -45,7 +45,8 @@
 //------------------------------------------------------------------------------
 #include "graphics/CDraw3D.h"
 #include "materials/CMaterial.h"
-
+#include "math/CVector3d.h"
+#include <vector>
 #include <iostream>
 //------------------------------------------------------------------------------
 #ifdef C_USE_OPENGL
@@ -388,6 +389,9 @@ void cDrawSphere(const double& a_radius,
     GLUquadricObj *quadObj;
     quadObj = gluNewQuadric ();
 
+	glClear(GL_COLOR_BUFFER_BIT);
+	glLoadIdentity();             /* clear the matrix */
+
     // set rendering style
     gluQuadricDrawStyle (quadObj, GLU_FILL);
 
@@ -400,6 +404,18 @@ void cDrawSphere(const double& a_radius,
 
     // delete our quadric object
     gluDeleteQuadric(quadObj);
+
+#endif
+}
+
+void cDrawSphere(std::vector<cVector3d> draw)
+{
+#ifdef C_USE_OPENGL
+	glBegin(GL_LINES_ADJACENCY);
+	for (int i = 0; i < draw.size(); i++) {
+		glVertex3d(draw[i].x(), draw[i].y(), draw[i].z());
+	}
+	glEnd();
 
 #endif
 }
