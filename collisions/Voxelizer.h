@@ -168,7 +168,7 @@ namespace chai3d {
 		//--------------------------------------------------------------------------
 		std::vector<cCollisionAABBNode> object_nodes;
 		unsigned long root_index;
-		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, std::vector<Triangle*> triangles, cVector3d* pos);
+		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, cCollisionAABBNode* node, cCollisionAABB* tree, cVector3d* pos, float accuraatheid);
 	};
 
 	//help function for comparing two voxels
