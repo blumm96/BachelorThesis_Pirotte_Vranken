@@ -27,7 +27,7 @@ namespace chai3d {
 
 	class Sphere {
 
-	// VARIABLES
+		// VARIABLES
 	private:
 
 		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0)
@@ -47,9 +47,9 @@ namespace chai3d {
 		Triangle* triangle;
 
 		//Help vector for drawing the sphere
-		std::vector<cVector3d> spherePoints;
+		std::vector<cVector3d*> spherePoints;
 
-	// CONCSTRUCTOR - DESTRUCTOR
+		// CONCSTRUCTOR - DESTRUCTOR
 	public:
 
 		// Constructor of sphere.
@@ -57,7 +57,7 @@ namespace chai3d {
 		// Destructor of sphere.
 		~Sphere();
 
-	// PUBLIC METHODS
+		// PUBLIC METHODS
 	public:
 		// Computes the distance between two spheres.
 		float distance(Sphere* sphere, cVector3d position1, cVector3d position2);
@@ -80,8 +80,8 @@ namespace chai3d {
 		void setState(sphereState nstate);
 		void setTriangle(Triangle* setT);
 
-		void make_Sphere(cVector3d center, double r, std::vector<cVector3d> &spherePoints);
-
+		void make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints);
+		inline void initRender() { if (spherePoints.empty()) make_Sphere(position, radius, spherePoints); };
 		void render();
 	};
 }

@@ -408,14 +408,16 @@ void cDrawSphere(const double& a_radius,
 #endif
 }
 
-void cDrawSphere(std::vector<cVector3d> draw)
+void cDrawSphere(std::vector<cVector3d*> draw)
 {
 #ifdef C_USE_OPENGL
-	glBegin(GL_LINES);
-	for (int i = 0; i < draw.size(); i++) {
-		glVertex3d(draw[i].x(), draw[i].y(), draw[i].z());
+	for (int i = 0; i < draw.size(); i+=3) {
+			glBegin(GL_LINES);
+			glVertex3d(draw[i]->x(), draw[i]->y(), draw[i]->z());
+			glVertex3d(draw[i + 1]->x(), draw[i + 1]->y(), draw[i + 1]->z());
+			glVertex3d(draw[i + 2]->x(), draw[i + 2]->y(), draw[i + 2]->z());
+			glEnd();
 	}
-	glEnd();
 
 #endif
 }

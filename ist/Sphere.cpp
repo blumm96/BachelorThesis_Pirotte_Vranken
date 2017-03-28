@@ -4,6 +4,10 @@
 
 #include "graphics/CDraw3D.h"
 
+#include <math.h>
+
+#include <vector>
+
 namespace chai3d {
 
 	/*
@@ -20,6 +24,11 @@ namespace chai3d {
 			//delete children[i];
 		//}
 		//delete triangle;
+
+		//delete all sphere points
+		for (int i = 0; i < spherePoints.size(); i++) {
+			if(spherePoints[i] != nullptr) delete spherePoints[i];
+		}
 	}
 
 	/*
@@ -118,7 +127,7 @@ namespace chai3d {
 
 	void Sphere::render() {
 		if (state == sphereState::SPHERE_LEAF) {
-			make_Sphere(position, radius, spherePoints);
+			initRender(); //this function needs to be called if the sphere changes (center or radius)
 			cDrawSphere(spherePoints);
 		}
 	}
@@ -127,40 +136,63 @@ namespace chai3d {
 	// in  - VERTEX center                 : defines the center of the sphere, all points will be offset from this
 	// in  - double r                      : defines the radius of the sphere
 	// out - vector<VERTEX> & spherePoints : vector containing the points of the sphere
-	void Sphere::make_Sphere(cVector3d center, double r, std::vector<cVector3d> &spherePoints)
+	void Sphere::make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints)
 	{
-		const double PI = 3.141592653589793238462643383279502884197;
+		const double PI = M_PI;
+		const int numRings = 10;
+		const int numElem = 10;
+
+		const float numRingsf = (float)numRings;
+		const float numElemf = (float)numElem;
+
 		spherePoints.clear();
 
-		// Iterate through phi, theta then convert r,theta,phi to  XYZ
-		for (double phi = 0.; phi < 2 * PI; phi += PI / 15.) // Azimuth [0, 2PI]
-		{
-			for (double theta = 0.; theta < PI; theta += PI / 15.) // Elevation [0, PI]
-			{
-				cVector3d point;
-				double x, y, z;
-				x = r * cos(phi) * sin(theta) + center.x();
-				y = r * sin(phi) * sin(theta) + center.y();
-				z = r            * cos(theta) + center.z();
-				point.set(x, y, z);
-				spherePoints.push_back(point);
-			}
-		}
-		// Iterate through phi, theta then convert r,theta,phi to  XYZ in outher direction
-		
-		for (double theta = 0.; theta < 2*PI; theta += PI / 15.)
-		{
-			for (double phi = 0.; phi < PI; phi += PI / 15.)
-			{
-				cVector3d point;
-				double x, y, z;
-				x = r * cos(phi) * sin(theta) + center.x();
-				y = r * sin(phi) * sin(theta) + center.y();
-				z = r            * cos(theta) + center.z();
-				point.set(x, y, z);
-				spherePoints.push_back(point);
-			}
+		//first index = the ring
+		//second index = element in the ring
+		std::vector<std::vector<cVector3d*>> horRings;
 
+		// Iterate through phi, theta then convert r,theta,phi to  XYZ
+		double theta, phi;
+		theta = phi = 0;
+
+		for (int i = 0; i < numRings; i++) // Elevation [0, PI]
+		{	
+			std::vector<cVector3d*> row;
+			row.clear();
+			for (int j = 0; j < numElem; j++) // Azimuth [0, 2PI]		
+			{
+				cVector3d* point = new cVector3d();
+				double x, y, z;
+				if (i == 0) {
+					x = 0 + center.x();
+					y = 0 + center.y();
+					z = r + center.z();
+				}
+				else if (i == numRings-1) {
+					x = 0 + center.x();
+					y = 0 + center.y();
+					z = -r + center.z();
+				}
+				else {
+					x = r * cos(phi) * sin(theta) + center.x();
+					y = r * sin(phi) * sin(theta) + center.y();
+					z = r            * cos(theta) + center.z();
+				}
+				point->set(x, y, z);
+				row.push_back(point);
+				phi += (2 * PI) / numElemf;
+			}
+			row.push_back(row[0]);
+			horRings.push_back(row);
+			theta += PI / numRingsf;
+		}
+
+		for (int k = 0; k < numRings-1; k++) {
+			for (int l = 0; l < numElem; l++) {
+				spherePoints.push_back(horRings[k][l]);
+				spherePoints.push_back(horRings[k+1][l]);
+				spherePoints.push_back(horRings[k+1][l+1]);
+			}
 		}
 		return;
 	}
