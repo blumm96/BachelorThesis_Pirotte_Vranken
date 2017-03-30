@@ -68,6 +68,8 @@ namespace chai3d {
 
 		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
 
+		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
+
 	};
 }
 
