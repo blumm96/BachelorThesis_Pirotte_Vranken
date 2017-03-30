@@ -248,7 +248,7 @@ namespace chai3d {
 				priorityList.pop_front();
 
 				Sphere* s = new Sphere();
-				s->setPosition(*(v->getPos()));
+				s->setPosition(*(v->getPos()) - positie);
 				s->setRadius(v->getMinDist());
 				s->setState(sphereState::SPHERE_LEAF);
 				s->setTriangle(closest_triangle);
