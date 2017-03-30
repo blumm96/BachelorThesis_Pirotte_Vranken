@@ -280,9 +280,10 @@ namespace chai3d {
 	void InnerSphereTree::render(cRenderOptions& a_options) {
 #ifdef C_USE_OPENGL
 		
+		//set rendering settings
 		glDisable(GL_LIGHTING);
 		glLineWidth(1.0);
-		glColor4fv(cColorf(1.0, 0, 0).getData());
+		glColor4fv(m_color.getData());
 	
 
 		if (prevDisplayDepth != m_displayDepth) {
