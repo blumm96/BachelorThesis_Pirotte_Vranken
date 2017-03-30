@@ -10,6 +10,8 @@
 
 namespace chai3d {
 
+	cVector3d Sphere::rootPositie = cVector3d(0, 0, 0);
+
 	/*
 		The constructor of a sphere.
 	*/
@@ -113,6 +115,11 @@ namespace chai3d {
 	}
 
 	void Sphere::setPosition(cVector3d pos) {
+		if (state == sphereState::SPHERE_ROOT) {
+			Sphere::rootPositie = pos;
+			position.set(0, 0, 0); 
+			return;
+		}
 		position = pos;
 	}
 

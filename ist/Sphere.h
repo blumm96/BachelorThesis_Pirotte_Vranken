@@ -12,6 +12,7 @@
 #include "collisions/CGenericCollision.h"
 #include "math/CVector3d.h"
 #include "collisions/Triangle.h"
+#include <iostream>
 
 #include <vector>
 
@@ -52,6 +53,8 @@ namespace chai3d {
 		// CONCSTRUCTOR - DESTRUCTOR
 	public:
 
+		static cVector3d Sphere::rootPositie;
+
 		// Constructor of sphere.
 		Sphere();
 		// Destructor of sphere.
@@ -84,7 +87,13 @@ namespace chai3d {
 		void addChild(Sphere* child);
 
 		void make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints);
-		inline void initRender() { if (spherePoints.empty()) make_Sphere(position, radius, spherePoints); };
+		inline void initRender() { 
+
+			if (spherePoints.empty()) { 
+				make_Sphere(position, radius, spherePoints); 
+			}
+
+		}
 		void render();
 	};
 }

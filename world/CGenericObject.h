@@ -59,6 +59,7 @@
 #include "math/CTransform.h"
 #include "system/CGenericType.h"
 #include "collisions/CGenericCollision.h"
+#include "ist/Sphere.h"
 //------------------------------------------------------------------------------
 #include <vector>
 #include <list>
@@ -168,6 +169,10 @@ public:
     virtual void setLocalPos(const cVector3d& a_localPos)
     {
         m_localPos = a_localPos;
+		if (m_collisionDetector == nullptr) return;
+		if (m_collisionDetector->getCollisionTreeType() == CollisionTreeType::IST) {
+			Sphere::rootPositie = m_localPos;
+		}
     }
 
 #ifdef C_USE_EIGEN

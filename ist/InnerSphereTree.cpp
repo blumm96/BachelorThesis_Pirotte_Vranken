@@ -219,7 +219,7 @@ namespace chai3d {
 
 		for (int i = 0; i < 4; i++) {
 			Sphere* s = new Sphere();
-			s->setPosition(w[i].pos);
+			s->setPosition(w[i].pos - Sphere::rootPositie);
 			s->setRadius(max[i]);
 			s->setState(sphereState::SPHERE_INTERNAL);
 			s->setDepth(node->getDepth()+1);
@@ -258,9 +258,9 @@ namespace chai3d {
 		Sphere *root = new Sphere();
 		root->setRadius((float)maxD);
 		root->setParent(NULL);
+		root->setState(sphereState::SPHERE_ROOT);
 		root->setPosition(middle);
 		root->setDepth(0);
-		root->setState(sphereState::SPHERE_ROOT);
 
 		rootSphere = root;
 	}
@@ -285,6 +285,7 @@ namespace chai3d {
 		glLineWidth(1.0);
 		glColor4fv(m_color.getData());
 	
+		cout << Sphere::rootPositie << endl;
 
 		if (prevDisplayDepth != m_displayDepth) {
 			spheres.clear();
