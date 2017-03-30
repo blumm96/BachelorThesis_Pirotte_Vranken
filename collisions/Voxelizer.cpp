@@ -107,7 +107,6 @@ namespace chai3d {
 
 		void Voxelizer::setObject(cCollisionAABB* c){
 			object = c;
-			initialize();
 		}
 
 		//--------------------------------------------------------------------------
@@ -122,8 +121,7 @@ namespace chai3d {
 			cVector3d min = object_nodes[object->getRoot()].m_bbox.getMin();
 			root_index = object->getRoot();
 			cout << "Voxels worden berekend." << endl;
-			cVector3d vec(0,0,0);
-			voxels = (maakVoxels(&max, &min, &(object_nodes[object->getRoot()]), object,&vec,10));
+			voxels = (maakVoxels(&max, &min, &(object_nodes[object->getRoot()]), object,&positie,accuraatheid));
 			mapDistances();
 
 			cout << voxels.size() << endl;
@@ -214,7 +212,7 @@ namespace chai3d {
 
 		}
 
-		InnerSphereTree* Voxelizer::buildInnerTree(int diepte)
+		InnerSphereTree* Voxelizer::buildInnerTree(int diepte, cVector3d positie, double size)
 		{
 			//build inner sphere structure
 
@@ -285,6 +283,10 @@ namespace chai3d {
 			
 			//IST hierarchy
 			InnerSphereTree* tree = new InnerSphereTree();
+
+			tree->setPositie(positie);
+			tree->setSize(size);
+
 			tree->buildTree(innerspheres, diepte);
 
 			//print inner spheres
