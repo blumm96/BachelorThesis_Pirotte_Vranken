@@ -141,10 +141,8 @@ namespace chai3d {
 	}
 
 	void Sphere::render() {
-		if (state == sphereState::SPHERE_LEAF) {
 			initRender(); //this function needs to be called if the sphere changes (center or radius)
 			cDrawSphere(spherePoints);
-		}
 	}
 
 	// Input arguments

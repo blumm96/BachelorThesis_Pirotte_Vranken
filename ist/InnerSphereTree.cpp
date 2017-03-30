@@ -11,7 +11,7 @@ namespace chai3d {
 		Constructor of an inner sphere tree.
 	*/
 	InnerSphereTree::InnerSphereTree() {
-		
+		prevDisplayDepth = m_displayDepth;
 	}
 
 	/*
@@ -93,7 +93,8 @@ namespace chai3d {
 	}
 
 	int InnerSphereTree::buildTree(std::vector<Sphere*> leafs, const int a_depth)
-	{
+	{	
+		//set spheres to render in the vector spheres
 		for (int i = 0; i < leafs.size(); i++) {
 			spheres.push_back(leafs[i]);
 		}
@@ -263,6 +264,17 @@ namespace chai3d {
 
 		rootSphere = root;
 	}
+
+	void InnerSphereTree::setSpheresToRender(Sphere* s, std::vector<Sphere*>& spheresToDraw)
+	{	
+		if (s->getDepth() == m_displayDepth || s->getState() == sphereState::SPHERE_LEAF) {
+			spheresToDraw.push_back(s);
+			return;
+		}
+		for (int i = 0; i < s->getChildren().size(); i++) {
+			setSpheresToRender(s->getChildren()[i], spheresToDraw);
+		}
+	}
 	
 
 	void InnerSphereTree::render(cRenderOptions& a_options) {
@@ -271,6 +283,14 @@ namespace chai3d {
 		glDisable(GL_LIGHTING);
 		glLineWidth(1.0);
 		glColor4fv(cColorf(1.0, 0, 0).getData());
+	
+
+		if (prevDisplayDepth != m_displayDepth) {
+			spheres.clear();
+			setSpheresToRender(rootSphere, spheres); //command this line out to render all leafs
+			prevDisplayDepth = m_displayDepth;
+		}
+		
 		for (int i = 0; i < spheres.size(); i++) {
 			spheres[i]->render();
 		}

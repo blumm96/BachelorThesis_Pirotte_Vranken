@@ -58,6 +58,7 @@ namespace chai3d {
 		// The rootsphere
 		Sphere* rootSphere;
 
+		//set spheres to render in the vector spheres
 		std::vector<Sphere*> spheres;
 
 		// De positie van het model.
@@ -65,6 +66,8 @@ namespace chai3d {
 
 		// De grootte van de bounding box.
 		double size;
+
+		int prevDisplayDepth;
 
 	// PROTECTED FUNCTIONS
 	public:
@@ -82,6 +85,8 @@ namespace chai3d {
 		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
 
 		void maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle);
+
+		void setSpheresToRender(Sphere* s, std::vector<Sphere*>& spheres);
 
 	};
 }
