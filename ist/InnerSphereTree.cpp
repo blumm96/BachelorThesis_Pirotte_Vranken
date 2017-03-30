@@ -115,7 +115,11 @@ namespace chai3d {
 
 		//define epsilon
 		double eps = 0.00001 * size;
+		//first index of weights is the number of the leaf
 		std::vector<std::vector<int>> weights;
+		//row with prototypes per leaf
+		std::vector<int> row;
+
 		int t = 0;
 		bool stop = false;
 
@@ -136,8 +140,10 @@ namespace chai3d {
 						else n[k]++;
 					}
 				}
-
-				for (int i = 0; i < 4; i++) weights[i][j] = n[i];
+				row.clear();
+				for (int i = 0; i < 4; i++) row.push_back(n[i]);
+				//first index of weights is the number of the leaf
+				weights.push_back(row);
 			}
 
 			//calculate new prototype positions
@@ -148,7 +154,7 @@ namespace chai3d {
 				for (int i = 0; i < leafs.size(); i++) {
 					float volume = pow(leafs[i]->getRadius(), 3)*(4.0 / 3.0)* M_PI;
 
-					float hL = exp(-weights[0][i] / L);
+					float hL = exp(-weights[i][k] / L);
 					float f = hL*volume;
 					cVector3d vec = cVector3d(0, 0, 0);
 					vec = f*(leafs[i]->getPosition());
