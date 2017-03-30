@@ -101,10 +101,15 @@ namespace chai3d {
 		// METHODS:
 		//--------------------------------------------------------------------------
 		void mapDistances();
-		InnerSphereTree* buildInnerTree(int diepte);
+		InnerSphereTree* buildInnerTree(int diepte, cVector3d positie, double size);
 
 		void find_closest_point(Voxel* v);
 		void setObject(cCollisionAABB* c);
+
+		void initialize();
+
+		inline void setPositie(cVector3d n_positie) { positie = n_positie; }
+		inline void setAccuraatheid(int n_accuraatheid) { accuraatheid = n_accuraatheid; }
 
 	public:
 		//--------------------------------------------------------------------------
@@ -159,16 +164,17 @@ namespace chai3d {
 		//void seed_next_voxel_search();
 		void process_node(cCollisionAABBNode* n, Voxel* v);
 		double closest_point_triangle(Voxel* v, Triangle* t);
-		void initialize();
 		double nearestpoint(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p);
 		double nearestpoint2(cVector3d* v0, cVector3d* v1, cVector3d* v2, cVector3d* p);
 		double distance(Voxel* v1, Voxel* v2);
+		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, cCollisionAABBNode* node, cCollisionAABB* tree, cVector3d* pos, float accuraatheid);
 		//--------------------------------------------------------------------------
 		// HELPMEMBERS:
 		//--------------------------------------------------------------------------
 		std::vector<cCollisionAABBNode> object_nodes;
 		unsigned long root_index;
-		std::vector<Voxel*> maakVoxels(cVector3d* max, cVector3d* min, cCollisionAABBNode* node, cCollisionAABB* tree, cVector3d* pos, float accuraatheid);
+		cVector3d positie;
+		int accuraatheid;
 	};
 
 	//help function for comparing two voxels

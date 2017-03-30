@@ -58,8 +58,17 @@ namespace chai3d {
 
 		std::vector<Sphere*> spheres;
 
+		// De positie van het model.
+		cVector3d positie;
+
+		// De grootte van de bounding box.
+		double size;
+
 	// PROTECTED FUNCTIONS
 	public:
+
+		inline void setPositie(cVector3d n_positie) { positie = n_positie; }
+		inline void setSize(double n_size) { size = n_size; }
 
 		// This method is used to recursively build the collision tree.
 		int buildTree(std::vector<Sphere*> leafs, const int a_depth);
@@ -69,6 +78,8 @@ namespace chai3d {
 		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
 
 		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
+
+		void maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle);
 
 	};
 }

@@ -78,6 +78,9 @@ namespace chai3d {
 			spheres.push_back(leafs[i]);
 		}
 
+		maakRootSphere(leafs, positie);
+
+		//BNG(size, rootSphere, leafs, a_depth);
 
 		return 0;
 	}
@@ -215,6 +218,29 @@ namespace chai3d {
 			leafs[i]->setParent(node);
 			node->addChild(leafs[i]);
 		}
+	}
+
+	void InnerSphereTree::maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle) {
+
+		double maxD = 0;
+
+		for (int i = 0; i < leafs.size(); i++) {
+
+			cVector3d help = middle - leafs[i]->getPosition();
+			double afstand = help.length() + leafs[i]->getRadius();
+			if (afstand > maxD) {
+				maxD = afstand;
+			}
+		}
+
+		Sphere *root = new Sphere();
+		root->setRadius((float)maxD);
+		root->setParent(NULL);
+		root->setPosition(middle);
+		root->setDepth(0);
+		root->setState(sphereState::SPHERE_ROOT);
+
+		rootSphere = root;
 	}
 	
 
