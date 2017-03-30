@@ -50,6 +50,8 @@ namespace chai3d {
 		//This method prints the AABB box tree for this mesh
 		virtual void printAABBCollisionTree(int maxDiepte);
 
+		void printChildren(Sphere* s);
+
 	// DATA MEMBERS
 	private:
 

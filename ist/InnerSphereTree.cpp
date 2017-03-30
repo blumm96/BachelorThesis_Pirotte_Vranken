@@ -22,12 +22,32 @@ namespace chai3d {
 	}
 
 	void InnerSphereTree::printAABBCollisionTree(int diepte) {
+		cout << endl;
 		cout << "INNER SPHERE TREE" << endl;
-		for (int i = 0; i < spheres.size(); i++) {
-			cout << "Sphere: " << spheres[i]->getPosition() << endl;
+		
+		this->printChildren(rootSphere);
+
+	}
+
+	void InnerSphereTree::printChildren(Sphere* s) {
+
+		for (int i = 0; i < s->getDepth(); i++) {
+			cout << "\t";
 		}
 
-		
+		cout << "Radius: " << s->getRadius() << " Positie: " << s->getPosition() << endl;
+		for (int i = 0; i < s->getChildren().size(); i++) {
+			if (s->getChildren()[i]->getState() != sphereState::SPHERE_LEAF) {
+				this->printChildren(s->getChildren()[i]);
+			}
+			else {
+				for (int j = 0; j < s->getChildren()[i]->getDepth(); j++) {
+					cout << "\t";
+				}
+				cout << "Radius: " << s->getChildren()[i]->getRadius() << " Positie: " << s->getChildren()[i]->getPosition() << endl;
+			}
+		}
+
 	}
 
 	/*
@@ -80,7 +100,7 @@ namespace chai3d {
 
 		maakRootSphere(leafs, positie);
 
-		//BNG(size, rootSphere, leafs, a_depth);
+		BNG(size, rootSphere, leafs, a_depth);
 
 		return 0;
 	}
@@ -216,6 +236,7 @@ namespace chai3d {
 	{
 		for (int i = 0; i < leafs.size(); i++) {
 			leafs[i]->setParent(node);
+			leafs[i]->setDepth(node->getDepth() + 1);
 			node->addChild(leafs[i]);
 		}
 	}

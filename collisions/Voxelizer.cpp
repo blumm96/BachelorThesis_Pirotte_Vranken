@@ -75,10 +75,11 @@ namespace chai3d {
 
 	How to use this class:
 		1. create a voxelizer with the constructor
-		2. set the object which needs to be voxelized (setObject())
-		3. map from the voxel to the distances to each voxel (mapDistances())
-		4. BuildInnerTree
-		5. delete the voxelizer
+		2. set the object which needs to be voxelized (setObject()), set the position and set the accuracy
+		3. Initialize
+		4. map from the voxel to the distances to each voxel (mapDistances())
+		5. BuildInnerTree
+		6. delete the voxelizer
 	*/
 	//==============================================================================
 
