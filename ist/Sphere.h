@@ -79,6 +79,8 @@ namespace chai3d {
 		void setPosition(cVector3d pos);
 		void setState(sphereState nstate);
 		void setTriangle(Triangle* setT);
+		void setParent(Sphere* n_parent);
+		void setDepth(int d);
 
 		void make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints);
 		inline void initRender() { if (spherePoints.empty()) make_Sphere(position, radius, spherePoints); };

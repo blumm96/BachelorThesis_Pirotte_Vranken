@@ -123,7 +123,7 @@ namespace chai3d {
 			root_index = object->getRoot();
 			cout << "Voxels worden berekend." << endl;
 			cVector3d vec(0,0,0);
-			voxels = (maakVoxels(&max, &min, &(object_nodes[object->getRoot()]), object,&vec,20));
+			voxels = (maakVoxels(&max, &min, &(object_nodes[object->getRoot()]), object,&vec,10));
 			mapDistances();
 
 			cout << voxels.size() << endl;

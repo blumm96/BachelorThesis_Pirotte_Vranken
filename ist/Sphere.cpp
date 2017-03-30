@@ -125,6 +125,21 @@ namespace chai3d {
 		triangle = setT;
 	}
 
+	void Sphere::setParent(Sphere * n_parent)
+	{
+		parent = n_parent;
+	}
+
+	void Sphere::setDepth(int d)
+	{
+		depth = d;
+	}
+
+	void Sphere::addChild(Sphere * child)
+	{
+		children.push_back(child);
+	}
+
 	void Sphere::render() {
 		if (state == sphereState::SPHERE_LEAF) {
 			initRender(); //this function needs to be called if the sphere changes (center or radius)

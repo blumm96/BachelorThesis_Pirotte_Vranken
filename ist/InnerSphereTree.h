@@ -66,7 +66,7 @@ namespace chai3d {
 
 		inline std::vector<Sphere*> getSpheres() { return spheres; }
 
-		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs);
+		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
 
 	};
 }

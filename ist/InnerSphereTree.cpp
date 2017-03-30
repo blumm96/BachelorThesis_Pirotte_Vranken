@@ -71,19 +71,29 @@ namespace chai3d {
 	Sphere* InnerSphereTree::getRootSphere() {
 		return rootSphere;
 	}
+
 	int InnerSphereTree::buildTree(std::vector<Sphere*> leafs, const int a_depth)
 	{
 		for (int i = 0; i < leafs.size(); i++) {
 			spheres.push_back(leafs[i]);
 		}
+
+
 		return 0;
 	}
 
 	//implementation of the BNG algorthm
 	//n-->the number of prototypes
-	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs)
+	//size is the max axis of the boundary box of the object
+	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth)
 	{
 #define TMAX 500
+		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
+		if (node->getDepth() == a_depth) {
+			addLeafs(leafs, node);
+			return;
+		}
+
 		struct prototype {
 			cVector3d pos;
 			std::vector<Sphere*> lfs;
@@ -182,10 +192,22 @@ namespace chai3d {
 			s->setPosition(w[i].pos);
 			s->setRadius(max[i]);
 			s->setState(sphereState::SPHERE_INTERNAL);
+			s->setDepth(node->getDepth()+1);
+			s->setParent(node);
 			
 			//set as child of node
+			node->addChild(s);
 
-			BNG(size, s, w[i].lfs);
+			//recursive call
+			BNG(size, s, w[i].lfs, a_depth);
+		}
+	}
+
+	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node)
+	{
+		for (int i = 0; i < leafs.size(); i++) {
+			leafs[i]->setParent(node);
+			node->addChild(leafs[i]);
 		}
 	}
 	
