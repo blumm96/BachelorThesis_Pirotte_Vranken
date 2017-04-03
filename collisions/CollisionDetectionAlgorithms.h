@@ -25,6 +25,8 @@ Algorithm sources:
 #include "math/CMaths.h"
 #include <iostream>
 #include <limits>
+
+using namespace std;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
@@ -61,7 +63,7 @@ namespace chai3d {
 
 	//De waarde van mindist gaat recursief worden aangepast door deze functie.
 	//Dit is voor AABB
-	void checkDistance(cCollisionAABBNode* A,
+	inline void checkDistance(cCollisionAABBNode* A,
 		cCollisionAABBNode* B,
 		double& mindist,
 		cCollisionAABB* tree_A,
@@ -109,7 +111,7 @@ namespace chai3d {
 		\param maxdiepte		The maximum depth the algorithm is allowed to check.
 		\param huidigeDiepte	The current depth of the checking algorithm.
 	*/
-	float checkDistance(
+	inline float checkDistanceSphere(
 		Sphere* sphereA,
 		Sphere* sphereB,
 		InnerSphereTree* tree1,
@@ -119,11 +121,12 @@ namespace chai3d {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
-		if ((sphereA->getDepth() > maxdiepte)||(sphereB->getDepth()>maxdiepte)) return sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
+		float afstand = sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
+
+		if (sphereA->getDepth() == maxdiepte) return afstand;
 
 		// Calculate the distance between the 2 spheres. 
 		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
-		float afstand = sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
 		if (afstand > 0) return afstand;
 
 		// If the 2 spheres collide and we are not at the maximum depth yet, continue the recursion.
@@ -145,24 +148,18 @@ namespace chai3d {
 
 				// If the children aren't leaf nodes, continue the recursion.
 				if ((newA->getState() != sphereState::SPHERE_LEAF) && (newB->getState() != sphereState::SPHERE_LEAF)) {
-					afstand = cMin(checkDistance(newA, newB, tree1, tree2, maxdiepte, stop), afstand);
+					afstand = cMin(checkDistanceSphere(newA, newB, tree1, tree2, maxdiepte, stop), afstand);
 				}
 				// If both children are leaf nodes, calculate the distance.
 				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
-				else if ((newA->getState() == sphereState::SPHERE_LEAF) && (newB->getState() == sphereState::SPHERE_LEAF)) {
+				else if ((newA->getState() == sphereState::SPHERE_LEAF) || (newB->getState() == sphereState::SPHERE_LEAF)) {
+					
 					afstand = newA->distance(newB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
 					if (afstand <= 0) {
 						stop = true;
 						goto checkDistanceEinde;
 					}
-				}
 
-				// If one of the spheres is a leaf, continue with the other but keep the leaf.
-				else if (newB->getState() == sphereState::SPHERE_LEAF) {
-					afstand = cMin(checkDistance(newA, sphereB, tree1, tree2, maxdiepte, stop), afstand);
-				}
-				else if (newA->getState() == sphereState::SPHERE_LEAF) {
-					afstand = cMin(checkDistance(sphereA, newB, tree1, tree2, maxdiepte, stop), afstand);
 				}
 			}
 		}
@@ -182,39 +179,39 @@ namespace chai3d {
 		\param sphereB		The sphere of the second tree to start the collision detection.
 	
 	*/
-	float checkDistanceFromSphere(
-		InnerSphereTree* tree1,
-		InnerSphereTree* tree2,
-		int maxdepth,
-		Sphere* sphereA,
-		Sphere* sphereB, 
-		bool& stop) {
+	//float checkDistanceFromSphere(
+	//	InnerSphereTree* tree1,
+	//	InnerSphereTree* tree2,
+	//	int maxdepth,
+	//	Sphere* sphereA,
+	//	Sphere* sphereB, 
+	//	bool& stop) {
 
-		float afstand = std::numeric_limits<float>::infinity();
+	//	float afstand = std::numeric_limits<float>::infinity();
 
-		// If the collision isn't between the 2 specified spheres,
-		// the children of the parents should be checked.
-		if ((sphereA->getState() != sphereState::SPHERE_ROOT) && (sphereB->getState() != sphereState::SPHERE_ROOT)) {
-			Sphere* parentA = sphereA->getParent();
-			Sphere* parentB = sphereB->getParent();
+	//	// If the collision isn't between the 2 specified spheres,
+	//	// the children of the parents should be checked.
+	//	if ((sphereA->getState() != sphereState::SPHERE_ROOT) && (sphereB->getState() != sphereState::SPHERE_ROOT)) {
+	//		Sphere* parentA = sphereA->getParent();
+	//		Sphere* parentB = sphereB->getParent();
 
-			for (int i = 0; i < parentA->getChildren().size(); i++) {
-				for (int j = 0; j < parentB->getChildren().size(); j++) {
+	//		for (int i = 0; i < parentA->getChildren().size(); i++) {
+	//			for (int j = 0; j < parentB->getChildren().size(); j++) {
 
-					if((sphereA != parentA->getChildren()[i] || (sphereB != parentA->getChildren()[i])))
-					afstand = checkDistance(parentA->getChildren()[i], parentB->getChildren()[j], tree1, tree2, maxdepth, stop);
+	//				if((sphereA != parentA->getChildren()[i] || (sphereB != parentA->getChildren()[i])))
+	//				afstand = checkDistance(parentA->getChildren()[i], parentB->getChildren()[j], tree1, tree2, maxdepth, stop);
 
-					if (stop) goto checkDistanceFromSphereEinde;
-				}
-			}
+	//				if (stop) goto checkDistanceFromSphereEinde;
+	//			}
+	//		}
 
-			checkDistanceFromSphere(tree1, tree2, maxdepth, parentA, parentB, stop);
+	//		checkDistanceFromSphere(tree1, tree2, maxdepth, parentA, parentB, stop);
 
-		}
+	//	}
 
-	checkDistanceFromSphereEinde: return afstand;
+	//checkDistanceFromSphereEinde: return afstand;
 
-	}
+	//}
 
 	//Help functions
 	/////////////////////////////////////////////////////////////////////////////////

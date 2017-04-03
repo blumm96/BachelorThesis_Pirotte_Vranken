@@ -170,9 +170,6 @@ public:
     {
         m_localPos = a_localPos;
 		if (m_collisionDetector == nullptr) return;
-		if (m_collisionDetector->getCollisionTreeType() == CollisionTreeType::IST) {
-			Sphere::rootPositie = m_localPos;
-		}
     }
 
 #ifdef C_USE_EIGEN

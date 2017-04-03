@@ -50,10 +50,11 @@ namespace chai3d {
 		//Help vector for drawing the sphere
 		std::vector<cVector3d*> spherePoints;
 
+		// The rootsphere of this sphere.
+		Sphere* rootSphere;
+
 		// CONCSTRUCTOR - DESTRUCTOR
 	public:
-
-		static cVector3d Sphere::rootPositie;
 
 		// Constructor of sphere.
 		Sphere();
@@ -77,6 +78,12 @@ namespace chai3d {
 		// Get the depth of the sphere in the innersphere tree.
 		int getDepth();
 		Triangle* getTriangle();
+
+		inline void setRootSphere(Sphere* r) { rootSphere = r; }
+		inline Sphere* getRootSphere() { 
+			if(state != sphereState::SPHERE_ROOT) return rootSphere; 
+			return this;
+		}
 
 		void setRadius(float r);
 		void setPosition(cVector3d pos);

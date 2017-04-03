@@ -1,4 +1,5 @@
 #include "ist/InnerSphereTree.h"
+#include "collisions/CollisionDetectionAlgorithms.h"
 #include <iostream>
 #include <math.h>
 #include <limits>
@@ -73,8 +74,15 @@ namespace chai3d {
 			Sphere* parent_A = IST_B->getRootSphere();
 			Sphere* parent_B = IST_A->getRootSphere();
 
-			double mindist = std::numeric_limits<double>::max();
-			int huidige = 0;
+			bool stop = false;
+
+			// Komt uit Collision detection algorithms
+			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop);
+
+			std::cout << collisionfeedback << std::endl;
+
+			if (collisionfeedback <= 0) return true;
+			else return false;
 		}
 		case traversalSetting::COMBINED: return false;
 		case traversalSetting::VOLUME_PEN: return false;
@@ -101,7 +109,7 @@ namespace chai3d {
 
 		maakRootSphere(leafs, positie);
 
-		BNG(size, rootSphere, leafs, a_depth);
+		BNG(size, rootSphere, leafs, a_depth, rootSphere);
 
 		return 0;
 	}
@@ -109,12 +117,12 @@ namespace chai3d {
 	//implementation of the BNG algorthm
 	//n-->the number of prototypes
 	//size is the max axis of the boundary box of the object
-	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth)
+	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root)
 	{
 #define TMAX 500
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
 		if (node->getDepth() == a_depth) {
-			addLeafs(leafs, node);
+			addLeafs(leafs, node, root);
 			return;
 		}
 
@@ -125,9 +133,9 @@ namespace chai3d {
 
 		prototype w[4];
 
-		double x = node->getPosition().x();
-		double y = node->getPosition().y();
-		double z = node->getPosition().z();
+		double x = node->getPosition().x() + node->getRootSphere()->getPosition().x();
+		double y = node->getPosition().y() + node->getRootSphere()->getPosition().y();
+		double z = node->getPosition().z() + node->getRootSphere()->getPosition().z();
 
 		double r = node->getRadius();
 		
@@ -153,10 +161,12 @@ namespace chai3d {
 			for (int j = 0; j < leafs.size(); j++) {
 				double d[4];
 				int n[4] = { 0,0,0,0 };
-				d[0] = (leafs[j]->getPosition() - w[0].pos).length();
-				d[1] = (leafs[j]->getPosition() - w[1].pos).length();
-				d[2] = (leafs[j]->getPosition() - w[2].pos).length();
-				d[3] = (leafs[j]->getPosition() - w[3].pos).length();
+
+				// Posities van de leafs zijn relatief tegenover de rootsphere.
+				d[0] = (leafs[j]->getPosition() + root->getPosition() - w[0].pos).length();
+				d[1] = (leafs[j]->getPosition() + root->getPosition() - w[1].pos).length();
+				d[2] = (leafs[j]->getPosition() + root->getPosition() - w[2].pos).length();
+				d[3] = (leafs[j]->getPosition() + root->getPosition() - w[3].pos).length();
 
 				for (int i = 0; i < 4; i++) {
 					for (int k = i + 1; k < 4; k++) {
@@ -203,7 +213,7 @@ namespace chai3d {
 			float rad;
 			int num;
 			for (int i = 0; i < 4; i++) {
-				float d = (leafs[j]->getPosition() - w[i].pos).length();
+				float d = (leafs[j]->getPosition() + root->getPosition() - w[i].pos).length();
 				if (d < mindist) {
 					mindist = d;
 					num = i;
@@ -219,25 +229,27 @@ namespace chai3d {
 
 		for (int i = 0; i < 4; i++) {
 			Sphere* s = new Sphere();
-			s->setPosition(w[i].pos - Sphere::rootPositie);
+			s->setPosition(w[i].pos - rootSphere->getPosition());
 			s->setRadius(max[i]);
 			s->setState(sphereState::SPHERE_INTERNAL);
 			s->setDepth(node->getDepth()+1);
 			s->setParent(node);
+			s->setRootSphere(root);
 			
 			//set as child of node
 			node->addChild(s);
 
 			//recursive call
-			BNG(size, s, w[i].lfs, a_depth);
+			BNG(size, s, w[i].lfs, a_depth, rootSphere);
 		}
 	}
 
-	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node)
+	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node, Sphere* root)
 	{
 		for (int i = 0; i < leafs.size(); i++) {
 			leafs[i]->setParent(node);
 			leafs[i]->setDepth(node->getDepth() + 1);
+			leafs[i]->setRootSphere(root);
 			node->addChild(leafs[i]);
 		}
 	}
@@ -284,8 +296,6 @@ namespace chai3d {
 		glDisable(GL_LIGHTING);
 		glLineWidth(1.0);
 		glColor4fv(m_color.getData());
-	
-		cout << Sphere::rootPositie << endl;
 
 		if (prevDisplayDepth != m_displayDepth) {
 			spheres.clear();

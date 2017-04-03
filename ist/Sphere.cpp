@@ -10,8 +10,6 @@
 
 namespace chai3d {
 
-	cVector3d Sphere::rootPositie = cVector3d(0, 0, 0);
-
 	/*
 		The constructor of a sphere.
 	*/
@@ -43,7 +41,7 @@ namespace chai3d {
 		\return The disance between the two given spheres.
 	*/
 	float Sphere::distance(Sphere* sphere, cVector3d position1, cVector3d position2) {
-		cVector3d hulp = position1 + this->getPosition() - position2 - sphere->getPosition();
+		cVector3d hulp = (position1 + this->getPosition()) - (position2 + sphere->getPosition());
 		float lengte = hulp.length();
 		float afstand =  lengte - sphere->getRadius() - this->getRadius();
 		if (afstand > 0.0) return afstand;
@@ -56,7 +54,8 @@ namespace chai3d {
 		\return The relative position.
 	*/
 	cVector3d Sphere::getPosition() {
-		return position;
+		if(state != sphereState::SPHERE_ROOT)return position;
+		return cVector3d(0, 0, 0);
 	}
 
 	/*
@@ -115,11 +114,6 @@ namespace chai3d {
 	}
 
 	void Sphere::setPosition(cVector3d pos) {
-		if (state == sphereState::SPHERE_ROOT) {
-			Sphere::rootPositie = pos;
-			position.set(0, 0, 0); 
-			return;
-		}
 		position = pos;
 	}
 

@@ -36,7 +36,7 @@ namespace chai3d {
 		// Get the rootsphere of this inner sphere tree.
 		Sphere* getRootSphere();
 		//! This method computes all collisions between a segment passed as argument and the attributed 3D object.
-		virtual bool computeCollision(cGenericObject* a_object,
+		inline virtual bool computeCollision(cGenericObject* a_object,
 			cVector3d& a_segmentPointA,
 			cVector3d& a_segmentPointB,
 			cCollisionRecorder& a_recorder,
@@ -80,9 +80,9 @@ namespace chai3d {
 
 		inline std::vector<Sphere*> getSpheres() { return spheres; }
 
-		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
+		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root);
 
-		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
+		void addLeafs(std::vector<Sphere*> leafs, Sphere* node, Sphere* root);
 
 		void maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle);
 

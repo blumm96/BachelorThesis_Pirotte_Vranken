@@ -233,7 +233,7 @@ namespace chai3d {
 			//print prioritylist
 			for (it; it != priorityList.end(); ++it) {
 				Voxel* v = *(it);
-				cout << "print voxel " << i+1 << " :position - " << *(v->getPos()) << " :min_distance - " << v->getMinDist() << endl;
+				//cout << "print voxel " << i+1 << " :position - " << *(v->getPos()) << " :min_distance - " << v->getMinDist() << endl;
 				i++;
 			}
 
@@ -291,10 +291,10 @@ namespace chai3d {
 			tree->buildTree(innerspheres, diepte);
 
 			//print inner spheres
-			cout << endl;
-			for (int i = 0; i < innerspheres.size(); i++) {
-				cout << "sphere " << i + 1 << " - position " << innerspheres[i]->getPosition() << " - radius " << innerspheres[i]->getRadius() << endl;
-			}
+			//cout << endl;
+			//for (int i = 0; i < innerspheres.size(); i++) {
+				//cout << "sphere " << i + 1 << " - position " << innerspheres[i]->getPosition() << " - radius " << innerspheres[i]->getRadius() << endl;
+			//}
 
 			return tree;
 		}
