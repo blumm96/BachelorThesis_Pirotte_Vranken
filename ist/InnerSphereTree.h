@@ -52,6 +52,8 @@ namespace chai3d {
 
 		void printChildren(Sphere* s);
 
+		inline double getSize() { return size; }
+
 	// DATA MEMBERS
 	private:
 
@@ -84,9 +86,12 @@ namespace chai3d {
 
 		void addLeafs(std::vector<Sphere*> leafs, Sphere* node, Sphere* root);
 
-		void maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle);
+		void maakRootSphere(std::vector<Sphere*> leafs);
 
 		void setSpheresToRender(Sphere* s, std::vector<Sphere*>& spheres);
+
+		inline cVector3d getPosition() { return positie; }
+		inline void setPosition(cVector3d m_position) { positie = m_position; }
 
 	};
 }

@@ -79,7 +79,7 @@ namespace chai3d {
 			// Komt uit Collision detection algorithms
 			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop);
 
-			std::cout << collisionfeedback << std::endl;
+			//std::cout << collisionfeedback << std::endl;
 
 			if (collisionfeedback <= 0) return true;
 			else return false;
@@ -107,7 +107,7 @@ namespace chai3d {
 			spheres.push_back(leafs[i]);
 		}
 
-		maakRootSphere(leafs, positie);
+		maakRootSphere(leafs);
 
 		BNG(size, rootSphere, leafs, a_depth, rootSphere);
 
@@ -133,9 +133,9 @@ namespace chai3d {
 
 		prototype w[4];
 
-		double x = node->getPosition().x() + node->getRootSphere()->getPosition().x();
-		double y = node->getPosition().y() + node->getRootSphere()->getPosition().y();
-		double z = node->getPosition().z() + node->getRootSphere()->getPosition().z();
+		double x = node->getPosition().x();
+		double y = node->getPosition().y();
+		double z = node->getPosition().z();
 
 		double r = node->getRadius();
 		
@@ -163,10 +163,10 @@ namespace chai3d {
 				int n[4] = { 0,0,0,0 };
 
 				// Posities van de leafs zijn relatief tegenover de rootsphere.
-				d[0] = (leafs[j]->getPosition() + root->getPosition() - w[0].pos).length();
-				d[1] = (leafs[j]->getPosition() + root->getPosition() - w[1].pos).length();
-				d[2] = (leafs[j]->getPosition() + root->getPosition() - w[2].pos).length();
-				d[3] = (leafs[j]->getPosition() + root->getPosition() - w[3].pos).length();
+				d[0] = (leafs[j]->getPosition() - w[0].pos).length();
+				d[1] = (leafs[j]->getPosition() - w[1].pos).length();
+				d[2] = (leafs[j]->getPosition() - w[2].pos).length();
+				d[3] = (leafs[j]->getPosition() - w[3].pos).length();
 
 				for (int i = 0; i < 4; i++) {
 					for (int k = i + 1; k < 4; k++) {
@@ -213,7 +213,7 @@ namespace chai3d {
 			float rad;
 			int num;
 			for (int i = 0; i < 4; i++) {
-				float d = (leafs[j]->getPosition() + root->getPosition() - w[i].pos).length();
+				float d = (leafs[j]->getPosition() - w[i].pos).length();
 				if (d < mindist) {
 					mindist = d;
 					num = i;
@@ -229,7 +229,7 @@ namespace chai3d {
 
 		for (int i = 0; i < 4; i++) {
 			Sphere* s = new Sphere();
-			s->setPosition(w[i].pos - rootSphere->getPosition());
+			s->setPosition(w[i].pos);
 			s->setRadius(max[i]);
 			s->setState(sphereState::SPHERE_INTERNAL);
 			s->setDepth(node->getDepth()+1);
@@ -254,14 +254,13 @@ namespace chai3d {
 		}
 	}
 
-	void InnerSphereTree::maakRootSphere(std::vector<Sphere*> leafs, cVector3d middle) {
+	void InnerSphereTree::maakRootSphere(std::vector<Sphere*> leafs) {
 
 		double maxD = 0;
 
 		for (int i = 0; i < leafs.size(); i++) {
 
-			cVector3d help = middle - leafs[i]->getPosition();
-			double afstand = help.length() + leafs[i]->getRadius();
+			double afstand = leafs[i]->getPosition().length() + leafs[i]->getRadius();
 			if (afstand > maxD) {
 				maxD = afstand;
 			}
@@ -271,7 +270,7 @@ namespace chai3d {
 		root->setRadius((float)maxD);
 		root->setParent(NULL);
 		root->setState(sphereState::SPHERE_ROOT);
-		root->setPosition(middle);
+		root->setPosition(cVector3d(0,0,0));
 		root->setDepth(0);
 
 		rootSphere = root;

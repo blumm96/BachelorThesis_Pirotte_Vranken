@@ -285,7 +285,7 @@ namespace chai3d {
 			//IST hierarchy
 			InnerSphereTree* tree = new InnerSphereTree();
 
-			tree->setPositie(positie);
+			tree->setPosition(positie);
 			tree->setSize(size);
 
 			tree->buildTree(innerspheres, diepte);

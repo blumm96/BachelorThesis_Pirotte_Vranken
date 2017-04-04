@@ -54,8 +54,7 @@ namespace chai3d {
 		\return The relative position.
 	*/
 	cVector3d Sphere::getPosition() {
-		if(state != sphereState::SPHERE_ROOT)return position;
-		return cVector3d(0, 0, 0);
+		return position;
 	}
 
 	/*

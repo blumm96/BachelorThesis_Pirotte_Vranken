@@ -109,7 +109,6 @@ namespace chai3d {
 		\param tree1			The tree of the first sphere.
 		\param tree2			The tree of the second sphere.
 		\param maxdiepte		The maximum depth the algorithm is allowed to check.
-		\param huidigeDiepte	The current depth of the checking algorithm.
 	*/
 	inline float checkDistanceSphere(
 		Sphere* sphereA,
@@ -121,7 +120,7 @@ namespace chai3d {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
-		float afstand = sphereA->distance(sphereB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
+		float afstand = sphereA->distance(sphereB, tree1->getPosition(), tree2->getPosition());
 
 		if (sphereA->getDepth() == maxdiepte) return afstand;
 
@@ -137,12 +136,11 @@ namespace chai3d {
 		std::vector<Sphere*> children_B = sphereB->getChildren();
 
 		// Iterate through all of the 2 sphere's children.
-		std::vector<Sphere*>::iterator itA, itB;
-		itA = children_A.begin(); itB = children_B.begin();
-		for (itA; itA < children_A.end(); itA++) {
-			for (itB; itB < children_B.end(); itB++) {
-				Sphere* newA = (*itA);
-				Sphere* newB = (*itB);
+
+		for (int i = 0; i < children_A.size(); i++) {
+			for (int j = 0; j < children_B.size(); j++) {
+				Sphere* newA = children_A[i];
+				Sphere* newB = children_B[j];
 				
 				if (stop) goto checkDistanceEinde;
 
@@ -154,7 +152,7 @@ namespace chai3d {
 				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
 				else if ((newA->getState() == sphereState::SPHERE_LEAF) || (newB->getState() == sphereState::SPHERE_LEAF)) {
 					
-					afstand = newA->distance(newB, tree1->getRootSphere()->getPosition(), tree2->getRootSphere()->getPosition());
+					afstand = newA->distance(newB, tree1->getPosition(), tree2->getPosition());
 					if (afstand <= 0) {
 						stop = true;
 						goto checkDistanceEinde;
