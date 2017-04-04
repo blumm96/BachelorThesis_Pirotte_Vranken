@@ -93,6 +93,8 @@ namespace chai3d {
 		inline cVector3d getPosition() { return positie; }
 		inline void setPosition(cVector3d m_position) { positie = m_position; }
 
+		inline void setRoot(Sphere* n_root) { rootSphere = n_root; }
+
 	};
 }
 

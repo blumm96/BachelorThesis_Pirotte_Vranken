@@ -44,6 +44,9 @@ namespace chai3d {
 		// The depth of the sphere in the innersphere tree.
 		int depth;
 
+		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
+		int childrenAmount;
+
 		// The triangle that goes with this sphere.
 		Triangle* triangle;
 
@@ -102,6 +105,9 @@ namespace chai3d {
 
 		}
 		void render();
+
+		inline void setChildrenAmount(int n_amount) { childrenAmount = n_amount; }
+		inline int getChildrenAmount() { return childrenAmount; }
 	};
 }
 #endif
