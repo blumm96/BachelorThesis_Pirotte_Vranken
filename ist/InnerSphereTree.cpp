@@ -77,7 +77,7 @@ namespace chai3d {
 			bool stop = false;
 
 			// Komt uit Collision detection algorithms
-			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop);
+			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
 
 			//std::cout << collisionfeedback << std::endl;
 

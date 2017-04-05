@@ -31,7 +31,7 @@ namespace chai3d {
 	*/
 	void saveIST(InnerSphereTree* tree, string naam) {
 
-		string fileNaam = "ist" + naam + ".txt";
+		string fileNaam = "ist" + naam + ".vp";
 		istFile.open(fileNaam);
 
 		istFile.clear();
@@ -93,7 +93,7 @@ namespace chai3d {
 	*/
 	InnerSphereTree* loadIST(string naam) {
 
-		string fileNaam = "ist" + naam + ".txt";
+		string fileNaam = "ist" + naam + ".vp";
 		istFile.open(fileNaam);
 
 		string lijn;
