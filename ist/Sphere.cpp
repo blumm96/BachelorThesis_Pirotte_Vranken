@@ -19,15 +19,15 @@ namespace chai3d {
 		The destructor of a sphere.
 	*/
 	Sphere::~Sphere() {
-		//if (state == sphereState::SPHERE_LEAF) return;
-		//for (int i = 0; i < children.size(); i++) {
-			//delete children[i];
-		//}
-		//delete triangle;
 
 		//delete all sphere points
 		for (int i = 0; i < spherePoints.size(); i++) {
 			if(spherePoints[i] != nullptr) delete spherePoints[i];
+		}
+
+		//delete all children
+		for (int i = 0; i < children.size(); i++) {
+			if (children[i] != nullptr) delete children[i];
 		}
 	}
 
@@ -38,7 +38,7 @@ namespace chai3d {
 		\param position1	The global position of the root sphere of this sphere.
 		\param position2	The global position of the root sphere of the given sphere.
 
-		\return The disance between the two given spheres.
+		\return The distance between the two given spheres.
 	*/
 	float Sphere::distance(Sphere* sphere, cVector3d position1, cVector3d position2) {
 		cVector3d hulp = (position1 + this->getPosition()) - (position2 + sphere->getPosition());
@@ -92,6 +92,7 @@ namespace chai3d {
 	sphereState Sphere::getState() {
 		return state;
 	}
+
 	/*
 		
 		Returns the depth of the sphere in the innersphere tree.
@@ -103,43 +104,104 @@ namespace chai3d {
 		return depth;
 	}
 
-		Triangle * Sphere::getTriangle()
-		{
-			return triangle;
-		}
+	/*
+		
+		Returns the triangle associated with this sphere.
 
+		\return The triangle of this sphere.
+
+	*/
+	Triangle* Sphere::getTriangle()
+	{
+		return triangle;
+	}
+
+	/*
+		
+		Set the radius of this sphere.
+
+		\param r The new radius of this sphere.
+
+	*/
 	void Sphere::setRadius(float r) {
 		radius = r;
 	}
 
+	/*
+	
+		Set the position of this sphere.
+
+		\param pos The new position of this sphere.
+
+	*/
 	void Sphere::setPosition(cVector3d pos) {
 		position = pos;
 	}
 
+	/*
+		
+		Set the state of this sphere.
+
+		\return nstate The new state of this sphere.
+
+	*/
 	void Sphere::setState(sphereState nstate) {
 		state = nstate;
 	}
 
-	void Sphere::setTriangle(Triangle * setT)
+	/*
+		
+		Set the triangle associated with this sphere.
+
+		\param setT The new triangle associated with this sphere.
+
+	*/
+	void Sphere::setTriangle(Triangle* setT)
 	{
 		triangle = setT;
 	}
 
-	void Sphere::setParent(Sphere * n_parent)
+	/*
+		
+		Set the parent of this sphere.
+
+		\param n_parent The new parent of this sphere.
+
+	*/
+	void Sphere::setParent(Sphere* n_parent)
 	{
 		parent = n_parent;
 	}
 
+	/*
+		
+		Set the depth of this sphere within the inner sphere tree.
+
+		\param d The new depth of this sphere.
+
+	*/
 	void Sphere::setDepth(int d)
 	{
 		depth = d;
 	}
 
-	void Sphere::addChild(Sphere * child)
+	/*
+		
+		Add a child to this sphere.
+
+		\param child The child to be added to this sphere.
+
+	*/
+	void Sphere::addChild(Sphere* child)
 	{
 		children.push_back(child);
 	}
 
+	/*
+		
+		Render this sphere.
+
+	*/
 	void Sphere::render() {
 			initRender(); //this function needs to be called if the sphere changes (center or radius)
 			cDrawSphere(spherePoints);

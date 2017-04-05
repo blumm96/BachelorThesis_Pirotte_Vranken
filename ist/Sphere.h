@@ -2,7 +2,7 @@
 /*
 	UHAS IMPLEMENTED CLASS
 
-
+	This class represents a Sphere within an inner sphere tree.
 
 	\author Casper Vranken
 	\author Niels Pirotte
@@ -39,22 +39,19 @@ namespace chai3d {
 		std::vector<Sphere*> children;
 		// The radius of the sphere.
 		float radius;
-		// The position of the sphere relative to the parent. If the sphere is rootsphere, the position is the global position.
+		// The position of the sphere relative to the root. If the sphere is rootsphere, the position is (0,0,0).
 		cVector3d position;
-		// The state of the sphere within the innerspheretree.
+		// The state of the sphere within the inner sphere tree.
 		sphereState state;
-		// The depth of the sphere in the innersphere tree.
+		// The depth of the sphere in the inner sphere tree.
 		int depth;
-
-		
+		// The triangle associated with this sphere.
+		Triangle *triangle;
 
 		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
 		int childrenAmount;
 
-		// The triangle that goes with this sphere.
-		Triangle* triangle;
-
-		//Help vector for drawing the sphere
+		//Help vector for drawing the sphere.
 		std::vector<cVector3d*> spherePoints;
 
 		// The rootsphere of this sphere.
@@ -84,23 +81,53 @@ namespace chai3d {
 		sphereState getState();
 		// Get the depth of the sphere in the innersphere tree.
 		int getDepth();
+		// Get th triangle of this sphere.
 		Triangle* getTriangle();
 
+		/*
+			
+			Set the root for this sphere.
+
+			\param r The root to be set.
+
+		*/
 		inline void setRootSphere(Sphere* r) { rootSphere = r; }
+
+		/*
+			
+			Returns the root for this sphere.
+
+			\return The root associated with this sphere.
+
+		*/
 		inline Sphere* getRootSphere() { 
 			if(state != sphereState::SPHERE_ROOT) return rootSphere; 
 			return this;
 		}
 
+		// Set the radius of this sphere.
 		void setRadius(float r);
+		// Set the position of this sphere.
 		void setPosition(cVector3d pos);
+		// Set the state of this sphere.
 		void setState(sphereState nstate);
+		// Set the triangle of this sphere.
 		void setTriangle(Triangle* setT);
+		// Set the parent sphere of this sphere.
 		void setParent(Sphere* n_parent);
+		// Set the depth of this sphere within the inner sphere tree.
 		void setDepth(int d);
+		// Add a child to this sphere.
 		void addChild(Sphere* child);
 
+		// Help function to render this sphere.
 		void make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints);
+
+		/*
+			
+			This is a help function to render the sphere.
+
+		*/
 		inline void initRender() { 
 
 			if (spherePoints.empty()) { 
@@ -108,10 +135,28 @@ namespace chai3d {
 			}
 
 		}
+
+		// Render the sphere.
 		void render();
 
+		/*
+			
+			Set the amount of children this sphere has.
+			This function should only be used when loading an inner sphere tree.
+
+			\param n_amount The amount of children this sphere has.
+
+		*/
 		inline void setChildrenAmount(int n_amount) { childrenAmount = n_amount; }
+
+		/*
+			
+			Get the amount of children this sphere has.
+			
+			\return The amount of children this sphere has.
+
+		*/
 		inline int getChildrenAmount() { return childrenAmount; }
 	};
-}
+} // chai3d
 #endif
