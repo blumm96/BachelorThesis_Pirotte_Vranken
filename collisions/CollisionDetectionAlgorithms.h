@@ -168,6 +168,12 @@ namespace chai3d {
 	}
 
 
+
+	struct comp {
+		bool operator()(Sphere* s1, Sphere* s2) { return ((s1->getMindist()) < (s2->getMindist())); }
+	};
+
+
 	inline void checkDistanceSphere2(Sphere* A,
 		Sphere* B,
 		float& mindist,
@@ -183,18 +189,35 @@ namespace chai3d {
 			//recursion
 			std::vector<Sphere*> children_A = A->getChildren();
 			std::vector<Sphere*> children_B = B->getChildren();
+			
+			std::sort(children_A.begin(), children_A.end(), comp());
+			std::sort(children_B.begin(), children_B.end(), comp());
+
+			for (Sphere* A: children_A) {
+				for (Sphere* B: children_B) {
+					Sphere* newA = A;
+					Sphere* newB = B;
+					float afstand = newA->distance(newB, tree_A->getPosition(), tree_B->getPosition());
+
+						if (newA->getMindist() > afstand) newA->setMindist(afstand);
+						if(newB->getMindist() > afstand) newB->setMindist(afstand);
+
+					if ((afstand == 0.0f)) checkDistanceSphere2(newA, newB, mindist, tree_A, tree_B, maxdiepte);
+					else mindist = cMin((float)mindist, afstand);
+
+				}
+			}
 
 			for (int i = 0; i < children_A.size(); i++) {
 				for (int j = 0; j < children_B.size(); j++) {
-					Sphere* newA = children_A[i];
-					Sphere* newB = children_B[j];
-					float afstand = newA->distance(newB, tree_A->getPosition(), tree_B->getPosition());
-					if ((afstand == 0.0f)) checkDistanceSphere2(newA, newB, mindist, tree_A, tree_B, maxdiepte);
-					else mindist = cMin((float)mindist, afstand);
+					children_A[i]->setMindist(std::numeric_limits<float>::infinity());
+					children_B[j]->setMindist(std::numeric_limits<float>::infinity());
 				}
 			}
 		}
 	}
+
+	
 
 	/*
 	

@@ -46,6 +46,7 @@ namespace chai3d {
 		// The depth of the sphere in the innersphere tree.
 		int depth;
 
+		float mindist;
 		
 
 		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
@@ -112,6 +113,9 @@ namespace chai3d {
 
 		inline void setChildrenAmount(int n_amount) { childrenAmount = n_amount; }
 		inline int getChildrenAmount() { return childrenAmount; }
+
+		inline float getMindist() { return mindist; };
+		inline void setMindist(float n_dist) { mindist = n_dist; };
 	};
 }
 #endif

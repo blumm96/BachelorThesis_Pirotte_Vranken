@@ -94,7 +94,6 @@ namespace chai3d {
 			float mindist = std::numeric_limits<float>::infinity();
 
 			// Komt uit Collision detection algorithms
-
 			checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
 			collisionfeedback = mindist;
 

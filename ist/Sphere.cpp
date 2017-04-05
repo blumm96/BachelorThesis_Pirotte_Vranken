@@ -13,7 +13,9 @@ namespace chai3d {
 	/*
 		The constructor of a sphere.
 	*/
-	Sphere::Sphere() {}
+	Sphere::Sphere() {
+		mindist = std::numeric_limits<float>::infinity();
+	}
 
 	/*
 		The destructor of a sphere.
