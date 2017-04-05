@@ -23,6 +23,13 @@ namespace chai3d {
 		delete rootSphere;
 	}
 
+	/*
+		
+		Print the entire collision tree.
+
+		\param diepte The maximum depth the tree should be printed.
+
+	*/
 	void InnerSphereTree::printAABBCollisionTree(int diepte) {
 		cout << endl;
 		cout << "INNER SPHERE TREE" << endl;
@@ -31,6 +38,13 @@ namespace chai3d {
 
 	}
 
+	/*
+	
+		Print the children of a specified sphere.
+
+		\param s The sphere of whom children should be printed.
+
+	*/
 	void InnerSphereTree::printChildren(Sphere* s) {
 
 		for (int i = 0; i < s->getDepth(); i++) {
@@ -59,6 +73,10 @@ namespace chai3d {
 		\param setting				The traversalsettings.
 		\param collisionfeedback	How close the collision is.
 		\param maxdiepte			The maximumdepth the function is allowed to check for collision.
+		\param myLocal				The local position of this IST.
+		\param BLocal				The local position of ist2.
+		\param positie				This parameter will be set to the position of the collision. It remains
+									unchanged if no collision occurs.
 
 		\return If to inner sphere trees have collided.
 	*/
@@ -119,6 +137,16 @@ namespace chai3d {
 		return rootSphere;
 	}
 
+	/*
+		
+		Build a tree out of leafs with a specified depth.
+
+		\param leafs	The leafs on which to base the IST.
+		\param a_depth	The depth that the IST should have.
+
+		\return			0.
+
+	*/
 	int InnerSphereTree::buildTree(std::vector<Sphere*> leafs, const int a_depth)
 	{	
 		//set spheres to render in the vector spheres
@@ -133,9 +161,17 @@ namespace chai3d {
 		return 0;
 	}
 
-	//implementation of the BNG algorthm
-	//n-->the number of prototypes
-	//size is the max axis of the boundary box of the object
+	/*
+		
+		Implementation of the BNG algorithm.
+
+		\param size			The size of the IST.
+		\param node			The node on which to build the following branch.
+		\param leafs		The remaining leafs on which to build the following internal sphere.
+		\param a_depth		The maximum depth of the IST.
+		\param root			The rootsphere.
+
+	*/
 	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root)
 	{
 #define TMAX 500
@@ -263,6 +299,15 @@ namespace chai3d {
 		}
 	}
 
+	/*
+		
+		Add all the leafs to a specified node.
+
+		\param leafs	The leafs that should be added to the node.
+		\param node		The node on which to add the leafs.
+		\param root		The rootsphere.
+
+	*/
 	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node, Sphere* root)
 	{
 		for (int i = 0; i < leafs.size(); i++) {
@@ -273,6 +318,13 @@ namespace chai3d {
 		}
 	}
 
+	/*
+		
+		Generate a rootsphere.
+
+		\param leafs The leafs of the IST. The rootsphere will surround all of the leafs.
+
+	*/
 	void InnerSphereTree::maakRootSphere(std::vector<Sphere*> leafs) {
 
 		double maxD = 0;
@@ -295,6 +347,14 @@ namespace chai3d {
 		rootSphere = root;
 	}
 
+	/*
+		
+		Set which sphers to render.
+
+		\param s				The sphere that should be rendered.
+		\param spheresToDraw	The vector that contains all the spheres to render. It will be adapted.
+
+	*/
 	void InnerSphereTree::setSpheresToRender(Sphere* s, std::vector<Sphere*>& spheresToDraw)
 	{	
 		if (s->getDepth() == m_displayDepth || s->getState() == sphereState::SPHERE_LEAF) {
@@ -306,7 +366,13 @@ namespace chai3d {
 		}
 	}
 	
+	/*
+		
+		Render the IST.
 
+		\param a_options The options to render the IST.
+
+	*/
 	void InnerSphereTree::render(cRenderOptions& a_options) {
 #ifdef C_USE_OPENGL
 		

@@ -7,18 +7,32 @@
 #include <vector>
 #include <cmath>
 #include <math.h>
+/*
+	
+	Save the IST to a file.
 
+	\author Casper Vranken
+	\author Niels Pirotte
+
+*/
 using namespace std;
 
 namespace chai3d {
 
+	// The file to be saved to.
 	fstream istFile;
 
+	// Save the inner sphere tree.
 	void saveIST(InnerSphereTree* tree, string naam);
+	// Print a sphere to the file.
 	void printSphere(Sphere* s);
+	// Load an IST from file.
 	InnerSphereTree* loadIST(string naam);
+	// Read a sphere from the file.
 	void readSphere(Sphere* parent, Sphere* root);
+	// Process a string to load a sphere.
 	Sphere* processString(string lijn);
+	// Split a string into a vector of strings.
 	unsigned int split(const string &txt, vector<string> &strs, char ch);
 
 	/*
