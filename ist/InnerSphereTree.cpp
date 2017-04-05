@@ -19,6 +19,7 @@ namespace chai3d {
 		Destructor of the inner sphere tree.
 	*/
 	InnerSphereTree::~InnerSphereTree() {
+		delete path;
 		delete rootSphere;
 	}
 
@@ -91,12 +92,11 @@ namespace chai3d {
 			Sphere* parent_A = IST_B->getRootSphere();
 			Sphere* parent_B = IST_A->getRootSphere();
 
-			float mindist = std::numeric_limits<float>::infinity();
-
 			// Komt uit Collision detection algorithms
 
-			checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
-			collisionfeedback = mindist;
+			bool stop = false;
+
+			collisionfeedback = checkDistanceSphere2(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie, (IST_A->getPath()), (IST_B->getPath()), nullptr, nullptr);
 
 			//std::cout << collisionfeedback << std::endl;
 

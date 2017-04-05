@@ -71,6 +71,11 @@ namespace chai3d {
 
 		int prevDisplayDepth;
 
+		// The node on which to begin checking.
+		Sphere* beginNode;
+
+		std::vector<Sphere*>* path;
+
 	// PROTECTED FUNCTIONS
 	public:
 
@@ -94,6 +99,12 @@ namespace chai3d {
 		inline void setPosition(cVector3d m_position) { positie = m_position; }
 
 		inline void setRoot(Sphere* n_root) { rootSphere = n_root; }
+
+		inline Sphere* getBeginNode() { return beginNode; }
+		inline void setBeginNode(Sphere* n_beginNode) { beginNode = n_beginNode; }
+
+		inline void setPath(std::vector<Sphere*>* n_path) { path = n_path; }
+		inline std::vector<Sphere*>* getPath() { return path; }
 
 	};
 }
