@@ -116,17 +116,18 @@ namespace chai3d {
 		InnerSphereTree* tree1,
 		InnerSphereTree* tree2,
 		int maxdiepte,
-		bool& stop) {
+		bool& stop, 
+		cVector3d& pos) {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
 		float afstand = sphereA->distance(sphereB, tree1->getPosition(), tree2->getPosition());
 
-		if (sphereA->getDepth() == maxdiepte) return afstand;
-
 		// Calculate the distance between the 2 spheres. 
 		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
 		if (afstand > 0) return afstand;
+
+		if (sphereA->getDepth() == maxdiepte) return afstand;
 
 		// If the 2 spheres collide and we are not at the maximum depth yet, continue the recursion.
 		afstand = std::numeric_limits<float>::infinity();
@@ -146,7 +147,7 @@ namespace chai3d {
 
 				// If the children aren't leaf nodes, continue the recursion.
 				if ((newA->getState() != sphereState::SPHERE_LEAF) && (newB->getState() != sphereState::SPHERE_LEAF)) {
-					afstand = cMin(checkDistanceSphere(newA, newB, tree1, tree2, maxdiepte, stop), afstand);
+					afstand = cMin(checkDistanceSphere(newA, newB, tree1, tree2, maxdiepte, stop, pos), afstand);
 				}
 				// If both children are leaf nodes, calculate the distance.
 				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
@@ -155,6 +156,7 @@ namespace chai3d {
 					afstand = newA->distance(newB, tree1->getPosition(), tree2->getPosition());
 					if (afstand <= 0) {
 						stop = true;
+						pos = (newA->getPosition() + tree1->getPosition() + newB->getPosition() + tree2->getPosition()) / 2;
 						goto checkDistanceEinde;
 					}
 

@@ -2,6 +2,8 @@
 /*
 	UHAS IMPLEMENTED CLASS
 
+
+
 	\author Casper Vranken
 	\author Niels Pirotte
 */
@@ -43,6 +45,8 @@ namespace chai3d {
 		sphereState state;
 		// The depth of the sphere in the innersphere tree.
 		int depth;
+
+		
 
 		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
 		int childrenAmount;
