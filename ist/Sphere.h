@@ -48,6 +48,8 @@ namespace chai3d {
 		// The triangle associated with this sphere.
 		Triangle *triangle;
 
+		float mindist;
+
 		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
 		int childrenAmount;
 
@@ -157,6 +159,9 @@ namespace chai3d {
 
 		*/
 		inline int getChildrenAmount() { return childrenAmount; }
+
+		inline float getMindist() { return mindist; };
+		inline void setMindist(float n_dist) { mindist = n_dist; };
 	};
 } // chai3d
 #endif

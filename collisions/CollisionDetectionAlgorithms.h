@@ -247,6 +247,56 @@ namespace chai3d {
 	}
 
 
+	struct comp {
+		bool operator()(Sphere* s1, Sphere* s2) { return ((s1->getMindist()) < (s2->getMindist())); }
+	};
+
+
+	inline void checkDistanceSphere3(Sphere* A,
+		Sphere* B,
+		float& mindist,
+		InnerSphereTree* tree_A,
+		InnerSphereTree* tree_B,
+		int maxdiepte)
+	{
+		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
+		if ((A->getState() == sphereState::SPHERE_LEAF && B->getState() == sphereState::SPHERE_LEAF) || A->getDepth() == maxdiepte) {
+			mindist = cMin(mindist, A->distance(B, tree_A->getPosition(), tree_B->getPosition()));
+		}
+		else {
+			//recursion
+			std::vector<Sphere*> children_A = A->getChildren();
+			std::vector<Sphere*> children_B = B->getChildren();
+
+			std::sort(children_A.begin(), children_A.end(), comp());
+			std::sort(children_B.begin(), children_B.end(), comp());
+
+			for (Sphere* A : children_A) {
+				for (Sphere* B : children_B) {
+					Sphere* newA = A;
+					Sphere* newB = B;
+					float afstand = newA->distance(newB, tree_A->getPosition(), tree_B->getPosition());
+
+					if (newA->getMindist() > afstand) newA->setMindist(afstand);
+					if (newB->getMindist() > afstand) newB->setMindist(afstand);
+
+					if ((afstand == 0.0f)) checkDistanceSphere3(newA, newB, mindist, tree_A, tree_B, maxdiepte);
+					else mindist = cMin((float)mindist, afstand);
+
+				}
+			}
+
+			for (int i = 0; i < children_A.size(); i++) {
+				for (int j = 0; j < children_B.size(); j++) {
+					children_A[i]->setMindist(std::numeric_limits<float>::infinity());
+					children_B[j]->setMindist(std::numeric_limits<float>::infinity());
+				}
+			}
+		}
+	}
+
+
+
 	inline float checkDistanceSphere2(
 		Sphere* sphereA,
 		Sphere* sphereB,
@@ -277,6 +327,8 @@ namespace chai3d {
 		else return checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, nullptr, nullptr);
 
 	}
+
+	
 
 	/*
 	

@@ -116,6 +116,9 @@ namespace chai3d {
 
 			collisionfeedback = checkDistanceSphere2(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie, (IST_A->getPath()), (IST_B->getPath()), nullptr, nullptr);
 
+			/*checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
+			collisionfeedback = mindist;*/
+
 			//std::cout << collisionfeedback << std::endl;
 
 			if (collisionfeedback <= 0) return true;
