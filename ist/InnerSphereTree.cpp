@@ -84,7 +84,26 @@ namespace chai3d {
 			if (collisionfeedback <= 0) return true;
 			else return false;
 		}
-		case traversalSetting::COMBINED: return false;
+		case traversalSetting::COMBINED: {
+			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
+			InnerSphereTree* IST_A = this;
+
+			Sphere* parent_A = IST_B->getRootSphere();
+			Sphere* parent_B = IST_A->getRootSphere();
+
+			float mindist = std::numeric_limits<float>::infinity();
+
+			// Komt uit Collision detection algorithms
+
+			checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
+			collisionfeedback = mindist;
+
+			//std::cout << collisionfeedback << std::endl;
+
+			if (collisionfeedback <= 0) return true;
+			else return false;
+		
+		};
 		case traversalSetting::VOLUME_PEN: return false;
 		default: return false;
 		}

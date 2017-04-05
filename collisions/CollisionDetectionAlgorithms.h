@@ -165,6 +165,35 @@ namespace chai3d {
 		checkDistanceEinde: return afstand;
 	}
 
+
+	inline void checkDistanceSphere2(Sphere* A,
+		Sphere* B,
+		float& mindist,
+		InnerSphereTree* tree_A,
+		InnerSphereTree* tree_B,
+		int maxdiepte)
+	{
+		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
+		if ((A->getState() == sphereState::SPHERE_LEAF && B->getState() == sphereState::SPHERE_LEAF) || A->getDepth() == maxdiepte) {
+			mindist = cMin(mindist, A->distance(B, tree_A->getPosition(), tree_B->getPosition()));
+		}
+		else {
+			//recursion
+			std::vector<Sphere*> children_A = A->getChildren();
+			std::vector<Sphere*> children_B = B->getChildren();
+
+			for (int i = 0; i < children_A.size(); i++) {
+				for (int j = 0; j < children_B.size(); j++) {
+					Sphere* newA = children_A[i];
+					Sphere* newB = children_B[j];
+					float afstand = newA->distance(newB, tree_A->getPosition(), tree_B->getPosition());
+					if ((afstand == 0.0f)) checkDistanceSphere2(newA, newB, mindist, tree_A, tree_B, maxdiepte);
+					else mindist = cMin((float)mindist, afstand);
+				}
+			}
+		}
+	}
+
 	/*
 	
 		Checks the distance between 2 innersphere trees starting from specified spheres.
