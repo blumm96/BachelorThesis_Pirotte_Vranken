@@ -177,6 +177,7 @@ namespace chai3d {
 	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root)
 	{
 #define TMAX 500
+		if (leafs.size() < 5) return;
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
 		if (node->getDepth() == a_depth) {
 			addLeafs(leafs, node, root);
@@ -203,7 +204,7 @@ namespace chai3d {
 		w[3].pos.set(x - r, y - r, z - r);
 
 		//define epsilon
-		double eps = 0.00001 * size;
+		double eps = 0.0000001 * size;
 		//first index of weights is the number of the leaf
 		std::vector<std::vector<int>> weights;
 		//row with prototypes per leaf
@@ -238,7 +239,7 @@ namespace chai3d {
 			}
 
 			//calculate new prototype positions
-			float L = 2 * pow((0.01 / 2.0), t / TMAX);
+			float L = 2 * pow((0.01 / 2.0), ((double)t) / ((double)TMAX));
 			for (int k = 0; k < 4; k++) {
 				double sumf = 0;
 				cVector3d sumv = cVector3d(0, 0, 0);
@@ -255,22 +256,23 @@ namespace chai3d {
 				}
 
 				sumv = sumv / sumf;
-				
 				if((w[k].pos - sumv).length() < eps) teller++;
-				if (teller == 4) stop = true;
-
+				if (teller == 4) {
+					stop = true;
+				}
 				w[k].pos = sumv;
 			}
 			t++;
 		}
 
+		//?
 		float max[4] = { 0,0,0,0 };
 		for (int j = 0; j < leafs.size(); j++) {
 			float mindist = numeric_limits<float>::infinity();
 			float rad;
 			int num;
 			for (int i = 0; i < 4; i++) {
-				float d = (leafs[j]->getPosition() - w[i].pos).length();
+				float d = ((leafs[j]->getPosition() - w[i].pos).length());
 				if (d < mindist) {
 					mindist = d;
 					num = i;
@@ -280,11 +282,14 @@ namespace chai3d {
 			if (max[num] < (mindist + rad)) max[num] = (mindist + rad);
 			w[num].lfs.push_back(leafs[j]);
 			}
-
+			
 			//we got all wheights with a vector to their leaves
 			//with all including radius of their leaves
 
 		for (int i = 0; i < 4; i++) {
+			if (w[i].lfs.empty()) {
+				continue;
+			}
 			Sphere* s = new Sphere();
 			s->setPosition(w[i].pos);
 			s->setRadius(max[i]);

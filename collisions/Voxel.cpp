@@ -58,7 +58,6 @@ namespace chai3d {
 	//! Destructor of Voxel
 	Voxel::~Voxel() {
 		delete(pos);
-		delete t;
 	}
 
 
