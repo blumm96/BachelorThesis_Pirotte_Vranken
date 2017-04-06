@@ -693,7 +693,7 @@ bool cCollisionAABB::computeCollision(cGenericCollision* B, traversalSetting set
 		if (mindist == 0.0) return true;
 		return false;
 	}
-	case traversalSetting::COMBINED: return false;
+	case traversalSetting::BACKWARDTRACK: return false;
 	case traversalSetting::VOLUME_PEN: return false;
 	default: return false;
 	}

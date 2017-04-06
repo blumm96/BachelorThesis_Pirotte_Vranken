@@ -13,14 +13,15 @@ namespace chai3d {
 	*/
 	InnerSphereTree::InnerSphereTree() {
 		prevDisplayDepth = m_displayDepth;
+		path = new vector<Sphere*>();
 	}
 
 	/*
 		Destructor of the inner sphere tree.
 	*/
 	InnerSphereTree::~InnerSphereTree() {
-		delete path;
 		delete rootSphere;
+		delete path;
 	}
 
 	/*
@@ -103,7 +104,7 @@ namespace chai3d {
 			if (collisionfeedback <= 0) return true;
 			else return false;
 		}
-		case traversalSetting::COMBINED: {
+		case traversalSetting::BACKWARDTRACK: {
 			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
 			InnerSphereTree* IST_A = this;
 
@@ -115,12 +116,10 @@ namespace chai3d {
 			bool stop = false;
 
 			collisionfeedback = checkDistanceSphere2(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie, (IST_A->getPath()), (IST_B->getPath()), nullptr, nullptr);
-
 			/*checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
 			collisionfeedback = mindist;*/
 
 			//std::cout << collisionfeedback << std::endl;
-
 			if (collisionfeedback <= 0) return true;
 			else return false;
 		

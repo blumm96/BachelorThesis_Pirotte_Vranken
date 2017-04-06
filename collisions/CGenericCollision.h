@@ -104,7 +104,7 @@ namespace chai3d {
 	{
 		DISTANCE,
 		VOLUME_PEN,
-		COMBINED
+		BACKWARDTRACK
 	} traversalSetting;
 
 	//! determenating the type of the collisiondetector tree.
