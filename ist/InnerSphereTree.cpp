@@ -13,6 +13,7 @@ namespace chai3d {
 	*/
 	InnerSphereTree::InnerSphereTree() {
 		prevDisplayDepth = m_displayDepth;
+		path = new vector<Sphere*>();
 	}
 
 	/*
@@ -177,7 +178,7 @@ namespace chai3d {
 	*/
 	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root)
 	{
-#define TMAX 500
+#define TMAX 500		
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
 		if (node->getDepth() == a_depth) {
 			addLeafs(leafs, node, root);
@@ -204,7 +205,7 @@ namespace chai3d {
 		w[3].pos.set(x - r, y - r, z - r);
 
 		//define epsilon
-		double eps = 0.00001 * size;
+		double eps = 0.0000001 * size;
 		//first index of weights is the number of the leaf
 		std::vector<std::vector<int>> weights;
 		//row with prototypes per leaf
@@ -239,7 +240,7 @@ namespace chai3d {
 			}
 
 			//calculate new prototype positions
-			float L = 2 * pow((0.01 / 2.0), t / TMAX);
+			float L = 2 * pow((0.01 / 2.0), ((double)t / (double)TMAX));
 			for (int k = 0; k < 4; k++) {
 				double sumf = 0;
 				cVector3d sumv = cVector3d(0, 0, 0);
@@ -286,6 +287,7 @@ namespace chai3d {
 			//with all including radius of their leaves
 
 		for (int i = 0; i < 4; i++) {
+			if (w[i].lfs.empty()) continue;
 			Sphere* s = new Sphere();
 			s->setPosition(w[i].pos);
 			s->setRadius(max[i]);
@@ -296,7 +298,6 @@ namespace chai3d {
 			
 			//set as child of node
 			node->addChild(s);
-
 			//recursive call
 			BNG(size, s, w[i].lfs, a_depth, rootSphere);
 		}
