@@ -86,6 +86,8 @@ namespace chai3d {
 		// The node on which to begin checking.
 		Sphere* beginNode;
 
+		
+
 		// The path to follow in the collision detection.
 		// This is needed for a faster checking in collision.
 		std::vector<Sphere*>* path;
