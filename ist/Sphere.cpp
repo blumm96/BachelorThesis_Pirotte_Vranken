@@ -1,5 +1,7 @@
 #include "ist/Sphere.h"
 
+#include "ist/InnerSphereTree.h"
+
 #include "math/CVector3d.h"
 
 #include "graphics/CDraw3D.h"
@@ -42,8 +44,17 @@ namespace chai3d {
 
 		\return The distance between the two given spheres.
 	*/
-	float Sphere::distance(Sphere* sphere, cVector3d position1, cVector3d position2) {
-		cVector3d hulp = (position1 + this->getPosition()) - (position2 + sphere->getPosition());
+	float Sphere::distance(Sphere* sphere, InnerSphereTree* tree1, InnerSphereTree* tree2) {
+		cVector3d x = this->getPosition().x()*tree1->getB1();
+		cVector3d y = this->getPosition().y()*tree1->getB2();
+		cVector3d z = this->getPosition().z()*tree1->getB3();
+		cVector3d posThis = tree1->getPosition() + x + y + z;
+		
+		x = sphere->getPosition().x()*tree2->getB1();
+		y = sphere->getPosition().y()*tree2->getB2();
+		z = sphere->getPosition().z()*tree2->getB3();
+		cVector3d posS = tree2->getPosition() + x + y + z;
+		cVector3d hulp = posThis - posS;
 		float lengte = hulp.length();
 		float afstand =  lengte - sphere->getRadius() - this->getRadius();
 		if (afstand > 0.0) return afstand;

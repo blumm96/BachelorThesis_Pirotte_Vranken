@@ -14,10 +14,9 @@
 */
 
 namespace chai3d {
-
+	class Sphere;
 	class InnerSphereTree : public cGenericCollision {
-
-	// CONSTRUCTOR - DESTRUCTOR
+		// CONSTRUCTOR - DESTRUCTOR
 	public:
 
 		// Constructor of the inner sphere tree.
@@ -26,7 +25,7 @@ namespace chai3d {
 		// Destructor of the inner sphere tree.
 		virtual ~InnerSphereTree();
 
-	// PUBLIC METHODS
+		// PUBLIC METHODS
 	public:
 
 		// Computes the collision between 2 inner sphere trees.
@@ -42,10 +41,9 @@ namespace chai3d {
 			cVector3d& a_segmentPointA,
 			cVector3d& a_segmentPointB,
 			cCollisionRecorder& a_recorder,
-			cCollisionSettings& a_settings)
-		{
-			return (false);
-		}
+			cCollisionSettings& a_settings) {
+			return false;
+		};
 
 		// Update the inner sphere tree. !NOT IMPLEMENTED!
 		inline virtual void update() {}
@@ -57,7 +55,7 @@ namespace chai3d {
 		void printChildren(Sphere* s);
 
 		/*
-			
+
 			Get the size of this IST.
 
 			\return The size of the IST.
@@ -65,7 +63,7 @@ namespace chai3d {
 		*/
 		inline double getSize() { return size; }
 
-	// DATA MEMBERS
+		// DATA MEMBERS
 	private:
 
 		// The rootsphere.
@@ -90,20 +88,45 @@ namespace chai3d {
 		// This is needed for a faster checking in collision.
 		std::vector<Sphere*>* path;
 
-	// PROTECTED FUNCTIONS
+		//the maximum depth of the tree
+		int m_maxDepth;
+
+		//base vectors for rotation
+		cVector3d* b1;
+		cVector3d* b2;
+		cVector3d* b3;
+
+		// PROTECTED FUNCTIONS
 	public:
 
-		/*
-			
-			Set the position of the IST.
+		inline cVector3d getB1() { return *b1; }
+		inline cVector3d getB2() { return *b2; }
+		inline cVector3d getB3() { return *b3; }
 
-			\param n_positie The new position of the IST.
+		/*
+
+			Set the rotation of the IST.
+
+			\param n The new rotation for the base vectors of the IST.
 
 		*/
-		inline void setPositie(cVector3d n_positie) { positie = n_positie; }
+		inline void setRotation(cMatrix3d n) {
+			double x = n.getRow(0).x();
+			double y = n.getRow(1).x();
+			double z = n.getRow(2).x();
+			b1->set(x, y, z);
+			x = n.getRow(0).y();
+			y = n.getRow(1).y();
+			z = n.getRow(2).y();
+			b2->set(x, y, z);
+			x = n.getRow(0).z();
+			y = n.getRow(1).z();
+			z = n.getRow(2).z();
+			b3->set(x, y, z);
+		}
 
 		/*
-			
+
 			Set the size of the IST.
 
 			\param n_size The new size of the IST.
@@ -115,7 +138,7 @@ namespace chai3d {
 		int buildTree(std::vector<Sphere*> leafs, const int a_depth);
 
 		/*
-			
+
 			Get all the spheres of the IST.
 
 			\return All the spheres.
@@ -136,7 +159,7 @@ namespace chai3d {
 		void setSpheresToRender(Sphere* s, std::vector<Sphere*>& spheres);
 
 		/*
-			
+
 			Get the position of the IST.
 
 			\return The position.
@@ -145,7 +168,7 @@ namespace chai3d {
 		inline cVector3d getPosition() { return positie; }
 
 		/*
-			
+
 			Set the position of the IST.
 
 			\param m_position The new position of the IST.
@@ -154,7 +177,7 @@ namespace chai3d {
 		inline void setPosition(cVector3d m_position) { positie = m_position; }
 
 		/*
-			
+
 			Set the rootsphere of this IST.
 
 			\n_root The new rootsphere of this IST.
@@ -163,7 +186,7 @@ namespace chai3d {
 		inline void setRoot(Sphere* n_root) { rootSphere = n_root; }
 
 		/*
-			
+
 			Get the begin node of this IST.
 
 			\return The begin node.
@@ -172,7 +195,7 @@ namespace chai3d {
 		inline Sphere* getBeginNode() { return beginNode; }
 
 		/*
-			
+
 			Set the begin node of this IST.
 
 			\param n_beginNode The new beginnode of this IST.
@@ -181,7 +204,7 @@ namespace chai3d {
 		inline void setBeginNode(Sphere* n_beginNode) { beginNode = n_beginNode; }
 
 		/*
-			
+
 			Set the path of this IST.
 
 			\param n_path The new path of this IST.
@@ -190,7 +213,7 @@ namespace chai3d {
 		inline void setPath(std::vector<Sphere*>* n_path) { path = n_path; }
 
 		/*
-			
+
 			Get the path of this IST.
 
 			\return The path of this IST.
@@ -198,6 +221,20 @@ namespace chai3d {
 		*/
 		inline std::vector<Sphere*>* getPath() { return path; }
 
+		//implementations for computeCollision chai3d
+		/*enum cCollisionISTState
+		{
+			C_IST_STATE_TEST_CURRENT_NODE,
+			C_IST_STATE_TEST_LEFT_NODE,
+			C_IST_STATE_TEST_RIGHT_NODE,
+			C_IST_STATE_POP_STACK
+		};
+
+		struct cCollisionISTStack
+		{
+			Sphere* m_index;
+			cCollisionISTState m_state;
+		};*/
 	};
 }
 

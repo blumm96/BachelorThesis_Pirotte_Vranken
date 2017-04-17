@@ -12,14 +12,16 @@
 #define SPHERE_H
 
 #include "collisions/CGenericCollision.h"
+#include "ist/InnerSphereTree.h"
 #include "math/CVector3d.h"
 #include "collisions/Triangle.h"
 #include <iostream>
+#include "ist/InnerSphereTree.h"
 
 #include <vector>
 
 namespace chai3d {
-
+	class InnerSphereTree;
 	// Describes where the sphere is located whithin the inner sphere tree.
 	enum sphereState
 	{
@@ -29,10 +31,9 @@ namespace chai3d {
 	};
 
 	class Sphere {
-
 		// VARIABLES
 	private:
-
+		
 		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0)
 		Sphere* parent;
 		// The children of this sphere. If the vector is empty, the sphere is a leafnode.
@@ -70,7 +71,7 @@ namespace chai3d {
 		// PUBLIC METHODS
 	public:
 		// Computes the distance between two spheres.
-		float distance(Sphere* sphere, cVector3d position1, cVector3d position2);
+		float distance(Sphere* sphere, InnerSphereTree* tree1, InnerSphereTree* tree2);
 		// Get the position relative to the parent. 
 		cVector3d getPosition();
 		// Get the radius of the sphere.
@@ -87,7 +88,7 @@ namespace chai3d {
 		Triangle* getTriangle();
 
 		/*
-			
+
 			Set the root for this sphere.
 
 			\param r The root to be set.
@@ -96,14 +97,14 @@ namespace chai3d {
 		inline void setRootSphere(Sphere* r) { rootSphere = r; }
 
 		/*
-			
+
 			Returns the root for this sphere.
 
 			\return The root associated with this sphere.
 
 		*/
-		inline Sphere* getRootSphere() { 
-			if(state != sphereState::SPHERE_ROOT) return rootSphere; 
+		inline Sphere* getRootSphere() {
+			if (state != sphereState::SPHERE_ROOT) return rootSphere;
 			return this;
 		}
 
@@ -126,14 +127,14 @@ namespace chai3d {
 		void make_Sphere(cVector3d center, double r, std::vector<cVector3d*> &spherePoints);
 
 		/*
-			
+
 			This is a help function to render the sphere.
 
 		*/
-		inline void initRender() { 
+		inline void initRender() {
 
-			if (spherePoints.empty()) { 
-				make_Sphere(position, radius, spherePoints); 
+			if (spherePoints.empty()) {
+				make_Sphere(position, radius, spherePoints);
 			}
 
 		}
@@ -142,7 +143,7 @@ namespace chai3d {
 		void render();
 
 		/*
-			
+
 			Set the amount of children this sphere has.
 			This function should only be used when loading an inner sphere tree.
 
@@ -152,9 +153,9 @@ namespace chai3d {
 		inline void setChildrenAmount(int n_amount) { childrenAmount = n_amount; }
 
 		/*
-			
+
 			Get the amount of children this sphere has.
-			
+
 			\return The amount of children this sphere has.
 
 		*/
@@ -162,6 +163,96 @@ namespace chai3d {
 
 		inline float getMindist() { return mindist; };
 		inline void setMindist(float n_dist) { mindist = n_dist; };
-	};
-} // chai3d
+
+	}; // chai3d
+}
 #endif
+
+		//implementations for computeCollision chai3d
+	//	inline bool intersect(const cVector3d& a_segmentPointA, const cVector3d& a_segmentPointB) const
+	//	{
+	//		const int RIGHT = 0;
+	//		const int LEFT = 1;
+	//		const int MIDDLE = 2;
+
+	//		double coord[3];
+	//		char inside = true;
+	//		char quadrant[3];
+	//		int i;
+	//		int whichPlane;
+	//		double maxT[3];
+	//		double candidatePlane[3];
+	//		double dir[3];
+	//		dir[0] = a_segmentPointB(0) - a_segmentPointA(0);
+	//		dir[1] = a_segmentPointB(1) - a_segmentPointA(1);
+	//		dir[2] = a_segmentPointB(2) - a_segmentPointA(2);
+
+	//		// find candidate planes; this loop can be avoided if rays cast all from 
+	//		// the eye (assume perspective view)
+	//		for (i = 0; i<3; i++)
+	//		{
+	//			if (a_segmentPointA(i) - < m_min(i))
+	//			{
+	//				quadrant[i] = LEFT;
+	//				candidatePlane[i] = m_min(i);
+	//				inside = false;
+	//			}
+	//			else if (a_segmentPointA(i) > m_max(i))
+	//			{
+	//				quadrant[i] = RIGHT;
+	//				candidatePlane[i] = m_max(i);
+	//				inside = false;
+	//			}
+	//			else
+	//			{
+	//				quadrant[i] = MIDDLE;
+	//			}
+	//		}
+
+	//		// ray origin inside boundary box
+	//		if (inside)
+	//		{
+	//			return (true);
+	//		}
+
+	//		// calculate T distances to candidate planes
+	//		for (i = 0; i<3; i++)
+	//		{
+	//			if (quadrant[i] != MIDDLE && dir[i] != 0.)
+	//				maxT[i] = (candidatePlane[i] - a_segmentPointA(i)) / dir[i];
+	//			else
+	//				maxT[i] = -1.;
+	//		}
+
+	//		// get largest of the maxT's for final choice of intersection
+	//		whichPlane = 0;
+	//		for (i = 1; i<3; i++)
+	//			if (maxT[whichPlane] < maxT[i])
+	//				whichPlane = i;
+
+	//		// check final candidate actually inside box
+	//		if (maxT[whichPlane] < 0.)
+	//		{
+	//			return (false);
+	//		}
+
+	//		for (i = 0; i<3; i++)
+	//		{
+	//			if (whichPlane != i)
+	//			{
+	//				coord[i] = a_segmentPointA(i) + maxT[whichPlane] * dir[i];
+	//				if (coord[i] < m_min(i) || coord[i] > m_max(i))
+	//				{
+	//					return (false);
+	//				}
+	//			}
+	//			else
+	//			{
+	//				coord[i] = candidatePlane[i];
+	//			}
+	//		}
+
+	//		// ray hits box
+	//		return (true);
+	//	}
+	//};
