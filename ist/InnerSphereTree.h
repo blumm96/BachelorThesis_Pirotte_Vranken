@@ -3,6 +3,7 @@
 
 #include "collisions/CGenericCollision.h"
 #include "ist/Sphere.h"
+#include <iostream>
 
 /*
 	UHAS IMPLEMENTED
@@ -12,6 +13,8 @@
 	\author Casper Vranken
 	\author Niels Pirotte
 */
+
+using namespace std;
 
 namespace chai3d {
 	class Sphere;
@@ -125,6 +128,8 @@ namespace chai3d {
 			y = n.getRow(1).z();
 			z = n.getRow(2).z();
 			b3->set(x, y, z);
+
+			cout << *b1 << " - " << *b2 << " - " << *b3 << endl;
 		}
 
 		/*

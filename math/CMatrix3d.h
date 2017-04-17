@@ -2058,6 +2058,20 @@ public:
         return m_data[a_index0][a_index1];
     }
 
+	//UHAS impl
+	inline void invertElem()
+	{
+		(*this)(0, 0) = -(*this)(0, 0);
+		(*this)(0, 1) = -(*this)(0, 1);
+		(*this)(0, 2) = -(*this)(0, 2);
+		(*this)(1, 0) = -(*this)(1, 0);
+		(*this)(1, 1) = -(*this)(1, 1);
+		(*this)(1, 2) = -(*this)(1, 2);
+		(*this)(2, 0) = -(*this)(2, 0);
+		(*this)(2, 1) = -(*this)(2, 1);
+		(*this)(2, 2) = -(*this)(2, 2);
+	}
+
 
     //--------------------------------------------------------------------------
     // PRIVATE MEMBERS

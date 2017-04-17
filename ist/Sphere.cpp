@@ -54,6 +54,7 @@ namespace chai3d {
 		y = sphere->getPosition().y()*tree2->getB2();
 		z = sphere->getPosition().z()*tree2->getB3();
 		cVector3d posS = tree2->getPosition() + x + y + z;
+
 		cVector3d hulp = posThis - posS;
 		float lengte = hulp.length();
 		float afstand =  lengte - sphere->getRadius() - this->getRadius();

@@ -195,7 +195,7 @@ namespace chai3d {
 		//We detected a collision
 		if ((sphereA->getState() == sphereState::SPHERE_LEAF) || (sphereB->getState() == sphereState::SPHERE_LEAF)) {
 			stop = true;
-			pos = (sphereA->getPosition() + sphereB->getPosition()+tree1->getPosition() + tree2->getPosition());
+			pos = (sphereA->getPosition() + tree1->getPosition());
 			pos = 0.5*pos;
 
 			return 0;

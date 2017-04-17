@@ -15,9 +15,9 @@ namespace chai3d {
 		prevDisplayDepth = m_displayDepth;
 		path = new vector<Sphere*>();
 
-		b1 = new cVector3d(1, 0, 0);
-		b2 = new cVector3d(0, 1, 0);
-		b3 = new cVector3d(0, 0, 1);
+		b1 = new cVector3d(1.0, 0.0, 0.0);
+		b2 = new cVector3d(0.0, 1.0, 0.0);
+		b3 = new cVector3d(0.0, 0.0, 1.0);
 	}
 
 	/*
@@ -97,8 +97,8 @@ namespace chai3d {
 			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
 			InnerSphereTree* IST_A = this;
 
-			Sphere* parent_A = IST_B->getRootSphere();
-			Sphere* parent_B = IST_A->getRootSphere();
+			Sphere* parent_A = IST_A->getRootSphere();
+			Sphere* parent_B = IST_B->getRootSphere();
 
 			bool stop = false;
 
@@ -114,8 +114,8 @@ namespace chai3d {
 			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
 			InnerSphereTree* IST_A = this;
 
-			Sphere* parent_A = IST_B->getRootSphere();
-			Sphere* parent_B = IST_A->getRootSphere();
+			Sphere* parent_A = IST_A->getRootSphere();
+			Sphere* parent_B = IST_B->getRootSphere();
 
 			// Komt uit Collision detection algorithms
 
