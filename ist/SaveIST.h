@@ -124,7 +124,7 @@ namespace chai3d {
 		InnerSphereTree* tree = new InnerSphereTree();
 		tree->setSize(size);
 		tree->setRoot(root);
-		tree->setPositie(cVector3d(0, 0, 0));
+		tree->setPosition(cVector3d(0, 0, 0));
 
 		return tree;
 

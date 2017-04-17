@@ -121,7 +121,7 @@ namespace chai3d {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
-		float afstand = sphereA->distance(sphereB, tree1->getPosition(), tree2->getPosition());
+		float afstand = sphereA->distance(sphereB, tree1, tree2);
 
 		// Calculate the distance between the 2 spheres. 
 		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
@@ -153,7 +153,7 @@ namespace chai3d {
 				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
 				else if ((newA->getState() == sphereState::SPHERE_LEAF) || (newB->getState() == sphereState::SPHERE_LEAF)) {
 					
-					afstand = newA->distance(newB, tree1->getPosition(), tree2->getPosition());
+					afstand = newA->distance(newB, tree1, tree2);
 					if (afstand <= 0) {
 						stop = true;
 						pos = (newA->getPosition() + tree1->getPosition() + newB->getPosition() + tree2->getPosition()) / 2;
@@ -182,7 +182,10 @@ namespace chai3d {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
-		float afstand = sphereA->distance(sphereB, tree1->getPosition(), tree2->getPosition());
+		float afstand = sphereA->distance(sphereB, tree1, tree2);
+
+		if (sphereA->getState() == sphereState::SPHERE_LEAF && afstand == 0.0) return 0.0;
+
 		// Calculate the distance between the 2 spheres. 
 		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
 		if (afstand > 0) return afstand;
@@ -216,9 +219,28 @@ namespace chai3d {
 				if (newB == excludeB) continue;
 				pathB->push_back(newB);
 
+				if (stop) {
+					goto checkDistanceSphere2HulpEinde;
+				}
+
 				// If the children aren't leaf nodes, continue the recursion.
-				afstand = cMin(checkDistanceSphere2Hulp(newA, newB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, nullptr, nullptr), afstand);
-				
+				if ((newA->getState() != sphereState::SPHERE_LEAF) && (newB->getState() != sphereState::SPHERE_LEAF)) {
+					afstand = cMin(checkDistanceSphere2Hulp(newA, newB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, nullptr, nullptr), afstand);
+				}
+				// If both children are leaf nodes, calculate the distance.
+				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
+				else if ((newA->getState() == sphereState::SPHERE_LEAF) || (newB->getState() == sphereState::SPHERE_LEAF)) {
+
+					afstand = newA->distance(newB, tree1, tree2);
+					if (afstand <= 0) {
+						stop = true;
+						pos = (newA->getPosition() + tree1->getPosition() + newB->getPosition() + tree2->getPosition()) / 2;
+
+						goto checkDistanceSphere2HulpEinde;
+					}
+
+				}
+
 				if (stop) {
 					goto checkDistanceSphere2HulpEinde;
 				}
@@ -244,7 +266,7 @@ namespace chai3d {
 	{
 		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
 		if ((A->getState() == sphereState::SPHERE_LEAF && B->getState() == sphereState::SPHERE_LEAF) || A->getDepth() == maxdiepte) {
-			mindist = cMin(mindist, A->distance(B, tree_A->getPosition(), tree_B->getPosition()));
+			mindist = cMin(mindist, A->distance(B, tree_A, tree_B));
 		}
 		else {
 			//recursion
@@ -258,7 +280,7 @@ namespace chai3d {
 				for (Sphere* B : children_B) {
 					Sphere* newA = A;
 					Sphere* newB = B;
-					float afstand = newA->distance(newB, tree_A->getPosition(), tree_B->getPosition());
+					float afstand = newA->distance(newB, tree_A, tree_B);
 
 					if (newA->getMindist() > afstand) newA->setMindist(afstand);
 					if (newB->getMindist() > afstand) newB->setMindist(afstand);
