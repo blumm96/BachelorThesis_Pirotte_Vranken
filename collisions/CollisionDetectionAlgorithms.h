@@ -156,7 +156,7 @@ namespace chai3d {
 					afstand = newA->distance(newB, tree1, tree2);
 					if (afstand <= 0) {
 						stop = true;
-						pos = (newA->getPosition() + tree1->getPosition() + newB->getPosition() + tree2->getPosition()) / 2;
+						pos = (newA->getPositionWithAngle(tree1));
 						goto checkDistanceEinde;
 					}
 
@@ -195,8 +195,7 @@ namespace chai3d {
 		//We detected a collision
 		if ((sphereA->getState() == sphereState::SPHERE_LEAF) || (sphereB->getState() == sphereState::SPHERE_LEAF)) {
 			stop = true;
-			pos = (sphereA->getPosition() + tree1->getPosition());
-			pos = 0.5*pos;
+			pos = (sphereA->getPositionWithAngle(tree1));
 
 			return 0;
 		}
@@ -234,7 +233,7 @@ namespace chai3d {
 					afstand = newA->distance(newB, tree1, tree2);
 					if (afstand <= 0) {
 						stop = true;
-						pos = (newA->getPosition() + tree1->getPosition() + newB->getPosition() + tree2->getPosition()) / 2;
+						pos = (newA->getPositionWithAngle(tree1));
 
 						goto checkDistanceSphere2HulpEinde;
 					}

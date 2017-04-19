@@ -72,6 +72,26 @@ namespace chai3d {
 	}
 
 	/*
+		
+		Returns the position of the sphere relative to the parent with the turning taken into account.
+
+		\param tree1 The tree of the sphere.
+
+		\return The relative position.
+
+	*/
+	cVector3d Sphere::getPositionWithAngle(InnerSphereTree* tree1) {
+
+		cVector3d x = this->getPosition().x()*tree1->getB1();
+		cVector3d y = this->getPosition().y()*tree1->getB2();
+		cVector3d z = this->getPosition().z()*tree1->getB3();
+		cVector3d posThis = tree1->getPosition() + x + y + z;
+
+		return posThis;
+
+	}
+
+	/*
 		Returns the radius of the sphere
 
 		\return The radius.

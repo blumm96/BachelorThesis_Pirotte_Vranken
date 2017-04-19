@@ -74,6 +74,8 @@ namespace chai3d {
 		float distance(Sphere* sphere, InnerSphereTree* tree1, InnerSphereTree* tree2);
 		// Get the position relative to the parent. 
 		cVector3d getPosition();
+		// Get the position relative to the parent with the turning taken into account.
+		cVector3d getPositionWithAngle(InnerSphereTree* tree1);
 		// Get the radius of the sphere.
 		float getRadius();
 		// Get the children of the sphere.
