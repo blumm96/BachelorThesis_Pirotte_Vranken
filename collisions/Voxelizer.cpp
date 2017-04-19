@@ -96,7 +96,7 @@ namespace chai3d {
 
 		//! Constructor of Voxelizer.
 		Voxelizer::Voxelizer() {
-			
+
 		}
 
 		//! Destructor of Voxelizer.
@@ -758,6 +758,9 @@ namespace chai3d {
 			 {
 			 fSqrDistance = (double) 0.0;
 			 }
+
+			 // for implementing the closest point on the triangle:
+			 // ClosestPoint = v0 + fS*kEdge0 + fT*kEdge1;
 
 			delete kEdge0;
 			delete kEdge1;

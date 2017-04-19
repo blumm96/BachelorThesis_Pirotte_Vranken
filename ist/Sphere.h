@@ -86,7 +86,7 @@ namespace chai3d {
 		sphereState getState();
 		// Get the depth of the sphere in the innersphere tree.
 		int getDepth();
-		// Get th triangle of this sphere.
+		// Get the triangle of this sphere.
 		Triangle* getTriangle();
 
 		/*
