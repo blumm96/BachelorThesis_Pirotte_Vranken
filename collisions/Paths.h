@@ -16,6 +16,7 @@ namespace chai3d {
 		vector<vector<Sphere*>> pathsA;
 		vector<vector<Sphere*>> pathsB;
 		int aantalVrijheidsgraden;
+		vector<cVector3d> positions;
 
 	// CONSTRUCTOR - DESTRUCTOR
 	public:
@@ -42,6 +43,11 @@ namespace chai3d {
 		vector<Sphere*> getSpheresAtDepth(int index, bool a);
 		void popBack(int index, bool a);
 		void pushBack(Sphere* s, int index, bool a);
+
+	// INLINE
+	public:
+		inline vector<cVector3d> getPositions() { return positions; }
+		inline int getAantalVrijheidsgraden() { return aantalVrijheidsgraden; }
 
 	};
 
