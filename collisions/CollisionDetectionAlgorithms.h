@@ -261,7 +261,9 @@ namespace chai3d {
 						goto checkDistanceSphere2HulpEinde;
 					}
 
-					for (unsigned int t = 0; t < newA->getTriangles().size(); t++) {
+					//cout << "Aantal driehoeken: " << newA->getTriangles().size() << endl;
+
+					/*for (unsigned int t = 0; t < newA->getTriangles().size(); t++) {
 						for (unsigned int u = 0; u < newB->getTriangles().size(); u++) {
 							if (newA->getTriangles()[t]->intersectie(newB->getTriangles()[u])) {
 								stop = true;
@@ -271,7 +273,7 @@ namespace chai3d {
 								goto checkDistanceSphere2HulpEinde;
 							}
 						}
-					}
+					}*/
 
 				}
 
