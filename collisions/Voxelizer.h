@@ -73,6 +73,8 @@ namespace chai3d {
 		void find_closest_point(Voxel* v);
 		void setObject(cCollisionAABB* c);
 
+		void mapClosestTriangles();
+
 		void initialize();
 
 		inline void setPositie(cVector3d n_positie) { positie = n_positie; }
@@ -139,6 +141,8 @@ namespace chai3d {
 		// HELPMEMBERS:
 		//--------------------------------------------------------------------------
 		std::vector<cCollisionAABBNode> object_nodes;
+		std::vector<Triangle*> allTriangles;
+		std::vector<Sphere*> leafs;
 		unsigned long root_index;
 		cVector3d positie;
 		int accuraatheid;

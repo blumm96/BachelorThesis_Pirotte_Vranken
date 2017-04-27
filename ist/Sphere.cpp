@@ -145,9 +145,9 @@ namespace chai3d {
 		\return The triangle of this sphere.
 
 	*/
-	Triangle* Sphere::getTriangle()
+	vector<Triangle*> Sphere::getTriangles()
 	{
-		return triangle;
+		return triangles;
 	}
 
 	/*
@@ -190,9 +190,9 @@ namespace chai3d {
 		\param setT The new triangle associated with this sphere.
 
 	*/
-	void Sphere::setTriangle(Triangle* setT)
+	void Sphere::addTriangle(Triangle* setT)
 	{
-		triangle = setT;
+		triangles.push_back(setT);
 	}
 
 	/*

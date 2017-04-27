@@ -261,6 +261,18 @@ namespace chai3d {
 						goto checkDistanceSphere2HulpEinde;
 					}
 
+					for (unsigned int t = 0; t < newA->getTriangles().size(); t++) {
+						for (unsigned int u = 0; u < newB->getTriangles().size(); u++) {
+							if (newA->getTriangles()[t]->intersectie(newB->getTriangles()[u])) {
+								stop = true;
+								afstand = 0;
+								pos = (newA->getPositionWithAngle(tree1));
+
+								goto checkDistanceSphere2HulpEinde;
+							}
+						}
+					}
+
 				}
 
 				if (stop) {
@@ -327,21 +339,22 @@ namespace chai3d {
 		InnerSphereTree* tree1,
 		InnerSphereTree* tree2,
 		int maxdiepte,
-		Paths* paths
+		Paths* paths,
+		vector<Sphere*> excludesA,
+		vector<Sphere*> excludesB, 
+		int hoeveelsteBezig
 		) {
 
-		float minimumAfstand = numeric_limits<float>::infinity();
+		bool stop = false;
 
-		for (int i = 0; i < paths->getAantalVrijheidsgraden(); i++) {
-
-			bool stop = false;
-
-			if (paths->getA(i).empty() || paths->getB(i).empty()) {
-				// ROEP DE HULP METHODE OP
-				float a = checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, paths->getPositions()[i], &paths->getA(i), &paths->getB(i), paths->getSpheresAtDepthA(4), paths->getSpheresAtDepthB(4));
-			}
-
+		if (paths->getA(hoeveelsteBezig).empty() || paths->getB(hoeveelsteBezig).empty()) {
+			// ROEP DE HULP METHODE OP
+			return checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, paths->getPositions()[hoeveelsteBezig], &paths->getA(hoeveelsteBezig), &paths->getB(hoeveelsteBezig), excludesA, excludesB);
 		}
+
+		float dist = checkDistanceSphere2Hulp(paths->getA(hoeveelsteBezig)[paths->getA(hoeveelsteBezig).size() - 1], paths->getB(hoeveelsteBezig)[paths->getB(hoeveelsteBezig).size() - 1], tree1, tree2, maxdiepte, stop, paths->getPositions()[hoeveelsteBezig], &paths->getA(hoeveelsteBezig), &paths->getB(hoeveelsteBezig), excludesA, excludesB);
+
+		if (dist == 0) return dist;
 
 	}
 
