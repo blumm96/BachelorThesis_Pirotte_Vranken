@@ -1,6 +1,7 @@
 #ifndef INNERSPHERETREE_H
 #define INNERSPHERETREE_H
 
+#include "collisions/Paths.h"
 #include "collisions/CGenericCollision.h"
 #include "ist/Sphere.h"
 #include <iostream>
@@ -18,6 +19,7 @@ using namespace std;
 
 namespace chai3d {
 	class Sphere;
+	class Paths;
 	class InnerSphereTree : public cGenericCollision {
 		// CONSTRUCTOR - DESTRUCTOR
 	public:
@@ -28,9 +30,12 @@ namespace chai3d {
 		// Destructor of the inner sphere tree.
 		virtual ~InnerSphereTree();
 
+		// Static datamembers
+	public:
+		static Paths globalPath;
+
 		// PUBLIC METHODS
 	public:
-
 		// Computes the collision between 2 inner sphere trees.
 		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
 		// Get the type of tree. In this case IST.

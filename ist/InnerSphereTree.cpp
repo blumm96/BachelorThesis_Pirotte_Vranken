@@ -8,6 +8,9 @@ using namespace std;
 
 namespace chai3d {
 
+	//initialization of static
+	Paths InnerSphereTree::globalPath = Paths(3);
+
 	/*
 		Constructor of an inner sphere tree.
 	*/
@@ -121,7 +124,9 @@ namespace chai3d {
 
 			bool stop = false;
 
-			collisionfeedback = checkDistanceSphere2(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie, (IST_A->getPath()), (IST_B->getPath()), nullptr, nullptr);
+			vector<Sphere*> visNodesA = vector<Sphere*>();
+			vector<Sphere*> visNodesB = vector<Sphere*>();
+			collisionfeedback = checkDistanceSphere2(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie, (IST_A->getPath()), (IST_B->getPath()), nullptr, nullptr, &visNodesA, &visNodesB, false);
 			/*checkDistanceSphere2(parent_A, parent_B, mindist, IST_A, IST_B, maxdiepte);
 			collisionfeedback = mindist;*/
 
@@ -129,6 +134,19 @@ namespace chai3d {
 			if (collisionfeedback <= 0) return true;
 			else return false;
 		
+		};
+		case traversalSetting::MULTIPOINT: {
+			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
+			InnerSphereTree* IST_A = this;
+
+			Sphere* parent_A = IST_A->getRootSphere();
+			Sphere* parent_B = IST_B->getRootSphere();
+
+			// Komt uit Collision detection algorithms
+
+			bool stop = false;
+
+			return checkDistanceSphereMultipoint(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, InnerSphereTree::globalPath);
 		};
 		case traversalSetting::VOLUME_PEN: return false;
 		default: return false;

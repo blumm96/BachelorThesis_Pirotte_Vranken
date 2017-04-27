@@ -33,6 +33,9 @@ using namespace std;
 //------------------------------------------------------------------------------
 namespace chai3d {
 	//------------------------------------------------------------------------------
+	//definitions
+	bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos);
+
 
 	//==============================================================================
 	/*!
@@ -178,8 +181,11 @@ namespace chai3d {
 		cVector3d& pos,
 		vector<Sphere*>* pathA,
 		vector<Sphere*>* pathB,
-		vector<Sphere*> excludeA,
-		vector<Sphere*> excludeB) {
+		Sphere* excludeA,
+		Sphere* excludeB,
+		vector<Sphere*>* visNodesA,
+		vector<Sphere*>* visNodesB, 
+		bool multi) {
 
 		// Return the distance between 2 spheres when we went deeper in the tree than specified.
 		// This results in worse accuracy and should ideally never be called.
@@ -213,12 +219,19 @@ namespace chai3d {
 			Sphere* newA = children_A[i];
 
 			bool stopA = false;
-			for (int k = 0; k < excludeA.size(); k++) {
-				if (excludeA[k] == newA) {
-					stopA = true;
-					break;
+
+			if (excludeA == newA) {
+				stopA = true;
+			}
+			else if(multi) {
+				for (Sphere* test : *visNodesA) {
+					if (test == newA) {
+						stopA = true;
+						break;
+					}
 				}
 			}
+
 			if (stopA) continue;
 
 			pathA->push_back(newA);
@@ -227,12 +240,19 @@ namespace chai3d {
 				Sphere* newB = children_B[j];
 				
 				bool stopB = false;
-				for (int k = 0; k < excludeB.size(); k++) {
-					if (excludeB[k] == newB) {
-						stopB = true;
-						break;
+
+				if (excludeB == newB) {
+					stopB = true;
+				}
+				else if (multi){
+					for (Sphere* test : *visNodesB) {
+						if (test == newB) {
+							stopB = true;
+							break;
+						}
 					}
 				}
+				
 				if (stopB) continue;
 
 				pathB->push_back(newB);
@@ -243,11 +263,7 @@ namespace chai3d {
 
 				// If the children aren't leaf nodes, continue the recursion.
 				if ((newA->getState() != sphereState::SPHERE_LEAF) && (newB->getState() != sphereState::SPHERE_LEAF)) {
-					vector<Sphere*>* a = new vector<Sphere*>();
-					vector<Sphere*>* b = new vector<Sphere*>();
-					afstand = cMin(checkDistanceSphere2Hulp(newA, newB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, *a, *b), afstand);
-					delete a;
-					delete b;
+					afstand = cMin(checkDistanceSphere2Hulp(newA, newB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, nullptr, nullptr, visNodesA, visNodesB, multi), afstand);
 				}
 				// If both children are leaf nodes, calculate the distance.
 				// If the distance is 0 or smaller, a collision has occured and the distance should be returned.
@@ -260,23 +276,35 @@ namespace chai3d {
 
 						goto checkDistanceSphere2HulpEinde;
 					}
-
 				}
 
 				if (stop) {
 					goto checkDistanceSphere2HulpEinde;
 				}
+				if (multi) {
+					vector<Sphere*>::iterator it = visNodesB->begin();
+					while(it != visNodesB->end()) {
+						Sphere* test = *(it);
+						if (test->isChild(pathB->back())) it = visNodesB->erase(it);
+						else it++;
+					}
+					visNodesB->push_back(pathB->back());
+				}
 				pathB->pop_back();
 			} // End of iteration B
+			if (multi) {
+				vector<Sphere*>::iterator it = visNodesA->begin();
+				while(it != visNodesA->end()) {
+					Sphere* test = *(it);
+					if (test->isChild(pathA->back())) it = visNodesA->erase(it);
+					else it++;
+				}
+				visNodesA->push_back(pathA->back());
+			}
 			pathA->pop_back();
 		} // End of iteration A
 		checkDistanceSphere2HulpEinde: return afstand;
 	}
-
-
-	struct comp {
-		bool operator()(Sphere* s1, Sphere* s2) { return ((s1->getMindist()) < (s2->getMindist())); }
-	};
 
 	inline float checkDistanceSphere2(
 		Sphere* sphereA,
@@ -288,26 +316,17 @@ namespace chai3d {
 		cVector3d& pos,
 		vector<Sphere*>* pathA,
 		vector<Sphere*>* pathB,
-		Sphere* excludeA, 
-		Sphere* excludeB) {
+		Sphere* excludeA,
+		Sphere* excludeB,
+		vector<Sphere*>* visNodesA,
+		vector<Sphere*>* visNodesB,
+		bool multi) {
 
 		if (pathA->empty() || pathB->empty()) {
-			vector<Sphere*>* a = new vector<Sphere*>();
-			vector<Sphere*>* b = new vector<Sphere*>();
-			return checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, *a, *b);
-			delete a;
-			delete b;
+			return checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, nullptr, nullptr, visNodesA, visNodesB, multi);
 		}
 
-		vector<Sphere*>* a = new vector<Sphere*>();
-		vector<Sphere*>* b = new vector<Sphere*>();
-		a->push_back(excludeA);
-		b->push_back(excludeB);
-
-		float dist = checkDistanceSphere2Hulp((*pathA)[pathA->size() - 1], (*pathB)[pathB->size() - 1], tree1, tree2, maxdiepte, stop, pos, pathA, pathB, *a, *b);
-
-		delete a;
-		delete b;
+		float dist = checkDistanceSphere2Hulp((*pathA)[pathA->size() - 1], (*pathB)[pathB->size() - 1], tree1, tree2, maxdiepte, stop, pos, pathA, pathB, excludeA, excludeB, visNodesA, visNodesB, multi);
 
 		if (dist == 0) return dist;
 
@@ -318,33 +337,100 @@ namespace chai3d {
 		pathB->pop_back();
 
 		//?
-		return checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, newExA, newExB);
+		return checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, newExA, newExB, visNodesA, visNodesB, multi);
 	}
 
-	inline float checkDistanceSphereMultiplePoints(
+	inline bool checkDistanceSphereMultipoint(
 		Sphere* sphereA,
 		Sphere* sphereB,
 		InnerSphereTree* tree1,
 		InnerSphereTree* tree2,
 		int maxdiepte,
-		Paths* paths
-		) {
+		bool& stop,
+		Paths paths) {
 
-		float minimumAfstand = numeric_limits<float>::infinity();
+		//init
+		int initPaths = paths.size(); //initPaths = aantal collisiepaden opgeslagen
+		int collisions = 0;
+		cVector3d pos;
+		vector<int> excludedPaths;
+		vector<int> reTraversePath;
 
-		for (int i = 0; i < paths->getAantalVrijheidsgraden(); i++) {
+		//clear alle berekende posities
+		paths.clearPositions();
 
-			bool stop = false;
-
-			if (paths->getA(i).empty() || paths->getB(i).empty()) {
-				// ROEP DE HULP METHODE OP
-				float a = checkDistanceSphere2Hulp(sphereA, sphereB, tree1, tree2, maxdiepte, stop, paths->getPositions()[i], &paths->getA(i), &paths->getB(i), paths->getSpheresAtDepthA(4), paths->getSpheresAtDepthB(4));
+		//check als leafs van deze paden nog raken
+		for (int i = 0; i < initPaths; i++) {
+			//test if leafs->needs to be deleted
+			if ((paths.getA(i).back()->getState() == sphereState::SPHERE_LEAF) && (paths.getB(i).back()->getState() == sphereState::SPHERE_LEAF)) cout << "error: unexpected collision check of non leaf spheres" << endl;
+			
+			if (checkLeafCollision(paths.getA(i).back(), paths.getB(i).back(), tree1, tree2, pos)) {
+				//deze paden moeten niet meer worden bekeken
+				paths.addPosition(pos);
+				excludedPaths.push_back(i);
+				collisions++;
 			}
-
+			else {
+				//deze paden moeten wel worden gebruikt om een nieuwe collisie te zoeken
+				reTraversePath.push_back(i);
+			}
 		}
 
+		//gebruik vorige paden die niet raken om terug te zoeken in de boom
+		vector<Sphere*>* excludesA = new vector<Sphere*>();
+		vector<Sphere*>* excludesB = new vector<Sphere*>();
+		for (int j: reTraversePath) {
+			//tegelijkertijd worden van de paden de raakpunten geset en ze worden toegevoegd aan  excludedPaths
+			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &paths.getA(j), &paths.getB(j), nullptr, nullptr, excludesA, excludesB, true)) {
+				paths.addPosition(pos);
+				collisions++;
+			}
+			else break;
+		}
+
+		//probeer nieuwe paden te vinden
+		for (int i = 0; i < paths.getAantalVrijheidsgraden() - collisions; i++) {
+			vector<Sphere*> addPathA = vector<Sphere*>(); 
+			vector<Sphere*> addPathB = vector<Sphere*>();
+
+			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &addPathA, &addPathB, nullptr, nullptr, excludesA, excludesB, true)) {
+				paths.addPosition(pos);
+				collisions++;
+				paths.pushBackA(addPathA);
+				paths.pushBackB(addPathB);
+			}
+			else break;
+		}
+
+		delete excludesA;
+		delete excludesB;
+
+		if (collisions > 0) return true;
+		return false;
 	}
 
+	
+
+	//Help functions
+	/////////////////////////////////////////////////////////////////////////////////
+
+	struct comp {
+		bool operator()(Sphere* s1, Sphere* s2) { return ((s1->getMindist()) < (s2->getMindist())); }
+	};
+
+	inline bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos) {
+
+		float afstand = leaf1->distance(leaf2, tree1, tree2);
+		if (afstand == 0.0) {
+			return true;
+			pos = leaf1->getPositionWithAngle(tree1);
+		}
+		return false;
+	}
+
+	//EXTRA
+	/////////////////////////////////////////////////////////////////////////////////
+	//This algorithm tries to create a speed up by first checking the sphers which were closest in a previous collision detection
 	inline void checkDistanceSphere3(Sphere* A,
 		Sphere* B,
 		float& mindist,
@@ -387,10 +473,6 @@ namespace chai3d {
 			}
 		}
 	}
-
-	//Help functions
-	/////////////////////////////////////////////////////////////////////////////////
-
 	//------------------------------------------------------------------------------
 } // namespace chai3d
   //------------------------------------------------------------------------------

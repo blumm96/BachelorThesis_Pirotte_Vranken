@@ -88,6 +88,8 @@ namespace chai3d {
 		int getDepth();
 		// Get the triangle of this sphere.
 		Triangle* getTriangle();
+		// returns true if this sphere is a child of a parameter sphere
+		bool isChild(Sphere* parent);
 
 		/*
 

@@ -72,4 +72,29 @@ namespace chai3d {
 		this->pushBack(s, index, false);
 	}
 
+	void Paths::pushBack(vector<Sphere*> newPath, bool a) {
+		if (a) pathsA.push_back(newPath);
+		else pathsB.push_back(newPath);
+	}
+
+	void Paths::pushBackA(vector<Sphere*> newPath) {
+		pushBack(newPath, true);
+	}
+
+	void Paths::pushBackB(vector<Sphere*> newPath) {
+		pushBack(newPath, false);
+	}
+
+	int Paths::size() { return pathsA.size(); }
+
+	void Paths::clearPositions()
+	{
+		positions.clear();
+	}
+
+	void Paths::addPosition(cVector3d pos)
+	{
+		positions.push_back(pos);
+	}
+
 } // chai3d

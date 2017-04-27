@@ -151,6 +151,22 @@ namespace chai3d {
 	}
 
 	/*
+
+	Returns if this sphere is a child of a sphere.
+
+	\param The posible parent sphere
+	\return True if this sphere is child of parent.
+
+	*/
+	bool Sphere::isChild(Sphere * parent)
+	{	
+		if (this->getState() == sphereState::SPHERE_ROOT) return false;
+		if (parent == nullptr) return false;
+		if (this->getParent() == parent) return true;
+		return false;
+	}
+
+	/*
 		
 		Set the radius of this sphere.
 

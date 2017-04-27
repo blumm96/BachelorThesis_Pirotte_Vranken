@@ -1,14 +1,15 @@
 #ifndef PATHS_H
 #define PATHS_H
 
-#include "ist/Sphere.h"
+#include "math/CVector3d.h"
+#include "ist\Sphere.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
 namespace chai3d {
-
+	class Sphere;
 	class Paths {
 
 	// DATA MEMBERS
@@ -37,12 +38,21 @@ namespace chai3d {
 		void pushBackA(Sphere* s, int index);
 		void pushBackB(Sphere* s, int index);
 
+		void pushBackA(vector<Sphere*> newPath);
+		void pushBackB(vector<Sphere*> newPath);
+
+		int size();
+
+		void clearPositions();
+		void addPosition(cVector3d pos);
+
 	// PRIVATE METHODS
 	private:
 		vector<Sphere*> get(int index, bool a);
 		vector<Sphere*> getSpheresAtDepth(int index, bool a);
 		void popBack(int index, bool a);
 		void pushBack(Sphere* s, int index, bool a);
+		void pushBack(vector<Sphere*> newPath, bool a);
 
 	// INLINE
 	public:
