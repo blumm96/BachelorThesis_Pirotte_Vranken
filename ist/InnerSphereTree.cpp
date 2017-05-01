@@ -148,6 +148,23 @@ namespace chai3d {
 
 			return checkDistanceSphereMultipoint(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, InnerSphereTree::globalPath);
 		};
+		case traversalSetting::ACCURATE: {
+			float kortste = numeric_limits<float>::infinity();
+			float verste = 0;
+
+			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
+			InnerSphereTree* IST_A = this;
+
+			Sphere* parent_A = IST_A->getRootSphere();
+			Sphere* parent_B = IST_B->getRootSphere();
+
+			accurateCheck(IST_A, IST_B, parent_A, parent_B, kortste, verste);
+
+			positie.set(kortste, verste, -1);
+
+			return true;
+
+		};
 		case traversalSetting::VOLUME_PEN: return false;
 		default: return false;
 		}

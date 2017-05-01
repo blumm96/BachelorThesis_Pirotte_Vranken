@@ -470,7 +470,32 @@ namespace chai3d {
 		}
 	}
 
+	inline void accurateCheck(
+		InnerSphereTree *tree1,
+		InnerSphereTree *tree2,
+		Sphere *sphere1,
+		Sphere *sphere2,
+		float &kortste,
+		float &langste
+	) {
 
+		if (sphere1->getState() == sphereState::SPHERE_LEAF) {
+			float kafstand = sphere1->distance(sphere2, tree1, tree2);
+			float lafstand = kafstand + sphere1->getRadius() * 2 + sphere2->getRadius() * 2;
+			if (kafstand < kortste) kortste = kafstand;
+			if (lafstand > langste) langste = lafstand;
+		}
+		else {
+			for (unsigned int i = 0; i < sphere1->getChildren().size(); i++) {
+				for (unsigned int j = 0; j < sphere2->getChildren().size(); j++) {
+
+					accurateCheck(tree1, tree2, sphere1->getChildren()[i], sphere2->getChildren()[j], kortste, langste);
+
+				}
+			}
+		}
+
+	}
 
 	//------------------------------------------------------------------------------
 } // namespace chai3d

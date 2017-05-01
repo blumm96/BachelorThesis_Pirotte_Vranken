@@ -2525,6 +2525,7 @@ bool cGenericObject::computeCollision(cGenericObject *B, traversalSetting settin
 	if (B == NULL) return false;
 	if (this->getCollisionDetector() == NULL) return false;
 
+
 	return this->getCollisionDetector()->computeCollision(B->getCollisionDetector(), setting, collisionfeedback, maxdiepte, this->getLocalPos(), B->getLocalPos(), positie);
 }
 
