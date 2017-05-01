@@ -251,9 +251,9 @@ namespace chai3d {
 				s->setPosition(*(v->getPos()) - positie);
 				s->setRadius(v->getMinDist());
 				s->setState(sphereState::SPHERE_LEAF);
-				s->setTriangle(closest_triangle);
 
 				innerspheres.push_back(s);
+				leafs.push_back(s);
 
 				//delete all voxels contained in the sphere
 				for (auto i = priorityList.begin(); i != priorityList.end();) {
@@ -772,7 +772,47 @@ namespace chai3d {
 				return fSqrDistance;
 		}
 
+		void Voxelizer::mapClosestTriangles() {
+			std::cout << "Aantal boxen: " << object_nodes.size() << endl;
+			for (int i = 0; i < object_nodes.size(); i++) {
 
+				if (object_nodes[i].m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) {
+					allTriangles.push_back(object_nodes[i].m_bbox.triangle);
+				}
+
+			}
+
+			for (int i = 0; i < allTriangles.size(); i++) {
+
+				int sphere = -1;
+				float minAfstand = std::numeric_limits<float>::infinity();
+
+				for (int k = 0; k < leafs.size(); k++) {
+					cVector3d helpPos = cVector3d(
+						leafs[k]->getPosition().x() - allTriangles[i]->getCenter()->x(),
+						leafs[k]->getPosition().y() - allTriangles[i]->getCenter()->y(),
+						leafs[k]->getPosition().z() - allTriangles[i]->getCenter()->z());
+					//helpPos.sub(*(allTriangles[i]->getCenter()));
+					float lengte = helpPos.length();
+					float afstand = helpPos.length() - leafs[k]->getRadius();
+
+					if (afstand < minAfstand) {
+						minAfstand = afstand;
+						sphere = k;
+					}
+				}
+
+				leafs[sphere]->addTriangle(allTriangles[i]);
+
+			}
+
+			for (int i = 0; i < leafs.size(); i++) {
+				cout << "Aantal tris: " << leafs[i]->getTriangles().size() << endl;
+			}
+			 
+			cout << allTriangles.size() << " triangles toegewezen aan leaf spheres." << endl << endl;
+
+		}
 
 	//------------------------------------------------------------------------------
 } // namespace chai3d

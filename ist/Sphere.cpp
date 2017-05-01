@@ -145,25 +145,9 @@ namespace chai3d {
 		\return The triangle of this sphere.
 
 	*/
-	Triangle* Sphere::getTriangle()
+	vector<Triangle*> Sphere::getTriangles()
 	{
-		return triangle;
-	}
-
-	/*
-
-	Returns if this sphere is a child of a sphere.
-
-	\param The posible parent sphere
-	\return True if this sphere is child of parent.
-
-	*/
-	bool Sphere::isChild(Sphere * parent)
-	{	
-		if (this->getState() == sphereState::SPHERE_ROOT) return false;
-		if (parent == nullptr) return false;
-		if (this->getParent() == parent) return true;
-		return false;
+		return triangles;
 	}
 
 	/*
@@ -206,9 +190,9 @@ namespace chai3d {
 		\param setT The new triangle associated with this sphere.
 
 	*/
-	void Sphere::setTriangle(Triangle* setT)
+	void Sphere::addTriangle(Triangle* setT)
 	{
-		triangle = setT;
+		triangles.push_back(setT);
 	}
 
 	/*

@@ -134,7 +134,7 @@ namespace chai3d {
 			z = n.getRow(2).z();
 			b3->set(x, y, z);
 
-			cout << *b1 << " - " << *b2 << " - " << *b3 << endl;
+			//cout << *b1 << " - " << *b2 << " - " << *b3 << endl;
 		}
 
 		/*

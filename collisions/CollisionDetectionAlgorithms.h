@@ -1,10 +1,6 @@
 //==============================================================================
 /*
-<<<<<<< HEAD
-Implemented by Casper Vranken and Niels Pirotte commisioned by the University of Hasselt, Belgium
-=======
 Implemented by Casper Vranken and Niels Pirotte commisioned by the University of Hasselt and KU Leuven, Belgium
->>>>>>> origin/IST
 
 Algorithm sources: 
 -new geometric datastructures for collision detection and haptics - René Weller
