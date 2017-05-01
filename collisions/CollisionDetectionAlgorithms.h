@@ -282,13 +282,13 @@ namespace chai3d {
 					goto checkDistanceSphere2HulpEinde;
 				}
 				if (multi) {
-					vector<Sphere*>::iterator it = visNodesB->begin();
+					/*vector<Sphere*>::iterator it = visNodesB->begin();
 					while(it != visNodesB->end()) {
 						Sphere* test = *(it);
 						if (test->isChild(pathB->back())) it = visNodesB->erase(it);
 						else it++;
 					}
-					visNodesB->push_back(pathB->back());
+					visNodesB->push_back(pathB->back());*/
 				}
 				pathB->pop_back();
 			} // End of iteration B
@@ -381,7 +381,7 @@ namespace chai3d {
 		vector<Sphere*>* excludesB = new vector<Sphere*>();
 		for (int j: reTraversePath) {
 			//tegelijkertijd worden van de paden de raakpunten geset en ze worden toegevoegd aan  excludedPaths
-			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &paths.getA(j), &paths.getB(j), nullptr, nullptr, excludesA, excludesB, true)) {
+			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &paths.getA(j), &paths.getB(j), nullptr, nullptr, excludesA, excludesB, true) <= 0) {
 				paths.addPosition(pos);
 				collisions++;
 			}
@@ -393,7 +393,7 @@ namespace chai3d {
 			vector<Sphere*> addPathA = vector<Sphere*>(); 
 			vector<Sphere*> addPathB = vector<Sphere*>();
 
-			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &addPathA, &addPathB, nullptr, nullptr, excludesA, excludesB, true)) {
+			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &addPathA, &addPathB, nullptr, nullptr, excludesA, excludesB, true) <= 0) {
 				paths.addPosition(pos);
 				collisions++;
 				paths.pushBackA(addPathA);
@@ -421,9 +421,9 @@ namespace chai3d {
 	inline bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos) {
 
 		float afstand = leaf1->distance(leaf2, tree1, tree2);
-		if (afstand == 0.0) {
-			return true;
+		if (afstand <= 0.0) {
 			pos = leaf1->getPositionWithAngle(tree1);
+			return true;
 		}
 		return false;
 	}
@@ -473,6 +473,9 @@ namespace chai3d {
 			}
 		}
 	}
+
+
+
 	//------------------------------------------------------------------------------
 } // namespace chai3d
   //------------------------------------------------------------------------------

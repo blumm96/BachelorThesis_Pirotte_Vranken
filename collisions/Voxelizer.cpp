@@ -252,7 +252,6 @@ namespace chai3d {
 				s->setRadius(v->getMinDist());
 				s->setState(sphereState::SPHERE_LEAF);
 				s->setTriangle(closest_triangle);
-				//Hier moet nog worden geset als de sphere aan de buitenkant van het object ligt of niet
 
 				innerspheres.push_back(s);
 
