@@ -505,6 +505,7 @@ namespace chai3d {
 			}
 		}
 		//std::cout << std::endl;
+	}
 
 	inline void accurateCheck(
 		InnerSphereTree *tree1,

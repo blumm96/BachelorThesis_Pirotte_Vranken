@@ -395,7 +395,7 @@ namespace chai3d {
 	{
 #define TMAX 500		
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
-		cout << "diepte: " << node->getDepth() << " - aantal leafs: " << leafs.size() << endl;
+		//cout << "diepte: " << node->getDepth() << " - aantal leafs: " << leafs.size() << endl;
 
 		if (node->getDepth() == a_depth) {
 			addLeafs(leafs, node, root);
