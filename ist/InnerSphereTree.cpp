@@ -106,11 +106,14 @@ namespace chai3d {
 			bool stop = false;
 
 			// Komt uit Collision detection algorithms
-			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
+			//collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
+			float mindist = std::numeric_limits<float>::infinity();
+			checkDistanceSphereTest(parent_A, parent_B, IST_A, IST_B, mindist, maxdiepte, stop, positie);
 
 			//std::cout << collisionfeedback << std::endl;
 
-			if (collisionfeedback <= 0) return true;
+			//if (collisionfeedback <= 0) return true;
+			if (mindist == 0.0f) return true;
 			else return false;
 		}
 		case traversalSetting::BACKWARDTRACK: {
@@ -149,6 +152,37 @@ namespace chai3d {
 			return checkDistanceSphereMultipoint(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, InnerSphereTree::globalPath);
 		};
 		case traversalSetting::VOLUME_PEN: return false;
+		default: return false;
+		}
+		return true;
+	}
+
+	bool InnerSphereTree::computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie) {
+		// Sanity check
+		if (ist2 == NULL) return false;
+		if (this->getCollisionTreeType() != ist2->getCollisionTreeType()) return false;
+
+		switch (setting) {
+		case traversalSetting::DISTANCE: {
+			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
+			InnerSphereTree* IST_A = this;
+
+			Sphere* parent_A = IST_A->getRootSphere();
+			Sphere* parent_B = IST_B->getRootSphere();
+
+			bool stop = false;
+
+			// Komt uit Collision detection algorithms
+			//collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
+			float mindist = std::numeric_limits<float>::infinity();
+			checkDistanceSphereTest(parent_A, parent_B, IST_A, IST_B, mindist, maxdiepte, stop, positie);
+
+			//std::cout << collisionfeedback << std::endl;
+
+			//if (collisionfeedback <= 0) return true;
+			if (mindist == 0.0f) return true;
+			else return false;
+		}
 		default: return false;
 		}
 		return true;
@@ -344,6 +378,8 @@ namespace chai3d {
 	{
 #define TMAX 500		
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
+		cout << "diepte: " << node->getDepth() << " - aantal leafs: " << leafs.size() << endl;
+
 		if (node->getDepth() == a_depth) {
 			addLeafs(leafs, node, root);
 			m_maxDepth = a_depth;
@@ -370,7 +406,7 @@ namespace chai3d {
 		w[3].pos.set(x - r, y - r, z - r);
 
 		//define epsilon
-		double eps = 0.0000001 * size;
+		double eps = 0.0001 * size;
 		//first index of weights is the number of the leaf
 		std::vector<std::vector<int>> weights;
 		//row with prototypes per leaf
@@ -387,6 +423,7 @@ namespace chai3d {
 				int n[4] = { 0,0,0,0 };
 
 				// Posities van de leafs zijn relatief tegenover de rootsphere.
+				// Bereken afstand tussen protoype en leafs
 				d[0] = (leafs[j]->getPosition() - w[0].pos).length();
 				d[1] = (leafs[j]->getPosition() - w[1].pos).length();
 				d[2] = (leafs[j]->getPosition() - w[2].pos).length();
@@ -410,17 +447,15 @@ namespace chai3d {
 				double sumf = 0;
 				cVector3d sumv = cVector3d(0, 0, 0);
 				for (int i = 0; i < leafs.size(); i++) {
-					float volume = pow(leafs[i]->getRadius(), 3)*(4.0 / 3.0)* M_PI;
+					float volume = pow(leafs[i]->getRadius(), 3.0)*(4.0 / 3.0)* M_PI;
 
 					float hL = exp(-weights[i][k] / L);
 					float f = hL*volume;
-					cVector3d vec = cVector3d(0, 0, 0);
-					vec = f*(leafs[i]->getPosition());
+					cVector3d vec = f*(leafs[i]->getPosition());
 
 					sumf += f;
 					sumv += vec;
 				}
-
 				sumv = sumv / sumf;
 				if((w[k].pos - sumv).length() < eps) teller++;
 				if (teller == 4) {
@@ -431,23 +466,37 @@ namespace chai3d {
 			t++;
 		}
 
-		//?
 		float max[4] = { 0,0,0,0 };
 		for (int j = 0; j < leafs.size(); j++) {
 			float mindist = numeric_limits<float>::infinity();
-			float rad;
+			float rad = leafs[j]->getRadius();
 			int num;
 			for (int i = 0; i < 4; i++) {
 				float d = ((leafs[j]->getPosition() - w[i].pos).length());
 				if (d < mindist) {
 					mindist = d;
 					num = i;
-					rad = leafs[j]->getRadius();
 				}
 			}
 			if (max[num] < (mindist + rad)) max[num] = (mindist + rad);
 			w[num].lfs.push_back(leafs[j]);
 			}
+
+		//? set new position npos
+		for (int i = 0; i < 4; i++) {
+			//calculate pos
+			max[i] = 0;
+			cVector3d npos = cVector3d(0.0, 0.0, 0.0);
+			for (int z = 0; z < w[i].lfs.size(); z++) {
+				npos += w[i].lfs[z]->getPosition();
+			}
+			w[i].pos = npos / (float)(w[i].lfs.size());
+
+			for (int z = 0; z < w[i].lfs.size(); z++) {
+				float d = (w[i].pos - w[i].lfs[z]->getPosition()).length();
+				if (max[i] < (w[i].lfs[z]->getRadius() + d)) max[i] = (w[i].lfs[z]->getRadius() + d);
+			}
+		}
 			
 			//we got all wheights with a vector to their leaves
 			//with all including radius of their leaves

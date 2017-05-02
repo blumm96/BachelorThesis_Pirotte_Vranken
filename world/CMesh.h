@@ -55,6 +55,7 @@
 #include "materials/CMaterial.h"
 #include "materials/CTexture2d.h"
 #include "graphics/CColor.h"
+#include "PQP/PQP.h"
 //------------------------------------------------------------------------------
 #include <vector>
 #include <list>
@@ -319,7 +320,7 @@ public:
 	//UHAS implemented
 	//This method prints the AABB box tree for this mesh
 	void printAABBCollisionTree(int maxDiepte);
-	bool loadFromFile2(std::string a_filename);
+	bool loadFromFile2(std::string a_filename, PQP_Model &m);
 
 
     //--------------------------------------------------------------------------

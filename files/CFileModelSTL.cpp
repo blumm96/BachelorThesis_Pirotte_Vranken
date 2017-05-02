@@ -48,6 +48,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <fstream>
+#include "PQP/PQP.h"
 //------------------------------------------------------------------------------
 using namespace std;
 //------------------------------------------------------------------------------
@@ -163,7 +164,7 @@ bool cLoadFileSTL(cMultiMesh* a_object, const std::string& a_filename)
 }
 
 //UHAS implemented
-bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename)
+bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename, PQP_Model &m)
 {
 	// sanity check
 	if (mesh == NULL)
@@ -204,6 +205,9 @@ bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename)
 		return (C_ERROR);
 	}
 
+	//begin model for PQP
+	m.BeginModel();
+
 	// load triangles
 	for (int i = 0; i<(int)numTriangles; i++)
 	{
@@ -216,7 +220,27 @@ bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename)
 		mesh->newTriangle(cVector3d(triangle.m_vertex0[0], triangle.m_vertex0[1], triangle.m_vertex0[2]),
 			cVector3d(triangle.m_vertex1[0], triangle.m_vertex1[1], triangle.m_vertex1[2]),
 			cVector3d(triangle.m_vertex2[0], triangle.m_vertex2[1], triangle.m_vertex2[2]));
+
+		// create some triangles
+		PQP_REAL p1[3], p2[3], p3[3];
+		
+		//initialize points
+		p1[0] = triangle.m_vertex0[0];
+		p1[1] = triangle.m_vertex0[1];
+		p1[2] = triangle.m_vertex0[2];
+		p2[0] = triangle.m_vertex1[0];
+		p2[1] = triangle.m_vertex1[1];
+		p2[2] = triangle.m_vertex1[2];
+		p3[0] = triangle.m_vertex2[0];
+		p3[1] = triangle.m_vertex2[1];
+		p3[2] = triangle.m_vertex2[2];
+		// add triangles that will belong to m1
+		m.AddTri(p1, p2, p3, i);
+
 	}
+
+	//end model for pqp
+	m.EndModel();
 
 	// compute normals
 	mesh->computeAllNormals();

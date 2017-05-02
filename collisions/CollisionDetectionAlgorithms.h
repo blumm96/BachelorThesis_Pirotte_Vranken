@@ -426,7 +426,7 @@ namespace chai3d {
 
 	//EXTRA
 	/////////////////////////////////////////////////////////////////////////////////
-	//This algorithm tries to create a speed up by first checking the sphers which were closest in a previous collision detection
+	//This algorithm tries to create a speed up by first checking the spheres which were closest in a previous collision detection
 	inline void checkDistanceSphere3(Sphere* A,
 		Sphere* B,
 		float& mindist,
@@ -470,7 +470,41 @@ namespace chai3d {
 		}
 	}
 
+	inline void checkDistanceSphereTest(
+		Sphere* sphereA,
+		Sphere* sphereB,
+		InnerSphereTree* tree1,
+		InnerSphereTree* tree2,
+		float &mindist,
+		int maxdiepte,
+		bool& stop,
+		cVector3d& pos)
+	{
+		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
+		if ((sphereA->getState() == sphereState::SPHERE_LEAF) && (sphereB->getState() == sphereState::SPHERE_LEAF) || sphereA->getDepth() == maxdiepte) {
+			mindist = cMin(mindist, sphereA->distance(sphereB, tree1, tree2));
+			if (mindist == 0.0f) {
+				pos = (sphereA->getPositionWithAngle(tree1));;
+			}
+			//std::cout << mindist << " min" << std::endl;
+		}
+		else {
+			//recursion
+			std::vector<Sphere*> children_A = sphereA->getChildren();
+			std::vector<Sphere*> children_B = sphereB->getChildren();
 
+			for (int i = 0; i < children_A.size(); i++) {
+				for (int j = 0; j < children_B.size(); j++) {
+					Sphere* newA = children_A[i];
+					Sphere* newB = children_B[j];
+					float afstand = newA->distance(newB, tree1, tree2);
+					if ((afstand == 0.0f)) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos);
+					else mindist = cMin((float)mindist, afstand);
+				}
+			}
+		}
+		//std::cout << std::endl;
+	}
 
 	//------------------------------------------------------------------------------
 } // namespace chai3d

@@ -53,6 +53,7 @@
 #include "files/CFileModelOBJ.h"
 #include "files/CFileModelSTL.h"
 #include "shaders/CShaderProgram.h"
+#include "PQP/PQP.h"
 //------------------------------------------------------------------------------
 #include <algorithm>
 #include <vector>
@@ -1858,7 +1859,7 @@ void cMesh::printAABBCollisionTree(int maxDiepte) {
 	}
 }
 
-bool cMesh::loadFromFile2(string a_filename)
+bool cMesh::loadFromFile2(string a_filename, PQP_Model &m)
 {
 	// find extension
 	string extension = cGetFileExtension(a_filename);
@@ -1879,7 +1880,7 @@ bool cMesh::loadFromFile2(string a_filename)
 	//--------------------------------------------------------------------
 	if (fileType == "stl")
 	{
-		result = cLoadFileSTL2(this, a_filename);
+		result = cLoadFileSTL2(this, a_filename, m);
 	}
 
 	return (result);
