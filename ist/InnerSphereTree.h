@@ -38,7 +38,7 @@ namespace chai3d {
 	public:
 		// Computes the collision between 2 inner sphere trees.
 		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
-		bool computeCollision(cGenericCollision * ist2, traversalSetting setting, double & collisionfeedback, int maxdiepte, cVector3d & positie);
+		bool computeCollision(cGenericCollision * ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d &positie);
 		// Get the type of tree. In this case IST.
 		virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::IST; };
 		// Render the spheres.

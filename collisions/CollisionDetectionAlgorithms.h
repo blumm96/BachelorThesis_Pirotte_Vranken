@@ -401,6 +401,8 @@ namespace chai3d {
 		delete excludesA;
 		delete excludesB;
 
+		cout << collisions << " collisies" << endl;
+
 		if (collisions > 0) return true;
 		return false;
 	}

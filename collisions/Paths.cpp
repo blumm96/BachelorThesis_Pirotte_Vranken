@@ -87,14 +87,20 @@ namespace chai3d {
 
 	int Paths::size() { return pathsA.size(); }
 
-	void Paths::clearPositions()
-	{
+	void Paths::clearPositions(){
+	
+		while (!positions.empty()) {
+			cVector3d *pos = positions.back();
+			delete pos;
+			positions.pop_back();
+		}
 		positions.clear();
 	}
 
 	void Paths::addPosition(cVector3d pos)
 	{
-		positions.push_back(pos);
+		cVector3d *nPos = new cVector3d(pos.x(), pos.y(), pos.z());
+		positions.push_back(nPos);
 	}
 
 } // chai3d
