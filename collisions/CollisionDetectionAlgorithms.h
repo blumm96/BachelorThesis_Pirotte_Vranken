@@ -479,13 +479,17 @@ namespace chai3d {
 		float &mindist,
 		int maxdiepte,
 		bool& stop,
-		cVector3d& pos)
+		cVector3d& pos,
+		Sphere* pA,
+		Sphere* pB)
 	{
 		if (mindist == 0.0) return; //We only want to know if the objects are colliding or not
 		if ((sphereA->getState() == sphereState::SPHERE_LEAF) && (sphereB->getState() == sphereState::SPHERE_LEAF) || sphereA->getDepth() == maxdiepte) {
-			mindist = cMin(mindist, sphereA->distance(sphereB, tree1, tree2));
+			mindist = cMin((float)mindist, sphereA->distance(sphereB, tree1, tree2));
 			if (mindist == 0.0f) {
-				pos = (sphereA->getPositionWithAngle(tree1));;
+				pA = sphereA;
+				pB = sphereB;
+				pos = (sphereA->getPositionWithAngle(tree1));
 			}
 			//std::cout << mindist << " min" << std::endl;
 		}
@@ -499,8 +503,10 @@ namespace chai3d {
 					Sphere* newA = children_A[i];
 					Sphere* newB = children_B[j];
 					float afstand = newA->distance(newB, tree1, tree2);
-					if ((afstand == 0.0f)) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos);
-					else mindist = cMin((float)mindist, afstand);
+					if (afstand != 0.0f) continue;
+					if (afstand < mindist) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos, pA, pB);
+					//if ((afstand == 0.0f)) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos);
+					//else mindist = cMin((float)mindist, afstand);
 				}
 			}
 		}

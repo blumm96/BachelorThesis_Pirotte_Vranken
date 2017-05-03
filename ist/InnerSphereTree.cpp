@@ -108,7 +108,7 @@ namespace chai3d {
 			// Komt uit Collision detection algorithms
 			//collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
 			float mindist = std::numeric_limits<float>::infinity();
-			checkDistanceSphereTest(parent_A, parent_B, IST_A, IST_B, mindist, maxdiepte, stop, positie);
+			checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, mindist, stop, positie);
 
 			//std::cout << collisionfeedback << std::endl;
 
@@ -174,26 +174,28 @@ namespace chai3d {
 		return true;
 	}
 
-	bool InnerSphereTree::computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie) {
+	bool InnerSphereTree::computeCollision(InnerSphereTree* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie, Sphere* pA, Sphere* pB) {
 		// Sanity check
 		if (ist2 == NULL) return false;
 		if (this->getCollisionTreeType() != ist2->getCollisionTreeType()) return false;
 
 		switch (setting) {
 		case traversalSetting::DISTANCE: {
-			InnerSphereTree* IST_B = dynamic_cast<InnerSphereTree*>(ist2);
-			InnerSphereTree* IST_A = this;
 
-			Sphere* parent_A = IST_A->getRootSphere();
-			Sphere* parent_B = IST_B->getRootSphere();
+			Sphere* parent_A = this->getRootSphere();
+			Sphere* parent_B = ist2->getRootSphere();
 
 			bool stop = false;
 
 			// Komt uit Collision detection algorithms
 			//collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
-			float mindist = std::numeric_limits<float>::infinity();
-			checkDistanceSphereTest(parent_A, parent_B, IST_A, IST_B, mindist, maxdiepte, stop, positie);
+			float mindist;
+			if (pA == nullptr && pB == nullptr) mindist = std::numeric_limits<float>::infinity();
+			else mindist = pA->distance(pB, this, ist2);
 
+			checkDistanceSphereTest(parent_A, parent_B, this, ist2, mindist, maxdiepte, stop, positie, pA, pB);
+
+			collisionfeedback = mindist;
 			//std::cout << collisionfeedback << std::endl;
 
 			//if (collisionfeedback <= 0) return true;

@@ -468,10 +468,10 @@ bool cWorld::computeCollision(cGenericObject *A, cGenericObject *B, traversalSet
 	return A->computeCollision(B, setting, collisionfeedback, maxdiepte, positie);
 }
 
-bool cWorld::computeCollision(InnerSphereTree * A, InnerSphereTree * B, traversalSetting setting, double & collisionfeedback, int maxDiepte, cVector3d & positie)
+bool cWorld::computeCollision(InnerSphereTree * A, InnerSphereTree * B, traversalSetting setting, double & collisionfeedback, int maxDiepte, cVector3d & positie, Sphere* pA, Sphere* pB)
 {
 	if(A == NULL || B == NULL) return false;
-	return A->computeCollision(B, setting, collisionfeedback, maxDiepte, positie);
+	return A->computeCollision(B, setting, collisionfeedback, maxDiepte, positie, pA, pB);
 }
 
 //------------------------------------------------------------------------------

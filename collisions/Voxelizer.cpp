@@ -290,7 +290,7 @@ namespace chai3d {
 			tree->buildTree(innerspheres, diepte);
 
 			//print inner spheres
-			//cout << endl;
+			cout << endl << "number of ISTs: " << innerspheres.size() << endl;
 			//for (int i = 0; i < innerspheres.size(); i++) {
 				//cout << "sphere " << i + 1 << " - position " << innerspheres[i]->getPosition() << " - radius " << innerspheres[i]->getRadius() << endl;
 			//}
