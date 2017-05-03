@@ -107,13 +107,11 @@ namespace chai3d {
 
 			// Komt uit Collision detection algorithms
 			//collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
-			float mindist = std::numeric_limits<float>::infinity();
-			checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, mindist, stop, positie);
+			collisionfeedback = checkDistanceSphere(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, positie);
 
 			//std::cout << collisionfeedback << std::endl;
-
 			//if (collisionfeedback <= 0) return true;
-			if (mindist == 0.0f) return true;
+			if (collisionfeedback == 0.0f) return true;
 			else return false;
 		}
 		case traversalSetting::BACKWARDTRACK: {

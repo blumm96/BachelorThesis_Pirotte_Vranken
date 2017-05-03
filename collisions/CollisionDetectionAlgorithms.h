@@ -240,14 +240,14 @@ namespace chai3d {
 				if (excludeB == newB) {
 					stopB = true;
 				}
-				else if (multi){
+				/*else if (multi){
 					for (Sphere* test : *visNodesB) {
 						if (test == newB) {
 							stopB = true;
 							break;
 						}
 					}
-				}
+				}*/
 				
 				if (stopB) continue;
 
@@ -289,13 +289,13 @@ namespace chai3d {
 				pathB->pop_back();
 			} // End of iteration B
 			if (multi) {
-				vector<Sphere*>::iterator it = visNodesA->begin();
-				while(it != visNodesA->end()) {
-					Sphere* test = *(it);
-					if (test->isChild(pathA->back())) it = visNodesA->erase(it);
-					else it++;
-				}
-				visNodesA->push_back(pathA->back());
+				//vector<Sphere*>::iterator it = visNodesA->begin();
+				//while(it != visNodesA->end()) {
+					//Sphere* test = *(it);
+					//if (test->isChild(pathA->back())) it = visNodesA->erase(it);
+					//else it++;
+				//}
+				//visNodesA->push_back(pathA->back());
 			}
 			pathA->pop_back();
 		} // End of iteration A
@@ -381,22 +381,27 @@ namespace chai3d {
 				paths.addPosition(pos);
 				collisions++;
 			}
-			else break;
+			else return false;
 		}
 
 		//probeer nieuwe paden te vinden
-		for (int i = 0; i < paths.getAantalVrijheidsgraden() - collisions; i++) {
-			vector<Sphere*> addPathA = vector<Sphere*>(); 
-			vector<Sphere*> addPathB = vector<Sphere*>();
+		int cs = collisions;
+		for (int i = 0; i < paths.getAantalVrijheidsgraden() - cs; i++) {
+			vector<Sphere*>* addPathA =  new vector<Sphere*>(); 
+			vector<Sphere*>* addPathB =  new vector<Sphere*>();
 
-			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &addPathA, &addPathB, nullptr, nullptr, excludesA, excludesB, true) <= 0) {
+			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, addPathA, addPathB, nullptr, nullptr, excludesA, excludesB, true) <= 0) {
 				paths.addPosition(pos);
 				collisions++;
-				paths.pushBackA(addPathA);
-				paths.pushBackB(addPathB);
+
+				cout << "path size: " << addPathA->size() << endl;
+				paths.pushBackA(*addPathA);
+				paths.pushBackB(*addPathB);
 			}
 			else break;
 		}
+		cout << "number of paths: " << paths.size() << endl;
+
 
 		delete excludesA;
 		delete excludesB;
@@ -503,7 +508,7 @@ namespace chai3d {
 					Sphere* newA = children_A[i];
 					Sphere* newB = children_B[j];
 					float afstand = newA->distance(newB, tree1, tree2);
-					if (afstand != 0.0f) continue;
+					//if (afstand != 0.0f) continue;
 					if (afstand < mindist) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos, pA, pB);
 					//if ((afstand == 0.0f)) checkDistanceSphereTest(newA, newB, tree1, tree2, mindist, maxdiepte, stop, pos);
 					//else mindist = cMin((float)mindist, afstand);
