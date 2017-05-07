@@ -23,6 +23,7 @@ Algorithm sources:
 #include <iostream>
 #include <limits>
 
+#define splitDepth 2
 using namespace std;
 //------------------------------------------------------------------------------
 
@@ -30,8 +31,7 @@ using namespace std;
 namespace chai3d {
 	//------------------------------------------------------------------------------
 	//definitions
-	bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos);
-
+	bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos, float &afstand);
 
 	//==============================================================================
 	/*!
@@ -335,51 +335,222 @@ namespace chai3d {
 		//?
 		return checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, pathA, pathB, newExA, newExB, visNodesA, visNodesB, multi);
 	}
-
-	inline bool checkDistanceSphereMultipoint(
-		Sphere* sphereA,
-		Sphere* sphereB,
+	////////////////////////////////////////////////////////////////////////////////////
+	inline bool checkDistanceRecursive(
+		Sphere* A,
+		Sphere* B,
 		InnerSphereTree* tree1,
 		InnerSphereTree* tree2,
 		int maxdiepte,
 		bool& stop,
-		Paths paths) {
+		cVector3d& pos,
+		Sphere* excludeA,
+		Sphere* excludeB,
+		vector<Sphere*>* visNodesA,
+		vector<Sphere*>* visNodesB,
+		Sphere* &raakpuntA,
+		Sphere* &raakpuntB,
+		float &schattingD,
+		bool multi) {
+		// Sanity check
+		if (A == nullptr || B == nullptr) return false;
+		// Return the distance between 2 spheres when we went deeper in the tree than specified.
+		// This results in worse accuracy and should ideally never be called.
+		float afstand = A->distance(B, tree1, tree2);
 
-		//init
-		int initPaths = paths.size(); //initPaths = aantal collisiepaden opgeslagen
-		int collisions = 0;
-		cVector3d pos;
-		vector<int> excludedPaths;
-		vector<int> reTraversePath;
+		if (afstand > schattingD) return false;
 
-		//clear alle berekende posities
-		paths.clearPositions();
-
-		//check als leafs van deze paden nog raken
-		for (int i = 0; i < initPaths; i++) {
-			//test if leafs->needs to be deleted
-			if ((paths.getA(i).back()->getState() == sphereState::SPHERE_LEAF) && (paths.getB(i).back()->getState() == sphereState::SPHERE_LEAF)) cout << "error: unexpected collision check of non leaf spheres" << endl;
-			
-			if (checkLeafCollision(paths.getA(i).back(), paths.getB(i).back(), tree1, tree2, pos)) {
-				//deze paden moeten niet meer worden bekeken
-				paths.addPosition(pos);
-				excludedPaths.push_back(i);
-				collisions++;
+		if (A->getState() == sphereState::SPHERE_LEAF) {
+			if (afstand == 0.0) {
+				raakpuntA = A;
+				raakpuntB = B;
+				pos = A->getPositionWithAngle(tree1);
+				stop = true;
+				return true;
 			}
 			else {
-				//deze paden moeten wel worden gebruikt om een nieuwe collisie te zoeken
-				reTraversePath.push_back(i);
+				schattingD = cMin(schattingD, afstand);
 			}
 		}
 
+		// Calculate the distance between the 2 spheres. 
+		// If the distance is greater than 0, The 2 spheres do not collide and the check should finish here.
+		if (afstand > 0) return false;
+		// if the max depth is reached we should alse not proces any futher nodes
+		if (A->getDepth() == maxdiepte) return false;
+
+		// Every sphere can have multiple children.
+		vector<Sphere*> children_A = A->getChildren();
+		vector<Sphere*> children_B = B->getChildren();
+
+		// Iterate through all of the 2 sphere's children.
+
+		for (int i = 0; i < children_A.size(); i++) {
+			Sphere* newA = children_A[i];
+			bool stopA = false;
+
+			if (excludeA == newA) {
+				continue;
+			}
+			else if (multi && (newA->getDepth() == splitDepth)) {
+				for (int k = 0; k < visNodesA->size(); k++) {
+					if ((*visNodesA)[k] == newA) {
+						stopA = true;
+						break;
+					}
+				}
+			}
+			if (stopA) continue;
+
+			for (int j = 0; j < children_B.size(); j++) {
+				Sphere* newB = children_B[j];
+				bool stopB = false;
+
+				if (excludeB == newB) {
+					continue;
+				}
+				else if (multi && (newB->getDepth() == splitDepth)) {
+					for (int k = 0; k < visNodesB->size(); k++) {
+						if ((*visNodesB)[k] == newB) {
+							stopB = true;
+							break;
+						}
+					}
+				}
+				if (stopB) continue;
+				
+				//check the children recursive
+				checkDistanceRecursive(newA, newB, tree1, tree2, maxdiepte, stop, pos, nullptr, nullptr, visNodesA, visNodesB, raakpuntA, raakpuntB, schattingD, multi);
+				if (stop) {
+					return true;
+				}
+			} // End of iteration B
+		} // End of iteration A
+		raakpuntA = nullptr;
+		raakpuntB = nullptr;
+		return false;
+	}
+
+	inline bool checkDistanceBacktrack(
+		Sphere* A,
+		Sphere* B,
+		InnerSphereTree* tree1,
+		InnerSphereTree* tree2,
+		int maxdiepte,
+		bool& stop,
+		cVector3d& pos,
+		vector<Sphere*>* visNodesA,
+		vector<Sphere*>* visNodesB,
+		Sphere* &raakpuntA,
+		Sphere* &raakpuntB,
+		float &schattingD) {
+
+		if (A == nullptr || B == nullptr) {
+			return checkDistanceRecursive(tree1->getRootSphere(), tree2->getRootSphere(), tree1, tree2, maxdiepte, stop, pos, nullptr, nullptr, visNodesA, visNodesB, raakpuntA, raakpuntB, schattingD, true);
+		}
+
+		bool raakt = checkDistanceRecursive(A->getParent(), B->getParent(), tree1, tree2, maxdiepte, stop, pos, A, B, visNodesA, visNodesB, raakpuntA, raakpuntB, schattingD, true);
+		if (!raakt) {
+			if ((A->getDepth() == splitDepth) && (B->getDepth() == splitDepth)) {
+				visNodesA->push_back(A);
+				visNodesB->push_back(B);
+			}
+			return checkDistanceBacktrack(A->getParent(), B->getParent(), tree1, tree2, maxdiepte, stop, pos, visNodesA, visNodesB, raakpuntA, raakpuntB, schattingD);
+		}
+		//we found a collision
+		return true;
+	}
+	////////////////////////////////////////////////////////////////////////////////////
+
+	inline bool checkDistanceSphereMultipoint(
+		InnerSphereTree* tree1,
+		InnerSphereTree* tree2,
+		int maxdiepte,
+		Paths paths,
+		float &schattingD) {
+
+		//init
+		if (paths.raakpuntenA.size() != paths.raakpuntenB.size()) cout << "error: unequal touch points" << endl;
+		int collisions = paths.raakpuntenA.size(); //initPaths = aantal collisiepaden opgeslagen
+		vector<Sphere*> retraverseA;
+		vector<Sphere*> retraverseB;
+
+		//clear alle berekende posities
+		paths.clearPositions();
+		float d;
+
+		//check als leafs van deze paden nog raken
+		//erase all points not colliding
+		vector<Sphere*>::iterator itA = paths.raakpuntenA.begin();
+		vector<Sphere*>::iterator itB = paths.raakpuntenB.begin();
+		vector<Sphere*> excludesA;
+		vector<Sphere*> excludesB;
+
+		while (itA != paths.raakpuntenA.end()) {
+			Sphere* checkA = *(itA);
+			Sphere* checkB = *(itB);
+			if ((checkA->getState() != sphereState::SPHERE_LEAF) || (checkB->getState() != sphereState::SPHERE_LEAF)) cout << "error: unexpected collision check of non leaf spheres" << endl;
+				
+			cVector3d pos;
+			if (checkLeafCollision(checkA, checkB, tree1, tree2, pos, d)) {
+				//deze paden moeten niet meer worden bekeken
+				schattingD = cMin(schattingD, d);
+				excludesA.push_back(checkA->getParent(splitDepth));
+				excludesB.push_back(checkB->getParent(splitDepth));
+				paths.addPosition(pos);
+			}
+			else {
+				//deze paden moeten wel worden gebruikt om een nieuwe collisie te zoeken
+				retraverseA.push_back(checkA);
+				retraverseB.push_back(checkB);
+				itA = paths.raakpuntenA.erase(itA);
+				itB = paths.raakpuntenB.erase(itB);
+				collisions--;
+				continue;
+			}
+		itA++;
+		itB++;
+		}
+
+		if (collisions == paths.getAantalVrijheidsgraden()) {
+			return true;
+		}
+
 		//gebruik vorige paden die niet raken om terug te zoeken in de boom
-		vector<Sphere*>* excludesA = new vector<Sphere*>();
-		vector<Sphere*>* excludesB = new vector<Sphere*>();
-		for (int j: reTraversePath) {
+		vector<Sphere*> vorigeAs;
+		vector<Sphere*> vorigeBs;
+		for (int i = 0; i < retraverseA.size(); i++) {
 			//tegelijkertijd worden van de paden de raakpunten geset en ze worden toegevoegd aan  excludedPaths
-			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, &paths.getA(j), &paths.getB(j), nullptr, nullptr, excludesA, excludesB, true) <= 0) {
+			Sphere* checkA = retraverseA[i];
+			Sphere* checkB = retraverseB[i];
+
+			for (int z = 0; z < vorigeAs.size(); z++) {
+				if (vorigeAs[z] == checkA->getParent(splitDepth) || vorigeBs[z] == checkB->getParent(splitDepth)) {
+					checkA = vorigeAs[z]->getParent();
+					checkB = vorigeBs[z]->getParent();
+					break;
+				}
+			}
+			
+			d = std::numeric_limits<float>::infinity();
+
+			Sphere* raaktA = nullptr;
+			Sphere* raaktB = nullptr;
+			cVector3d pos;
+			bool stop = false;
+			if (checkDistanceBacktrack(checkA, checkB, tree1, tree2, maxdiepte, stop, pos, &excludesA, &excludesB, raaktA, raaktB, d)) {
+				if (raaktA == nullptr || raaktB == nullptr) cout << "error: collisie maar paden niet geset!" << endl;
+				paths.raakpuntenA.push_back(raaktA);
+				paths.raakpuntenB.push_back(raaktB);
+
+				schattingD = cMin(schattingD, d);
+
 				paths.addPosition(pos);
 				collisions++;
+				if (collisions == paths.getAantalVrijheidsgraden()) return true;
+
+				vorigeAs.push_back(raaktA->getParent(splitDepth));
+				vorigeBs.push_back(raaktB->getParent(splitDepth));
 			}
 			else return false;
 		}
@@ -387,25 +558,33 @@ namespace chai3d {
 		//probeer nieuwe paden te vinden
 		int cs = collisions;
 		for (int i = 0; i < paths.getAantalVrijheidsgraden() - cs; i++) {
-			vector<Sphere*>* addPathA =  new vector<Sphere*>(); 
-			vector<Sphere*>* addPathB =  new vector<Sphere*>();
+			Sphere* findA = nullptr;
+			Sphere* findB = nullptr;
+			cVector3d pos;
+			d = std::numeric_limits<float>::infinity();
+			bool stop = false;
+			if (checkDistanceBacktrack(nullptr, nullptr, tree1, tree2, maxdiepte, stop, pos, &excludesA, &excludesB, findA, findB, d)) {
+				if (findA == nullptr || findB == nullptr) {
+					cout << "error: collisie maar paden niet geset!" << endl;
+					break;
+				}
+				paths.raakpuntenA.push_back(findA);
+				paths.raakpuntenB.push_back(findB);
 
-			if (checkDistanceSphere2(sphereA, sphereB, tree1, tree2, maxdiepte, stop, pos, addPathA, addPathB, nullptr, nullptr, excludesA, excludesB, true) <= 0) {
+				schattingD = cMin(schattingD, d);
+				
 				paths.addPosition(pos);
 				collisions++;
 
-				cout << "path size: " << addPathA->size() << endl;
-				paths.pushBackA(*addPathA);
-				paths.pushBackB(*addPathB);
+				//cout << "collisie: sphereA: " << findA << " - sphereB: " << findB << " - pos: " << pos << endl;
+				//cout << "size of raakpunten: " << paths.raakpuntenA.size() << " - number of pos: " << paths.getPositions().size() << endl;
+				if (collisions == paths.getAantalVrijheidsgraden()) return true;
+
+				excludesA.push_back(findA->getParent(splitDepth));
+				excludesB.push_back(findB->getParent(splitDepth));
 			}
 			else break;
 		}
-		cout << "number of paths: " << paths.size() << endl;
-
-
-		delete excludesA;
-		delete excludesB;
-
 		if (collisions > 0) return true;
 		return false;
 	}
@@ -419,11 +598,12 @@ namespace chai3d {
 		bool operator()(Sphere* s1, Sphere* s2) { return ((s1->getMindist()) < (s2->getMindist())); }
 	};
 
-	inline bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos) {
+	inline bool checkLeafCollision(Sphere* leaf1, Sphere* leaf2, InnerSphereTree* tree1, InnerSphereTree* tree2, cVector3d &pos, float &afstand) {
 
-		float afstand = leaf1->distance(leaf2, tree1, tree2);
-		if (afstand <= 0.0) {
+		float d = leaf1->distance(leaf2, tree1, tree2);
+		if (d <= 0.0) {
 			pos = leaf1->getPositionWithAngle(tree1);
+			afstand = d;
 			return true;
 		}
 		return false;

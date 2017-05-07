@@ -46,7 +46,7 @@ namespace chai3d {
 	void saveIST(InnerSphereTree* tree, string naam) {
 
 		string fileNaam = "ist" + naam + ".txt";
-		istFile.open(fileNaam);
+		istFile.open(fileNaam, ios::out);
 
 		istFile.clear();
 

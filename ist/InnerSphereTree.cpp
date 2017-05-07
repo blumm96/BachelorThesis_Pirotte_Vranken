@@ -1,5 +1,6 @@
 #include "ist/InnerSphereTree.h"
 #include "collisions/CollisionDetectionAlgorithms.h"
+#include "collisions/Paths.h"
 #include <iostream>
 #include <math.h>
 #include <limits>
@@ -8,9 +9,8 @@ using namespace std;
 
 namespace chai3d {
 
-	//initialization of static
+	//initialize static
 	Paths InnerSphereTree::globalPath = Paths(3);
-
 	/*
 		Constructor of an inner sphere tree.
 	*/
@@ -144,10 +144,12 @@ namespace chai3d {
 			Sphere* parent_B = IST_B->getRootSphere();
 
 			// Komt uit Collision detection algorithms
-
-			bool stop = false;
-
-			return checkDistanceSphereMultipoint(parent_A, parent_B, IST_A, IST_B, maxdiepte, stop, InnerSphereTree::globalPath);
+			float schattingD = std::numeric_limits<float>::infinity();
+			bool hit = checkDistanceSphereMultipoint(IST_A, IST_B, maxdiepte, InnerSphereTree::globalPath, schattingD);
+			collisionfeedback = schattingD;
+			
+			if (hit) return true;
+			return false;
 		};
 		case traversalSetting::ACCURATE: {
 			float kortste = numeric_limits<float>::infinity();

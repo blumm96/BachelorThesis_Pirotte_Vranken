@@ -1,9 +1,9 @@
 #ifndef INNERSPHERETREE_H
 #define INNERSPHERETREE_H
 
-#include "collisions/Paths.h"
 #include "collisions/CGenericCollision.h"
 #include "ist/Sphere.h"
+#include "collisions/Paths.h"
 #include <iostream>
 
 /*
@@ -18,9 +18,11 @@
 using namespace std;
 
 namespace chai3d {
-	class Sphere;
-	class Paths;
 	class InnerSphereTree : public cGenericCollision {
+		// Declaration static vars
+	public:
+		static Paths globalPath;
+
 		// CONSTRUCTOR - DESTRUCTOR
 	public:
 
@@ -29,10 +31,6 @@ namespace chai3d {
 
 		// Destructor of the inner sphere tree.
 		virtual ~InnerSphereTree();
-
-		// Static datamembers
-	public:
-		static Paths globalPath;
 
 		// PUBLIC METHODS
 	public:

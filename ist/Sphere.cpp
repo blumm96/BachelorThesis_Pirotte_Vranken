@@ -115,6 +115,7 @@ namespace chai3d {
 		\return The parent of the sphere.
 	*/
 	Sphere* Sphere::getParent() {
+		if (state == sphereState::SPHERE_ROOT) return nullptr;
 		return parent;
 	}
 

@@ -71,7 +71,7 @@ namespace chai3d {
 
 		if (node->m_nodeType == cAABBNodeType::C_AABB_NODE_LEAF) {
 			float out = 0;
-			if (triangle_intersection(*(node->m_bbox.triangle->p1), *(node->m_bbox.triangle->p2), *(node->m_bbox.triangle->p3), *origin, cVector3d(1, 0, 0), &out, cVector3d(0, 0, 0))) {
+			if (triangle_intersection(*(node->m_bbox.triangle->p1), *(node->m_bbox.triangle->p2), *(node->m_bbox.triangle->p3), *origin, cVector3d(1, 0 , 0), &out, cVector3d(0, 0, 0))) {
 				aantalRakingen++;
 				return;
 			}

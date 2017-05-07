@@ -2,14 +2,13 @@
 #define PATHS_H
 
 #include "math/CVector3d.h"
-#include "ist\Sphere.h"
+#include "ist/Sphere.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
 namespace chai3d {
-	class Sphere;
 	class Paths {
 
 	// DATA MEMBERS
@@ -17,7 +16,7 @@ namespace chai3d {
 		vector<vector<Sphere*>> pathsA;
 		vector<vector<Sphere*>> pathsB;
 		int aantalVrijheidsgraden;
-		vector<cVector3d> positions;
+		vector<cVector3d> &positions = vector<cVector3d>();
 
 	// CONSTRUCTOR - DESTRUCTOR
 	public:
@@ -26,6 +25,10 @@ namespace chai3d {
 
 	// PUBLIC METHODS
 	public:
+		//voor te testen, getters en setters moeten nog worden toegevoegd
+		vector<Sphere*> &raakpuntenA = vector<Sphere*>();
+		vector<Sphere*> &raakpuntenB = vector<Sphere*>();
+
 		vector<Sphere*> getA(int index);
 		vector<Sphere*> getB(int index);
 
@@ -56,7 +59,14 @@ namespace chai3d {
 
 	// INLINE
 	public:
-		inline vector<cVector3d> getPositions() { return positions; }
+		inline unsigned int getPositionSize() { return positions.size(); }
+		inline cVector3d getPositions(unsigned int i) { 
+			if (i < 0 || i >= positions.size()) {
+				//cout << "error in Paths.h: index out of range!" << endl;
+				return cVector3d(0, 0, 0);
+			}
+			return positions[i]; 
+		}
 		inline int getAantalVrijheidsgraden() { return aantalVrijheidsgraden; }
 
 	};

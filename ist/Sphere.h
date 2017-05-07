@@ -11,19 +11,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "collisions/CGenericCollision.h"
-#include "ist/InnerSphereTree.h"
 #include "math/CVector3d.h"
 #include "collisions/Triangle.h"
 #include <iostream>
-#include "ist/InnerSphereTree.h"
 
 #include <vector>
 
 using namespace std;
 
 namespace chai3d {
-	class InnerSphereTree;
 	// Describes where the sphere is located whithin the inner sphere tree.
 	enum sphereState
 	{
@@ -32,6 +28,7 @@ namespace chai3d {
 		SPHERE_LEAF
 	};
 
+	class InnerSphereTree;
 	class Sphere {
 		// VARIABLES
 	private:
@@ -96,6 +93,14 @@ namespace chai3d {
 			if (s == nullptr) return false;
 			if (this->getParent() == s) return true;
 			return false;
+		}
+
+		inline Sphere* getParent(int depth) {
+			if (this->getState() == sphereState::SPHERE_ROOT) cout << "error: root sphere has no parent" << endl;
+			if (this->getDepth()< depth) cout << "error: cannot return parent at that depth, because this sphere has a higher depth" << endl;
+
+			if (this->getDepth() == depth) return this;
+			else return this->getParent()->getParent(depth);
 		}
 
 		/*
