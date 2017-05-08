@@ -33,7 +33,7 @@ namespace chai3d {
 		// VARIABLES
 	private:
 		
-		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0)
+		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0).
 		Sphere* parent;
 		// The children of this sphere. If the vector is empty, the sphere is a leafnode.
 		vector<Sphere*> children;
@@ -45,9 +45,12 @@ namespace chai3d {
 		sphereState state;
 		// The depth of the sphere in the inner sphere tree.
 		int depth;
-		// The triangle associated with this sphere.
+		// The triangles associated with this sphere.
+		// This can be used to expand the program.
+		// Nothing is done with the triangles right now.
 		vector<Triangle*> triangles;
 
+		// This variable is used for a collision algorithm.
 		float mindist;
 
 		// The amount of children the shere has. This is only valid if the innersphertree is loaded from a file.
@@ -81,13 +84,20 @@ namespace chai3d {
 		vector<Sphere*> getChildren();
 		// Get the parentsphere of the sphere.
 		Sphere* getParent();
-		// Get the state of the sphere within the innerspheretree.
+		// Get the state of the sphere within the inner sphere tree.
 		sphereState getState();
-		// Get the depth of the sphere in the innersphere tree.
+		// Get the depth of the sphere in the inner sphere tree.
 		int getDepth();
-		// Get the triangle of this sphere.
+		// Get the triangles of this sphere.
 		vector<Triangle*> getTriangles();
 
+		/*
+			This method returns if the current sphere is the child of \p s.
+		
+			\param s The potential parent sphere that needs to be checked.
+		
+			\return Return if the sphere is the child of \p s.
+		*/
 		inline bool isChild(Sphere* s) {
 			if (this->getState() == sphereState::SPHERE_ROOT) return false;
 			if (s == nullptr) return false;
@@ -95,6 +105,13 @@ namespace chai3d {
 			return false;
 		}
 
+		/*
+			Return a pointer to the parent of the spheres at a specific depth.
+
+			\param depth The depth that the parent should have.
+
+			\return The parent sphere at the specific depth.
+		*/
 		inline Sphere* getParent(int depth) {
 			if (this->getState() == sphereState::SPHERE_ROOT) cout << "error: root sphere has no parent" << endl;
 			if (this->getDepth()< depth) cout << "error: cannot return parent at that depth, because this sphere has a higher depth" << endl;
@@ -177,98 +194,22 @@ namespace chai3d {
 		*/
 		inline int getChildrenAmount() { return childrenAmount; }
 
+		/*
+			Return the mindist variable.
+
+			\return The mindist variable.
+		*/
 		inline float getMindist() { return mindist; };
+
+		/*
+			
+			Set the mindist variable.
+
+			\param n_dist The new value the mindist variable should have.
+
+		*/
 		inline void setMindist(float n_dist) { mindist = n_dist; };
 
 	}; // chai3d
 }
 #endif
-
-		//implementations for computeCollision chai3d
-	//	inline bool intersect(const cVector3d& a_segmentPointA, const cVector3d& a_segmentPointB) const
-	//	{
-	//		const int RIGHT = 0;
-	//		const int LEFT = 1;
-	//		const int MIDDLE = 2;
-
-	//		double coord[3];
-	//		char inside = true;
-	//		char quadrant[3];
-	//		int i;
-	//		int whichPlane;
-	//		double maxT[3];
-	//		double candidatePlane[3];
-	//		double dir[3];
-	//		dir[0] = a_segmentPointB(0) - a_segmentPointA(0);
-	//		dir[1] = a_segmentPointB(1) - a_segmentPointA(1);
-	//		dir[2] = a_segmentPointB(2) - a_segmentPointA(2);
-
-	//		// find candidate planes; this loop can be avoided if rays cast all from 
-	//		// the eye (assume perspective view)
-	//		for (i = 0; i<3; i++)
-	//		{
-	//			if (a_segmentPointA(i) - < m_min(i))
-	//			{
-	//				quadrant[i] = LEFT;
-	//				candidatePlane[i] = m_min(i);
-	//				inside = false;
-	//			}
-	//			else if (a_segmentPointA(i) > m_max(i))
-	//			{
-	//				quadrant[i] = RIGHT;
-	//				candidatePlane[i] = m_max(i);
-	//				inside = false;
-	//			}
-	//			else
-	//			{
-	//				quadrant[i] = MIDDLE;
-	//			}
-	//		}
-
-	//		// ray origin inside boundary box
-	//		if (inside)
-	//		{
-	//			return (true);
-	//		}
-
-	//		// calculate T distances to candidate planes
-	//		for (i = 0; i<3; i++)
-	//		{
-	//			if (quadrant[i] != MIDDLE && dir[i] != 0.)
-	//				maxT[i] = (candidatePlane[i] - a_segmentPointA(i)) / dir[i];
-	//			else
-	//				maxT[i] = -1.;
-	//		}
-
-	//		// get largest of the maxT's for final choice of intersection
-	//		whichPlane = 0;
-	//		for (i = 1; i<3; i++)
-	//			if (maxT[whichPlane] < maxT[i])
-	//				whichPlane = i;
-
-	//		// check final candidate actually inside box
-	//		if (maxT[whichPlane] < 0.)
-	//		{
-	//			return (false);
-	//		}
-
-	//		for (i = 0; i<3; i++)
-	//		{
-	//			if (whichPlane != i)
-	//			{
-	//				coord[i] = a_segmentPointA(i) + maxT[whichPlane] * dir[i];
-	//				if (coord[i] < m_min(i) || coord[i] > m_max(i))
-	//				{
-	//					return (false);
-	//				}
-	//			}
-	//			else
-	//			{
-	//				coord[i] = candidatePlane[i];
-	//			}
-	//		}
-
-	//		// ray hits box
-	//		return (true);
-	//	}
-	//};

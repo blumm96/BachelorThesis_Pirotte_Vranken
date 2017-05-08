@@ -43,7 +43,7 @@ namespace chai3d {
 		virtual void render(cRenderOptions& a_options);
 		// Get the rootsphere of this inner sphere tree.
 		Sphere* getRootSphere();
-		//! This method computes all collisions between a segment passed as argument and the attributed 3D object.
+		// This method computes all collisions between a segment passed as argument and the attributed 3D object.
 		inline virtual bool computeCollision(cGenericObject* a_object,
 			cVector3d& a_segmentPointA,
 			cVector3d& a_segmentPointB,
@@ -85,16 +85,14 @@ namespace chai3d {
 		// De grootte van de bounding box.
 		double size;
 
-		// The previus display depth of the inner sphere tree.
+		// The previous display depth of the inner sphere tree.
 		int prevDisplayDepth;
 
 		// The node on which to begin checking.
 		Sphere* beginNode;
 
-		
-
 		// The path to follow in the collision detection.
-		// This is needed for a faster checking in collision.
+		// This is needed for a faster checking in collision. eg. the backward track algorithm.
 		std::vector<Sphere*>* path;
 
 		//the maximum depth of the tree
@@ -108,8 +106,31 @@ namespace chai3d {
 		// PROTECTED FUNCTIONS
 	public:
 
+		/*
+			
+			Get the first base vector for rotation.
+
+			\return The first base vector.
+
+		*/
 		inline cVector3d getB1() { return *b1; }
+
+		/*
+
+			Get the second base vector for rotation.
+
+			\return The second base vector.
+
+		*/
 		inline cVector3d getB2() { return *b2; }
+
+		/*
+
+			Get the third base vector for rotation.
+
+			\return The third base vector.
+
+		*/
 		inline cVector3d getB3() { return *b3; }
 
 		/*
@@ -132,8 +153,6 @@ namespace chai3d {
 			y = n.getRow(1).z();
 			z = n.getRow(2).z();
 			b3->set(x, y, z);
-
-			//cout << *b1 << " - " << *b2 << " - " << *b3 << endl;
 		}
 
 		/*
@@ -231,21 +250,6 @@ namespace chai3d {
 
 		*/
 		inline std::vector<Sphere*>* getPath() { return path; }
-
-		//implementations for computeCollision chai3d
-		/*enum cCollisionISTState
-		{
-			C_IST_STATE_TEST_CURRENT_NODE,
-			C_IST_STATE_TEST_LEFT_NODE,
-			C_IST_STATE_TEST_RIGHT_NODE,
-			C_IST_STATE_POP_STACK
-		};
-
-		struct cCollisionISTStack
-		{
-			Sphere* m_index;
-			cCollisionISTState m_state;
-		};*/
 	};
 }
 

@@ -37,6 +37,7 @@ namespace chai3d {
 
 	/*
 		Calculates the distance between two spheres.
+		The rotation of the ists is taken into account.
 
 		\param sphere		The other sphere to calculate the distance between.
 		\param position1	The global position of the root sphere of this sphere.
@@ -242,6 +243,8 @@ namespace chai3d {
 			cDrawSphere(spherePoints);
 	}
 
+	// Make a sphere to render it.
+	// Not very important to the actual collision detection.
 	// Input arguments
 	// in  - VERTEX center                 : defines the center of the sphere, all points will be offset from this
 	// in  - double r                      : defines the radius of the sphere

@@ -174,6 +174,21 @@ namespace chai3d {
 		return true;
 	}
 
+	/*
+		
+		This function calculates a collision between 2 ists.
+
+		\param ist2					The second ist to check collision with.
+		\param setting				The settings for the collision detection.
+		\param collisionFeedback	How far the ists are apart.
+		\param maxdiepte			The maximum depth the algorithm shoud check.
+		\param positie				The position the collision happens at.
+		\param pa					The first sphere to start collision detection.
+		\param pb					The second sphere to start collision detection.
+
+		\return If the two ists are colliding.
+
+	*/
 	bool InnerSphereTree::computeCollision(InnerSphereTree* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie, Sphere* pA, Sphere* pB) {
 		// Sanity check
 		if (ist2 == NULL) return false;
@@ -215,148 +230,6 @@ namespace chai3d {
 	Sphere* InnerSphereTree::getRootSphere() {
 		return rootSphere;
 	}
-
-	//bool InnerSphereTree::computeCollision(cGenericObject * a_object, cVector3d & a_segmentPointA, cVector3d & a_segmentPointB, cCollisionRecorder & a_recorder, cCollisionSettings & a_settings)
-	//{
-	//	// sanity check
-	//	if (rootSphere == nullptr) { return (false); }
-
-	//	// init stack
-	//	std::vector<cCollisionISTStack> stack;
-	//	stack.resize(m_maxDepth + 1);
-
-	//	int index = 0;
-	//	stack[0].m_index = rootSphere;
-	//	stack[0].m_state = C_IST_STATE_TEST_CURRENT_NODE;
-
-	//	// create an axis-aligned boundary box for the line
-	//	Sphere* Line = new Sphere();
-	//	cVector3d gem = a_segmentPointA + a_segmentPointB;
-	//	gem = gem *0.5;
-	//	Line->setPosition(gem);
-	//	cVector3d dv = a_segmentPointA - a_segmentPointB;
-	//	double d = dv.length() *0.5;
-	//	Line->setRadius(d);
-
-	//	// no collision occurred yet
-	//	bool result = false;
-
-	//	// collision search
-	//	while (index > -1)
-	//	{
-	//		// get index of current node on stack 
-	//		Sphere* sphereIndex = stack[index].m_index;
-	//		
-	//		// get type of current node
-	//		 sphereState nodeType = sphereIndex->getState();
-
-
-	//		//----------------------------------------------------------------------
-	//		// INTERNAL NODE:
-	//		//----------------------------------------------------------------------
-	//		if (nodeType == sphereState::SPHERE_INTERNAL)
-	//		{
-	//			switch (stack[index].m_state)
-	//			{
-	//				////////////////////////////////////////////////////////////////
-	//				// TEST CURRENT NODE
-	//				////////////////////////////////////////////////////////////////
-	//			case C_IST_STATE_TEST_CURRENT_NODE:
-	//			{
-	//				// check if line box intersects box of current node
-	//				if (sphereIndex->distance(Line, cVector3d(0,0,0), cVector3d(0,0,0)) == 0.0)
-	//				{
-	//					// check if segment intersects box of current node
-	//					if (m_nodes[nodeIndex].m_bbox.intersect(a_segmentPointA, a_segmentPointB))
-	//					{
-	//						stack[index].m_state = C_AABB_STATE_TEST_LEFT_NODE;
-	//					}
-	//					else
-	//					{
-	//						stack[index].m_state = C_AABB_STATE_TEST_CURRENT_NODE;
-	//						index--;
-	//					}
-	//				}
-	//				else
-	//				{
-	//					stack[index].m_state = C_AABB_STATE_TEST_CURRENT_NODE;
-	//					index--;
-	//				}
-	//			}
-	//			break;
-
-	//			////////////////////////////////////////////////////////////////
-	//			// TEST LEFT NODE
-	//			////////////////////////////////////////////////////////////////
-	//			case C_AABB_STATE_TEST_LEFT_NODE:
-	//			{
-	//				stack[index].m_state = C_AABB_STATE_TEST_RIGHT_NODE;
-
-	//				// push left child node on stack
-	//				index++;
-	//				stack[index].m_index = m_nodes[nodeIndex].m_leftSubTree;
-	//				stack[index].m_state = C_AABB_STATE_TEST_CURRENT_NODE;
-	//			}
-	//			break;
-
-	//			////////////////////////////////////////////////////////////////
-	//			// TEST RIGHT NODE
-	//			////////////////////////////////////////////////////////////////
-	//			case C_AABB_STATE_TEST_RIGHT_NODE:
-	//			{
-	//				stack[index].m_state = C_AABB_STATE_POP_STACK;
-
-	//				// push right child node on stack
-	//				index++;
-	//				stack[index].m_index = m_nodes[nodeIndex].m_rightSubTree;
-	//				stack[index].m_state = C_AABB_STATE_TEST_CURRENT_NODE;
-	//			}
-	//			break;
-
-	//			////////////////////////////////////////////////////////////////
-	//			// POP STACK
-	//			////////////////////////////////////////////////////////////////
-	//			case C_AABB_STATE_POP_STACK:
-	//			{
-	//				// restore state of current node for next search and pop stack
-	//				stack[index].m_state = C_AABB_STATE_TEST_CURRENT_NODE;
-	//				index--;
-	//			}
-	//			break;
-	//			}
-	//		}
-
-
-	//		//----------------------------------------------------------------------
-	//		// LEAF NODE:
-	//		//----------------------------------------------------------------------
-	//		else if (nodeType == C_AABB_NODE_LEAF)
-	//		{
-	//			// get index of leaf element
-	//			int elementIndex = m_nodes[nodeIndex].m_leftSubTree;
-
-	//			// call the element's collision detection method
-	//			if (m_elements->m_allocated[elementIndex])
-	//			{
-	//				if (m_elements->computeCollision(elementIndex,
-	//					a_object,
-	//					a_segmentPointA,
-	//					a_segmentPointB,
-	//					a_recorder,
-	//					a_settings))
-	//				{
-	//					result = true;
-	//				}
-	//			}
-
-	//			// pop stack
-	//			index--;
-	//		}
-	//	}
-
-	//	// return result
-	//	return (result);
-	//}
 
 	/*
 		
