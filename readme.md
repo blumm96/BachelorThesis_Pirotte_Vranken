@@ -15,7 +15,7 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
   using namespace chai3d;**  
 
   ---
-  **_In de initialisatie stap van de main()_**
+  **_In de initialisatie stap van de main()_**  
   ---
 
   1. Maak een AABBtree van het object  
@@ -29,7 +29,7 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
     **//bouwt hieruit innerspheres op**  
 
   3. set het object in de voxelizer  
-    **cCollisionAABB\* colliderObject = dynamic_cast<cCollisionAABB*>(object->getCollisionDetector());**  
+    **cCollisionAABB\* colliderObject = dynamic_cast<cCollisionAABB\*>(object->getCollisionDetector());**  
     **voxelizerObject->setObject(colliderObject);**  
 
   4. stel accuraatheid van de voxelizer in  
@@ -57,5 +57,27 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
   9. De IST moet nu nog worden geset als de collision detector van het object  
     **onderkaak->setCollisionDetector(istOnderkaak);**  
 
+- **Collision detection tussen 2 opgebouwde trees van 2 objecten (zelfde type collision detector)**
+  ---
+  **_In de haptic thread._**  
+  ---
+  
+  **world->computeCollision(object1, object2, traversalSetting, distance, maxdiepte, \*position);**  
+  //de traversalSetting bepaald het gebruikte algoritme voor het afgaan van de binary trees  
+  //Deze algoritmes zijn gedefinieerd in de file: CollisionDetectionAlgorithms.h  
+  //De huidige opties zijn:  
+    * Distance -> algoritme 5.2 p.120 in het boek: __New Geometric Data Structures for Collision Detection and Haptics.__  
+    * Volume Penetration (not yet implemented) -> algoritme 5.3 p123.  
+    * Backward track -> houdt het vorige pad bij waaruit een collisie volgde en zoekt vanuit dit pad opnieuw naar collisies.  
+    * Multipoint -> houdt rekening met mogelijk meerdere collisies en werkt analoog met optie c. Er kan een splitting depth worden ingesteld door de **#define splitDeth 2** aan te passen vanboven in de CollisionDetectionAlgorithms.h header file. Deze bepaalt op welke diepte raakpunten niet meer dezelfde parent mogen hebben. Het aantal collisies kan worden opgevraagd met:  
+      **InnerSphereTree::globalPath.getNumberOfCollisions();**  
+      Waarna elke positie van collisie kan worden opgevraagd met:  
+        **InnerSphereTree::globalPath.getCollisions(index);  //deze geeft een cVector3d terug**  
 
-    
+Wanneer de objecten worden bewogen of worden geroteerd moet dit wel worden doorgegeven aan de collision detectors:  
+**istObject->setRotation(object->getLocalRot());  
+istObject->setPosition(object->getLocalPos());**  
+
+
+  
+
