@@ -151,7 +151,7 @@ setPosAndRot(T2, R2, object2);
 - **Hoe grotere snelheden behalen:**  
 Door in de Haptic thread enkel naar collisies te zoeken wanneer een zekere minimum afstand is afgelegd. We voeren een globale variabele in:  
 ```c
-cVector3d traveledDistance;**  
+cVector3d traveledDistance;  
 ```
 Bij elke verplaatsing wordt deze vector aangepast:  
 ```c
