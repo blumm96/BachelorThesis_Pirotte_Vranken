@@ -252,6 +252,70 @@ bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename, PQP_Model &m)
 	return (C_SUCCESS);
 }
 
+bool cLoadFileSTL2(cMesh* mesh, const std::string& a_filename)
+{
+	// sanity check
+	if (mesh == NULL)
+		return (C_ERROR);
+
+	// open file
+	ifstream file(a_filename.c_str(), ios::binary);
+	if (!file)
+		return (C_ERROR);
+
+	// get length of file
+	file.seekg(0, file.end);
+	int length = (int)(file.tellg());
+	file.seekg(0, file.beg);
+	if (length < 84)
+	{
+		file.close();
+		return (C_ERROR);
+	}
+
+	// read header
+	cHeaderSTL header;
+	file.read((char*)(&header), 84);
+
+	// read number of triangles
+	unsigned int numTriangles = header.m_numTriangles;
+	if (numTriangles == 0)
+	{
+		file.close();
+		return (C_ERROR);
+	}
+
+	// check if the length of the file correspond to the number of triangles found
+	double num = (double)(length - sizeof(cHeaderSTL)) / 50.0;
+	if ((num != floor(num)) && ((int)num != numTriangles))
+	{
+		file.close();
+		return (C_ERROR);
+	}
+
+	// load triangles
+	for (int i = 0; i<(int)numTriangles; i++)
+	{
+		cTriangleSTL triangle;
+
+		// read triangle data from file
+		file.read((char*)(&triangle), 50);
+
+		// create triangle entity
+		mesh->newTriangle(cVector3d(triangle.m_vertex0[0], triangle.m_vertex0[1], triangle.m_vertex0[2]),
+			cVector3d(triangle.m_vertex1[0], triangle.m_vertex1[1], triangle.m_vertex1[2]),
+			cVector3d(triangle.m_vertex2[0], triangle.m_vertex2[1], triangle.m_vertex2[2]));
+	}
+
+	// compute normals
+	mesh->computeAllNormals();
+
+	// close file
+	file.close();
+
+	// return success
+	return (C_SUCCESS);
+}
 
 //==============================================================================
 /*!

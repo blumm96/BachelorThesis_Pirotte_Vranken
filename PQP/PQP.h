@@ -42,7 +42,10 @@
 #define PQP_H
 
 #include "PQP_Compile.h"   
-#include "PQP_Internal.h"                             
+#include "PQP_Internal.h"
+#include "math/CVector3d.h"
+#include "math/CMatrix3d.h"
+#include "world/CMesh.h"
                         
 //----------------------------------------------------------------------------
 //
@@ -328,6 +331,27 @@ PQP_Tolerance(PQP_ToleranceResult *res,
               PQP_REAL tolerance,
               int qsize = 2);
 
+//UHAS implemented
+using namespace chai3d;
+inline void setPosAndRot(PQP_REAL *pos, PQP_REAL (*rot)[3], cGenericObject* model) {
+	cMatrix3d m = model->getLocalRot();
+	cVector3d p = model->getLocalPos();
+
+	int index = 0;
+	for (PQP_REAL *i = pos; i != pos + 3; i++) {
+		*i = p(index);
+		index++;
+	}
+	int row;
+	int collumn = 0;
+	for (row = 0; row < 3; row++) {
+		for (PQP_REAL *k = rot[row]; k != rot[row] + 3; k++) {
+			*k = m(row, collumn);
+			collumn++;
+		}
+		collumn = 0;
+	}
+}
 #endif 
 #endif
 

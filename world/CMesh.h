@@ -321,6 +321,7 @@ public:
 	//This method prints the AABB box tree for this mesh
 	void printAABBCollisionTree(int maxDiepte);
 	bool loadFromFile2(std::string a_filename, PQP_Model &m);
+	bool loadFromFile2(std::string a_filename);
 
 
     //--------------------------------------------------------------------------
