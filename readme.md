@@ -3,16 +3,16 @@ Uitbreiding op de CHAI3D library is hier af te halen: [Zip-bestand] (http://www.
 ## How to:
 Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
 - **Bouwen van een IST**
-  Include volgende header files:
+  Include volgende header files:  
 
 	#include <ist/InnerSphereTree.h>  
 	#include <collisions/Voxelizer.h>  
 	#include "ist/SaveIST.h"  
 
-  Gebruik volgende namespaces:
+  Gebruik volgende namespaces:  
 
-  **using namespace std;  
-  using namespace chai3d;**  
+	using namespace std;  
+	using namespace chai3d;  
 
 ---
 **_In de initialisatie stap van de main()_**  
