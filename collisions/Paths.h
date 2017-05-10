@@ -40,7 +40,7 @@ namespace chai3d {
 			}
 			return positions[i]; 
 		}
-		inline int getAantalVrijheidsgraden() { return aantalVrijheidsgraden; }
+		inline int getDegreesFreedom() { return aantalVrijheidsgraden; }
 
 	};
 

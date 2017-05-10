@@ -511,7 +511,7 @@ namespace chai3d {
 		itB++;
 		}
 
-		if (collisions == paths.getAantalVrijheidsgraden()) {
+		if (collisions == paths.getDegreesFreedom()) {
 			return true;
 		}
 
@@ -546,7 +546,7 @@ namespace chai3d {
 
 				paths.addPosition(pos);
 				collisions++;
-				if (collisions == paths.getAantalVrijheidsgraden()) return true;
+				if (collisions == paths.getDegreesFreedom()) return true;
 
 				vorigeAs.push_back(raaktA->getParent(splitDepth));
 				vorigeBs.push_back(raaktB->getParent(splitDepth));
@@ -559,7 +559,7 @@ namespace chai3d {
 
 		//probeer nieuwe paden te vinden
 		int cs = collisions;
-		for (int i = 0; i < paths.getAantalVrijheidsgraden() - cs; i++) {
+		for (int i = 0; i < paths.getDegreesFreedom() - cs; i++) {
 			Sphere* findA = nullptr;
 			Sphere* findB = nullptr;
 			cVector3d pos;
@@ -580,7 +580,7 @@ namespace chai3d {
 
 				//cout << "collisie: sphereA: " << findA << " - sphereB: " << findB << " - pos: " << pos << endl;
 				//cout << "size of raakpunten: " << paths.raakpuntenA.size() << " - number of pos: " << paths.getPositions().size() << endl;
-				if (collisions == paths.getAantalVrijheidsgraden()) return true;
+				if (collisions == paths.getDegreesFreedom()) return true;
 
 				excludesA.push_back(findA->getParent(splitDepth));
 				excludesB.push_back(findB->getParent(splitDepth));
