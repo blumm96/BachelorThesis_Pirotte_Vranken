@@ -20,7 +20,7 @@
 using namespace std;
 
 namespace chai3d {
-	// Describes where the sphere is located whithin the inner sphere tree.
+	// Indicates where the sphere is located whithin the inner sphere tree.
 	enum sphereState
 	{
 		SPHERE_ROOT,
@@ -28,6 +28,7 @@ namespace chai3d {
 		SPHERE_LEAF
 	};
 
+	// Forward declarations
 	class InnerSphereTree;
 	class Sphere {
 		// VARIABLES
@@ -47,7 +48,7 @@ namespace chai3d {
 		int depth;
 		// The triangles associated with this sphere.
 		// This can be used to expand the program.
-		// Nothing is done with the triangles right now.
+		// Triangles are not used, more implementation needed
 		vector<Triangle*> triangles;
 
 		// This variable is used for a collision algorithm.

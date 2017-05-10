@@ -1,3 +1,11 @@
+//==============================================================================
+/*
+Implemented by Casper Vranken and Niels Pirotte commisioned by the University of Hasselt and KU Leuven, Belgium
+
+Implementation of the Sphere class
+*/
+//==============================================================================
+
 #include "ist/Sphere.h"
 
 #include "ist/InnerSphereTree.h"

@@ -210,7 +210,7 @@ namespace chai3d {
 
 			Set the rootsphere of this IST.
 
-			\n_root The new rootsphere of this IST.
+			\param n_root The new rootsphere of this IST.
 
 		*/
 		inline void setRoot(Sphere* n_root) { rootSphere = n_root; }

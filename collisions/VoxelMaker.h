@@ -1,3 +1,11 @@
+//==============================================================================
+/*
+
+Implements ray intersection algorithm for checking if a voxel is inside the object
+
+*/
+//==============================================================================
+
 #ifndef VOXELMAKER_H
 #define VOXELMAKER_H
 

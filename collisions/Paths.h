@@ -1,3 +1,13 @@
+//==============================================================================
+/*
+This class provides feedback for the multipoint algotihm.
+
+\author    Niels Pirotte
+\author    Casper Vranken
+\version   1.0.0
+*/
+//==============================================================================
+
 #ifndef PATHS_H
 #define PATHS_H
 
@@ -7,6 +17,7 @@
 #include <iostream>
 
 using namespace std;
+
 
 namespace chai3d {
 	class Paths {
@@ -23,16 +34,21 @@ namespace chai3d {
 
 	// PUBLIC METHODS
 	public:
-		//voor te testen, getters en setters moeten nog worden toegevoegd
+		//Interface with colliding spheres found by multipoint algorithm
 		vector<Sphere*> &raakpuntenA = vector<Sphere*>();
 		vector<Sphere*> &raakpuntenB = vector<Sphere*>();
 
+		//Clear all contact points found by multipoint algorithm
 		void clearPositions();
+		//Add contact point
 		void addPosition(cVector3d pos);
 
 	// INLINE
 	public:
+		// Returns number of collisions found by multipoint algorithm
 		inline unsigned int getNumberOfCollisions() { return positions.size(); }
+
+		//Get a contact point
 		inline cVector3d getCollision(unsigned int i) { 
 			if (i < 0 || i >= positions.size()) {
 				//cout << "error in Paths.h: index out of range!" << endl;
@@ -40,8 +56,9 @@ namespace chai3d {
 			}
 			return positions[i]; 
 		}
-		inline int getDegreesFreedom() { return aantalVrijheidsgraden; }
 
+		//Returns the number of contact points configured for the multipoint algorithm
+		inline int getDegreesFreedom() { return aantalVrijheidsgraden; }
 	};
 
 } // -- chai3d

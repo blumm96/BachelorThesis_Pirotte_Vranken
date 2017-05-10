@@ -333,6 +333,15 @@ PQP_Tolerance(PQP_ToleranceResult *res,
 
 //UHAS implemented
 using namespace chai3d;
+
+/*
+	Equals position vector and rotation matrix of PQP model
+	with the position vector and rotation matrix of a chai3d object
+
+	\param pos vector of the position of the PQP model
+	\param rot matrix of the rotation of the PQP model
+	\param model pointer to chai3d object
+*/
 inline void setPosAndRot(PQP_REAL *pos, PQP_REAL (*rot)[3], cGenericObject* model) {
 	cMatrix3d m = model->getLocalRot();
 	cVector3d p = model->getLocalPos();
