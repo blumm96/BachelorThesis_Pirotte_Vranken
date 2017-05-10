@@ -5,14 +5,14 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
 - **Bouwen van een IST**
   Include volgende header files:
 
-  **#include <ist/InnerSphereTree.h>**
-  **#include <collisions/Voxelizer.h>**
-  **#include "ist/SaveIST.h"**
+  **#include <ist/InnerSphereTree.h>**  
+  **#include <collisions/Voxelizer.h>**  
+  **#include "ist/SaveIST.h"**  
 
   Gebruik volgende namespaces:
 
-  **using namespace std;
-  using namespace chai3d;**
+  **using namespace std;  
+  using namespace chai3d;**  
 
   ---
   **_In de initialisatie stap van de main()_**
