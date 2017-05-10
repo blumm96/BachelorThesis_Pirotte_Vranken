@@ -13,8 +13,10 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
 
   **using namespace std;  
   using namespace chai3d;**  
+
   ---
-  **_In de initialisatie stap van de main()_**  
+  #**_In de initialisatie stap van de main()_**  
+
   ---
 
   1. Maak een AABBtree van het object  
@@ -57,8 +59,10 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
     **onderkaak->setCollisionDetector(istOnderkaak);**  
 
 - **Collision detection tussen 2 opgebouwde trees van 2 objecten (zelfde type collision detector)**  
+  
   ---
-  **_In de haptic thread._**  
+  #**_In de haptic thread._**  
+
   ---
   
   **world->computeCollision(object1, object2, traversalSetting, distance, maxdiepte, \*position);**  
@@ -90,8 +94,10 @@ istObject->setPosition(object->getLocalPos());**
   **//position and rotation of m2 for pqp collision detection**  
   **PQP_REAL T2[3];**  
   **PQP_REAL R2[3][3];**    
+  
   ---
-  **_In de initialisatie stap van de main()_**
+  #**_In de initialisatie stap van de main()_**  
+  
   ---
 
 Laat de modellen m1 en m2 in bij het inladen van de mesh  
@@ -101,8 +107,10 @@ Laat de modellen m1 en m2 in bij het inladen van de mesh
   **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model1"), \*m1);**  
   **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);**  
   **//Er worden nu PQP modellen gemaakt vanuit de stl files.**  
+  
   ---
-  **_In de Haptic Thread while loop:_**
+  #**_In de Haptic Thread while loop:_**  
+  
   ---
 
 Voor een distance query zoals beschreven op github:  
@@ -131,13 +139,16 @@ Bij elke verplaatsing wordt deze vector aangepast:
   **traveledDistance += displacement;**  
 
   ---
-  **_In de Haptic Thread_**  
+  #**_In de Haptic Thread_**  
+  
   ---
 We make een variabele aan:  
   **float minDist = 0;**  
   
   ---
-  **_In de Haptic loop krijgen (while lus in Haptic Thread)_**
+  
+  #**_In de Haptic loop krijgen (while lus in Haptic Thread)_**  
+  
   ---
   **If(traveledDistance.length() > minDist){**  
     **//Doe collisie detectie => een schatting van de min. afstand door het collisie detectie algoritme = schattingD**  
