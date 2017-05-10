@@ -101,60 +101,60 @@ istObject->setPosition(object->getLocalPos());**
   ---
 
 Laat de modellen m1 en m2 in bij het inladen van de mesh  
-  **m1 = new PQP_Model();**  
-  **m2 = new PQP_Model();**    
-  **bool fileload;**  
-  **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model1"), \*m1);**  
-  **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);**  
-  **//Er worden nu PQP modellen gemaakt vanuit de stl files.**  
+	**m1 = new PQP_Model();**  
+	**m2 = new PQP_Model();**    
+	**bool fileload;**  
+	**fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model1"), \*m1);**  
+	**fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);**  
+	**//Er worden nu PQP modellen gemaakt vanuit de stl files.**  
   
   ---
-  #**_In de Haptic Thread while loop:_**  
+  **_In de Haptic Thread while loop:_**  
   
   ---
 
 Voor een distance query zoals beschreven op github:  
-  **double distance_pqp;**  
-  **setPosAndRot1();**  
-  **setPosAndRot2();**    
-  **//distance with pqp lib**  
-  **PQP_DistanceResult dres;**  
-  **double rel_err = 0.0, abs_err = 0.0;**  
-  **PQP_Distance(&dres, R1, T1, m1, R2, T2, m2, rel_err, abs_err);**  
-  **distance_pqp = dres.Distance();**    
+	**double distance_pqp;**  
+	**setPosAndRot1();**  
+	**setPosAndRot2();**    
+	**//distance with pqp lib**  
+	**PQP_DistanceResult dres;**  
+	**double rel_err = 0.0, abs_err = 0.0;**  
+	**PQP_Distance(&dres, R1, T1, m1, R2, T2, m2, rel_err, abs_err);**  
+	**distance_pqp = dres.Distance();**    
 Voor een collision query zoals beschreven op github  
   
-  **int colliding;**  
-  **//colliding querry with pqp**  
-  **PQP_CollideResult cres;**  
-  **PQP_Collide(&cres, R1, T1, m1, R2, T2, m2);**  
-  **colliding = cres.Colliding();**    
+	**int colliding;**  
+	**//colliding querry with pqp**  
+	**PQP_CollideResult cres;**  
+	**PQP_Collide(&cres, R1, T1, m1, R2, T2, m2);**  
+	**colliding = cres.Colliding();**    
 Bij elke beweging of rotatie moeten zoals bij collisie detectie met ISTs of AABBs ook de positie en de rotatie van de modellen worden geset:  
-  **setPosAndRot(T1, R1, object1);**  
-  **setPosAndRot(T2, R2, object2);**  
+	**setPosAndRot(T1, R1, object1);**  
+	**setPosAndRot(T2, R2, object2);**  
 - **Hoe grotere snelheden behalen:**  
 Door in de Haptic thread enkel naar collisies te zoeken wanneer een zekere minimum afstand is afgelegd. We voeren een globale variabele in:  
-  **cVector3d traveledDistance;**  
+	**cVector3d traveledDistance;**  
 Bij elke verplaatsing wordt deze vector aangepast:  
-  **traveledDistance += displacement;**  
+	**traveledDistance += displacement;**  
 
   ---
-  #**_In de Haptic Thread_**  
+  **_In de Haptic Thread_**  
   
   ---
 We make een variabele aan:  
-  **float minDist = 0;**  
+	**float minDist = 0;**  
   
   ---
   
-  #**_In de Haptic loop krijgen (while lus in Haptic Thread)_**  
+  **_In de Haptic loop krijgen (while lus in Haptic Thread)_**  
   
   ---
-  **If(traveledDistance.length() > minDist){**  
-    **//Doe collisie detectie => een schatting van de min. afstand door het collisie detectie algoritme = schattingD**  
-    **minDist = schattingD;**  
-    **traveledDistance->zero();**  
-  **}**  
+	**If(traveledDistance.length() > minDist){**  
+		**//Doe collisie detectie => een schatting van de min. afstand door het collisie detectie algoritme = schattingD**  
+		**minDist = schattingD;**  
+		**traveledDistance->zero();**  
+	**}**  
 
 
   
