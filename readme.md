@@ -13,7 +13,6 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
 
   **using namespace std;  
   using namespace chai3d;**  
-
   ---
   **_In de initialisatie stap van de main()_**  
   ---
@@ -57,7 +56,7 @@ Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
   9. De IST moet nu nog worden geset als de collision detector van het object  
     **onderkaak->setCollisionDetector(istOnderkaak);**  
 
-- **Collision detection tussen 2 opgebouwde trees van 2 objecten (zelfde type collision detector)**
+- **Collision detection tussen 2 opgebouwde trees van 2 objecten (zelfde type collision detector)**  
   ---
   **_In de haptic thread._**  
   ---
@@ -78,7 +77,7 @@ Wanneer de objecten worden bewogen of worden geroteerd moet dit wel worden doorg
 **istObject->setRotation(object->getLocalRot());  
 istObject->setPosition(object->getLocalPos());**  
 
-- **Collision detection a.d.h.v. de PQP library – (https://github.com/GammaUNC/PQP)**
+- **Collision detection a.d.h.v. de PQP library – (https://github.com/GammaUNC/PQP)**  
   Include volgende header file:  
   **#include "PQP/PQP.h"**  
   Maak volgende globale variabelen aan:  
@@ -102,7 +101,6 @@ Laat de modellen m1 en m2 in bij het inladen van de mesh
   **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model1"), \*m1);**  
   **fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);**  
   **//Er worden nu PQP modellen gemaakt vanuit de stl files.**  
-
   ---
   **_In de Haptic Thread while loop:_**
   ---
