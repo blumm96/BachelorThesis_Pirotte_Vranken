@@ -75,6 +75,7 @@ bool cLoadFileSTL(cMultiMesh* a_object, const std::string& a_filename);
 //UHAS implemented
 //! This function loads an STL model file.
 bool cLoadFileSTL2(cMesh* a_object, const std::string& a_filename, PQP_Model &m);
+bool cLoadFileSTL2(cMesh* a_object, const std::string& a_filename);
 
 //! This function saves an STL model file.
 bool cSaveFileSTL(cMultiMesh* a_object, const std::string& a_filename);

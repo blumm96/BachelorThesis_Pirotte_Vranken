@@ -1886,6 +1886,33 @@ bool cMesh::loadFromFile2(string a_filename, PQP_Model &m)
 	return (result);
 }
 
+bool cMesh::loadFromFile2(string a_filename)
+{
+	// find extension
+	string extension = cGetFileExtension(a_filename);
+
+	// we need a file extension to figure out file type
+	if (extension.length() == 0)
+	{
+		return (false);
+	}
+
+	// convert string to lower extension
+	string fileType = cStrToLower(extension);
+
+	// result for loading file
+	bool result = false;
+	//--------------------------------------------------------------------
+	// .STL FORMAT
+	//--------------------------------------------------------------------
+	if (fileType == "stl")
+	{
+		result = cLoadFileSTL2(this, a_filename);
+	}
+
+	return (result);
+}
+
 //------------------------------------------------------------------------------
 } // namespace chai3d
 //------------------------------------------------------------------------------
