@@ -35,7 +35,8 @@ using namespace chai3d;
 
   4. stel accuraatheid van de voxelizer in  
     **voxelizerObject->setAccuraatheid(n);**  
-    **//deze accuraatheid (n) bepaalt de afstand tussen de voxels. Afstand tussen voxels in de x-richting (dx) = Lengte over de /x-as van de oriented bounding box van het object gedeeld door n.**  
+    **//deze accuraatheid (n) bepaalt de afstand tussen de voxels.  
+    //Afstand tussen voxels in de x-richting (dx) = Lengte over de x-as van de oriented bounding box van het object gedeeld door n.**  
     **//Analoog voor y en z richting.**  
 
   5. begin met distance mapping  
@@ -154,7 +155,7 @@ cVector3d traveledDistance;**
 ```
 Bij elke verplaatsing wordt deze vector aangepast:  
 ```c
-**traveledDistance += displacement;**  
+traveledDistance += displacement;  
 ```
 
 ---
@@ -163,7 +164,7 @@ Bij elke verplaatsing wordt deze vector aangepast:
 ---
 We make een variabele aan:  
 ```c
-**float minDist = 0;**  
+float minDist = 0;  
 ```
   
 ---  
