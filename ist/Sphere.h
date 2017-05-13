@@ -32,7 +32,7 @@ namespace chai3d {
 	class InnerSphereTree;
 	class Sphere {
 		// VARIABLES
-	private:
+	public:
 		
 		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0).
 		Sphere* parent;

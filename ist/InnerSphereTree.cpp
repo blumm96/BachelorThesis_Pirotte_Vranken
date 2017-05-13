@@ -189,7 +189,7 @@ namespace chai3d {
 		\return If the two ists are colliding.
 
 	*/
-	bool InnerSphereTree::computeCollision(InnerSphereTree* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie, Sphere* pA, Sphere* pB) {
+	bool InnerSphereTree::computeCollision(InnerSphereTree* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d& positie, Sphere* &pA, Sphere* &pB) {
 		// Sanity check
 		if (ist2 == NULL) return false;
 		if (this->getCollisionTreeType() != ist2->getCollisionTreeType()) return false;
@@ -208,7 +208,8 @@ namespace chai3d {
 			if (pA == nullptr && pB == nullptr) mindist = std::numeric_limits<float>::infinity();
 			else mindist = pA->distance(pB, this, ist2);
 
-			checkDistanceSphereTest(parent_A, parent_B, this, ist2, mindist, maxdiepte, stop, positie, pA, pB);
+			int test = 0;
+			checkDistanceSphereTest(parent_A, parent_B, this, ist2, mindist, maxdiepte, stop, positie, pA, pB, test);
 
 			collisionfeedback = mindist;
 			//std::cout << collisionfeedback << std::endl;
@@ -250,7 +251,7 @@ namespace chai3d {
 
 		maakRootSphere(leafs);
 
-		BNG(size, rootSphere, leafs, a_depth, rootSphere);
+		BNG(size, rootSphere, leafs, a_depth);
 
 		return 0;
 	}
@@ -259,21 +260,21 @@ namespace chai3d {
 		
 		Implementation of the BNG algorithm.
 
-		\param size			The size of the IST.
+		\param size			The size of the boundingbox of the object for determining the stopcriteria.
 		\param node			The node on which to build the following branch.
 		\param leafs		The remaining leafs on which to build the following internal sphere.
 		\param a_depth		The maximum depth of the IST.
 		\param root			The rootsphere.
 
 	*/
-	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root)
+	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth)
 	{
 #define TMAX 500		
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
 		//cout << "diepte: " << node->getDepth() << " - aantal leafs: " << leafs.size() << endl;
 
 		if (node->getDepth() == a_depth) {
-			addLeafs(leafs, node, root);
+			addLeafs(leafs, node);
 			m_maxDepth = a_depth;
 			return;
 		}
@@ -323,8 +324,8 @@ namespace chai3d {
 
 				for (int i = 0; i < 4; i++) {
 					for (int k = i + 1; k < 4; k++) {
-						if (d[i] < d[k]) n[i]++;
-						else n[k]++;
+						if (d[i] < d[k]) n[k]++;
+						else n[i]++;
 					}
 				}
 				row.clear();
@@ -401,12 +402,12 @@ namespace chai3d {
 			s->setState(sphereState::SPHERE_INTERNAL);
 			s->setDepth(node->getDepth()+1);
 			s->setParent(node);
-			s->setRootSphere(root);
+			s->setRootSphere(rootSphere);
 			
 			//set as child of node
 			node->addChild(s);
 			//recursive call
-			BNG(size, s, w[i].lfs, a_depth, rootSphere);
+			BNG(size, s, w[i].lfs, a_depth);
 		}
 	}
 
@@ -419,12 +420,12 @@ namespace chai3d {
 		\param root		The rootsphere.
 
 	*/
-	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node, Sphere* root)
+	void InnerSphereTree::addLeafs(std::vector<Sphere*> leafs, Sphere * node)
 	{
 		for (int i = 0; i < leafs.size(); i++) {
 			leafs[i]->setParent(node);
 			leafs[i]->setDepth(node->getDepth() + 1);
-			leafs[i]->setRootSphere(root);
+			leafs[i]->setRootSphere(rootSphere);
 			node->addChild(leafs[i]);
 		}
 	}

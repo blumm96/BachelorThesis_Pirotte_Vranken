@@ -36,7 +36,7 @@ namespace chai3d {
 	public:
 		// Computes the collision between 2 inner sphere trees.
 		virtual bool computeCollision(cGenericCollision* ist2, traversalSetting setting, double &collisionfeedback, int maxdiepte, cVector3d myLocal, cVector3d BLocal, cVector3d& positie);
-		bool computeCollision(InnerSphereTree * ist2, traversalSetting setting, double & collisionfeedback, int maxdiepte, cVector3d & positie, Sphere *pA, Sphere* pB);
+		bool computeCollision(InnerSphereTree * ist2, traversalSetting setting, double & collisionfeedback, int maxdiepte, cVector3d & positie, Sphere* &pA, Sphere* &pB);
 		// Get the type of tree. In this case IST.
 		virtual inline CollisionTreeType getCollisionTreeType() { return CollisionTreeType::IST; };
 		// Render the spheres.
@@ -71,7 +71,7 @@ namespace chai3d {
 		inline double getSize() { return size; }
 
 		// DATA MEMBERS
-	private:
+	public:
 
 		// The rootsphere.
 		Sphere* rootSphere;
@@ -177,10 +177,10 @@ namespace chai3d {
 		inline std::vector<Sphere*> getSpheres() { return spheres; }
 
 		// An implementation of the BNG algorithm used.
-		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, Sphere* root);
+		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
 
 		//Add leafs to a certain node.
-		void addLeafs(std::vector<Sphere*> leafs, Sphere* node, Sphere* root);
+		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
 
 		// Create a rootsphere.
 		void maakRootSphere(std::vector<Sphere*> leafs);

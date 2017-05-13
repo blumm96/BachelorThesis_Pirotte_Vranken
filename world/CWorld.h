@@ -159,7 +159,7 @@ public:
 	//UHAS implement
 	//! This method computes the interaction between 2 objects in this world
 	bool computeCollision(cGenericObject *A, cGenericObject *B, traversalSetting setting, double &collisionfeedback, int maxDiepte, cVector3d& positie);
-	bool computeCollision(InnerSphereTree *A, InnerSphereTree *B, traversalSetting setting, double &collisionfeedback, int maxDiepte, cVector3d& positie, Sphere* pA, Sphere* pB);
+	bool computeCollision(InnerSphereTree *A, InnerSphereTree *B, traversalSetting setting, double &collisionfeedback, int maxDiepte, cVector3d& positie, Sphere* &pA, Sphere* &pB);
 
 
     //-----------------------------------------------------------------------
