@@ -127,8 +127,7 @@ fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);
 Voor een distance query zoals beschreven op github:  
 ```c
 double distance_pqp;  
-setPosAndRot1();  
-setPosAndRot2();    
+   
 //distance with pqp lib  
 PQP_DistanceResult dres;  
 double rel_err = 0.0, abs_err = 0.0;  
