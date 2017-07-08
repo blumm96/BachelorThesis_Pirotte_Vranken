@@ -177,11 +177,11 @@ namespace chai3d {
 		inline std::vector<Sphere*> getSpheres() { return spheres; }
 
 		// An implementation of the BNG algorithm used.
-		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth);
+		void BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, bool &one);
 
 		//Add leafs to a certain node.
 		void addLeafs(std::vector<Sphere*> leafs, Sphere* node);
-
+		
 		// Create a rootsphere.
 		void maakRootSphere(std::vector<Sphere*> leafs);
 

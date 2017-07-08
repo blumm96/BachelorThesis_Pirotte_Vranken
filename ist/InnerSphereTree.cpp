@@ -251,7 +251,8 @@ namespace chai3d {
 
 		maakRootSphere(leafs);
 
-		BNG(size, rootSphere, leafs, a_depth);
+		bool one = true;
+		BNG(size, rootSphere, leafs, a_depth, one);
 
 		return 0;
 	}
@@ -267,7 +268,7 @@ namespace chai3d {
 		\param root			The rootsphere.
 
 	*/
-	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth)
+	void InnerSphereTree::BNG(double size, Sphere* node, std::vector<Sphere*> leafs, const int a_depth, bool &one)
 	{
 #define TMAX 500		
 		//als we de diepte hebben bereikt dan moeten we de kinderen nog toevoegen
@@ -394,7 +395,8 @@ namespace chai3d {
 			//we got all wheights with a vector to their leaves
 			//with all including radius of their leaves
 		for (int i = 0; i < 4; i++) {
-			if (node->getDepth() == 1) {
+			if (node->getDepth() == 1 && one) {
+				//if(i == 3) one = false;
 				for (int j = 0; j < w[i].lfs.size(); j++) w[i].lfs[j]->color = i+1;
 			}
 			if (w[i].lfs.empty()) continue;
@@ -409,7 +411,7 @@ namespace chai3d {
 			//set as child of node
 			node->addChild(s);
 			//recursive call
-			BNG(size, s, w[i].lfs, a_depth);
+			BNG(size, s, w[i].lfs, a_depth, one);
 		}
 	}
 
