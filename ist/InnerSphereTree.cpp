@@ -373,7 +373,7 @@ namespace chai3d {
 			}
 			if (max[num] < (mindist + rad)) max[num] = (mindist + rad);
 			w[num].lfs.push_back(leafs[j]);
-			}
+		}
 
 		//? set new position npos
 		for (int i = 0; i < 4; i++) {
@@ -393,8 +393,10 @@ namespace chai3d {
 			
 			//we got all wheights with a vector to their leaves
 			//with all including radius of their leaves
-
 		for (int i = 0; i < 4; i++) {
+			if (node->getDepth() == 1) {
+				for (int j = 0; j < w[i].lfs.size(); j++) w[i].lfs[j]->color = i+1;
+			}
 			if (w[i].lfs.empty()) continue;
 			Sphere* s = new Sphere();
 			s->setPosition(w[i].pos);

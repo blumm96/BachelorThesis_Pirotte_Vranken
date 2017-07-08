@@ -408,9 +408,25 @@ void cDrawSphere(const double& a_radius,
 #endif
 }
 
-void cDrawSphere(std::vector<cVector3d*> draw)
+void cDrawSphere(std::vector<cVector3d*> draw, int color)
 {
 #ifdef C_USE_OPENGL
+	switch (color) {
+	case 1: 
+		glColor3f(1.0, 0.0, 0.0);
+		break;
+	case 2: 
+		glColor3f(0.0, 1.0, 0.0);
+		break;
+	case 3: 
+		glColor3f(0.0, 0.0, 1.0);
+		break;
+	case 4: 
+		glColor3f(0.0, 1.0, 1.0);
+		break;
+	}
+	
+
 	for (int i = 0; i < draw.size(); i+=3) {
 			glBegin(GL_LINES);
 			glVertex3d(draw[i]->x(), draw[i]->y(), draw[i]->z());

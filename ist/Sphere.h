@@ -33,7 +33,9 @@ namespace chai3d {
 	class Sphere {
 		// VARIABLES
 	public:
-		
+		//Testing
+		int color;
+
 		// The parent of this sphere. If NULL, sphere is rootsphere and localposition is equal to (0,0,0).
 		Sphere* parent;
 		// The children of this sphere. If the vector is empty, the sphere is a leafnode.

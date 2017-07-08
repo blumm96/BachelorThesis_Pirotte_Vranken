@@ -263,7 +263,7 @@ namespace chai3d {
 	*/
 	void Sphere::render() {
 			initRender(); //this function needs to be called if the sphere changes (center or radius)
-			cDrawSphere(spherePoints);
+			cDrawSphere(spherePoints, color);
 	}
 
 	// Make a sphere to render it.

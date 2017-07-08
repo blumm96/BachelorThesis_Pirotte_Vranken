@@ -100,7 +100,7 @@ void cDrawSphere(const double& a_radius,
 	const cVector3d positie = cVector3d(0,0,0));
 
 //! This function draws a sphere.
-void cDrawSphere(std::vector<cVector3d*> draw);
+void cDrawSphere(std::vector<cVector3d*> draw, int color);
 
 //! This function draws an arrow on the z-axis using a cone and a cylinder.
 void cDrawArrow(const cVector3d& a_arrowStart, 
