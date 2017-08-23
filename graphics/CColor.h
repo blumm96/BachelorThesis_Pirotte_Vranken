@@ -641,6 +641,10 @@ public:
     //! This method sets the color to Red Indian.
     inline void setRedIndian()              { setb(0xCD, 0x5C, 0x5C); } 
 
+	inline void setKULeuven()				{ setb(0x4F, 0xB1, 0x9C); }
+
+	inline void setUHasselt()				{ setb(0xEA, 0x66, 0x0A); }
+
     //! This method sets the color to Light Coral Red. 
     inline void setRedLightCoral()          { setb(0xF0, 0x80, 0x80); }
 

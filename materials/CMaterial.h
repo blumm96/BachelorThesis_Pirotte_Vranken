@@ -838,6 +838,10 @@ public:
     //! This method sets the color to White.
     inline void setWhite()                  { m_diffuse.setb(0xFF, 0xFF, 0xFF); updateColors();}
 
+	inline void setKULeuven()				{ m_diffuse.setb(0x4F, 0xB1, 0x9C); updateColors();}
+
+	inline void setUHasselt()				{ m_diffuse.setb(0xEA, 0x66, 0x0A); updateColors();}
+
     //! This method sets the color to White Snow.
     inline void setWhiteSnow()              { m_diffuse.setb(0xFF, 0xFA, 0xFA); updateColors();}
 

@@ -1,99 +1,99 @@
 # Collision detection application
-Uitbreiding op de CHAI3D library is hier af te halen: [Zip-bestand] (http://www.chai3d.org/download/releases/).
+The CHAI3D-library can be downloaded here: http://www.chai3d.org/download/releases/ .
 ## How to:
-Opmerking: in het volgende is **object** is een pointer naar een **cMesh**.
-- **Bouwen van een IST**
-  Include volgende header files:  
+Note: in the following text **object** is a pointer to a **cMesh**.
+- **Building an IST**
+  Include following header files:  
 ```c
 #include <ist/InnerSphereTree.h>  
 #include <collisions/Voxelizer.h>  
 #include "ist/SaveIST.h"  
 ```
-  Gebruik volgende namespaces:  
+  Use following namespaces:  
 ```c
 using namespace std;  
 using namespace chai3d;  
 ```
 ---
-**_In de initialisatie stap van de main()_**  
+**_In the initialisation of the main()_**  
 
 ---
 
-  1. Maak een AABBtree van het object  
+  1. Maak an AABBtree of the object.  
     **object->createAABBCollisionDetector(double radius);**  
-    **//creëert een box hiërarchie**  
-    **//radius => bij opbouw van een box rond een vertex wordt deze box een kubus met ribbe gelijk aan radius**  
+    **//creates a box-hierarchy**  
+    **//radius => if building a box around a vertex, this box will become a cube with the sides equal to the radius**
 
-  2. maak een voxelizer aan voor het object  
+  2. Make a voxelizer for the object.
     **Voxelizer\* voxelizerObject = new Voxelizer();**  
-    **//maakt een distance-map tussen voxels en een object welke is voorgesteld in Box structuur (AABBtree)**  
-    **//bouwt hieruit innerspheres op**  
+    **//Make a distance map between the voxels and the object which is represented in the box-hierarchy(AABBtree)**  
+    **//Build inner sphere trees out of this.**
 
-  3. set het object in de voxelizer  
+  3. Set the object in the voxelizer.
     **cCollisionAABB\* colliderObject = dynamic_cast<cCollisionAABB\*>(object->getCollisionDetector());**  
     **voxelizerObject->setObject(colliderObject);**  
 
-  4. stel accuraatheid van de voxelizer in  
+  4. Set the accuracy of the voxelizer.  
     **voxelizerObject->setAccuraatheid(n);**  
-    **//deze accuraatheid (n) bepaalt de afstand tussen de voxels.  
-    //Afstand tussen voxels in de x-richting (dx) = Lengte over de x-as van de oriented bounding box van het object gedeeld door n.**  
-    **//Analoog voor y en z richting.**  
+    **//This accuracy (n) determines the distance between the voxels.  
+    //The distance between the voxels in the x-direction (dx) is equal to the length in the x-direction of the oriented bounding box of the object divided by n.**  
+    **//The same goes for the y- and z-direction.**  
 
-  5. begin met distance mapping  
+  5. Start the distance mapping.
     **voxelizerObject->initialize();**  
 
-  6. bouw de InnerSpheres op en hieruit wordt de IST opgebouwd m.b.v. het BNG algoritme  
+  6. Build the inner sphere trees, and out of this build the inner sphere trees with the BNG algorithm.
     **InnerSphereTree\* istObject;**  
-    **istObject = voxelizerObject->buildInnerTree(diepte, locale pos object, maximale lengte object);**  
+    **istObject = voxelizerObject->buildInnerTree(depth, local pos object, maximum length object);**  
 
-  7. verwijder de voxelizer  
+  7. Delete the voxelizer.
     **delete voxelizerObject;**  
 
-  8. sla de InnerSphereTree op, zodat IST opbouw niet meer moet worden uitgevoerd, maar kan worden ingeladen  
+  8. Save the inner sphere tree, this way the IST only has to be build once and can be loaded afterwards. 
     **saveIST(istObject, "filename");**  
 
-  Stap 1-8 kan worden overgeslagen indien de IST al eerder berekend is en opgeslagen  
+  Step 1-8 can be skipped if the IST has been build and saved before.
   **InnerSphereTree\* istObject;**  
   **istObject = loadIST("filename");**  
 
-  9. De IST moet nu nog worden geset als de collision detector van het object  
-    **onderkaak->setCollisionDetector(istOnderkaak);**  
+  9. The IST now only has te be set as the collision detector of the object.  
+    **lowerJaw->setCollisionDetector(istLowerJaw);**  
 
-- **Collision detection tussen 2 opgebouwde trees van 2 objecten (zelfde type collision detector)**  
+- **Collision detection between two build trees of two objects (same type of collision detector)**  
   
 ---
-**_In de haptic thread._**  
+**_In the haptics thread._**  
 
 ---
 ```c  
 world->computeCollision(object1, object2, traversalSetting, distance, maxdiepte, *position);
 ```
-  de traversalSetting bepaald het gebruikte algoritme voor het afgaan van de binary trees  
-  Deze algoritmes zijn gedefinieerd in de file: CollisionDetectionAlgorithms.h  
-  De huidige opties zijn:  
-    * Distance -> algoritme 5.2 p.120 in het boek: __New Geometric Data Structures for Collision Detection and Haptics.__  
-    * Volume Penetration (not yet implemented) -> algoritme 5.3 p123.  
-    * Backward track -> houdt het vorige pad bij waaruit een collisie volgde en zoekt vanuit dit pad opnieuw naar collisies.  
-    * Multipoint -> houdt rekening met mogelijk meerdere collisies en werkt analoog met optie c. Er kan een splitting depth worden ingesteld door de **#define splitDeth 2** aan te passen vanboven in de CollisionDetectionAlgorithms.h header file. Deze bepaalt op welke diepte raakpunten niet meer dezelfde parent mogen hebben. Het aantal collisies kan worden opgevraagd met:  
+  Thee traversalSetting determins the used algorithm to traverse the binary tree.  
+  These algorithms are defined in the following file: CollisionDetectionAlgorithms.h  
+  The current options are:  
+    * Distance -> algorithm 5.2 p.120 in: __New Geometric Data Structures for Collision Detection and Haptics.__  
+    * Volume Penetration (not yet implemented) -> algorithm 5.3 p123.  
+    * Backward track -> saves the path of the previous collision and uses this path to check for a new collision. This results in a faster collision detection.  
+    * Multipoint -> searches for multiple points and works in a same manner as c). A splitting depth can be set by altering the **#define splitDeth 2** in the top of the CollisionDetectionAlgorithms.h header file. This determins at which depth the collision point can't have the same parent. The number of collisions can be get by:  
 
 ```c
 InnerSphereTree::globalPath.getNumberOfCollisions();  
 ```
-Waarna elke positie van collisie kan worden opgevraagd met:  
+After which the position of every collision can be get with:  
 ```c
-InnerSphereTree::globalPath.getCollisions(index);  //deze geeft een cVector3d terug  
+InnerSphereTree::globalPath.getCollisions(index);  //This returns a cVector3d.  
 ```
-Wanneer de objecten worden bewogen of worden geroteerd moet dit wel worden doorgegeven aan de collision detectors:  
+When the objects move or rotate, the collision detectors have to be updated:  
 ```c
 istObject->setRotation(object->getLocalRot());  
 istObject->setPosition(object->getLocalPos());  
 ```
-- **Collision detection a.d.h.v. de PQP library – (https://github.com/GammaUNC/PQP)**  
-  Include volgende header file:
+- **Collision detection with the PQP library – (https://github.com/GammaUNC/PQP)**  
+  Include the following header file:
 ```c
 #include "PQP/PQP.h"  
 ```
-  Maak volgende globale variabelen aan:  
+  Make the following global variables:  
 ```c
 //collision detection with pqp lib  
 PQP_Model* m1;  
@@ -106,25 +106,25 @@ PQP_REAL T2[3];
 PQP_REAL R2[3][3];    
 ```  
 ---
-**_In de initialisatie stap van de main()_**   
+**_In the initialisation step of the main()_**   
 
 ---
 
-Laat de modellen m1 en m2 in bij het inladen van de mesh  
+Load the models m1 and m2 while loading in the meshes.  
 ```c
 m1 = new PQP_Model();  
 m2 = new PQP_Model();    
 bool fileload;  
 fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model1"), \*m1);  
 fileload = bovenkaak->loadFromFile2(RESOURCE_PATH("Path_model2"), \*m2);  
-//Er worden nu PQP modellen gemaakt vanuit de stl files.  
+//PQP models can be made from the STL-files now.  
 ```  
 ---
-**_In de Haptic Thread while loop:_**  
+**_Meanwhile in the haptics thread:_**  
 
 ---
 
-Voor een distance query zoals beschreven op github:  
+For a distance query as described on github:  
 ```c
 double distance_pqp;  
    
@@ -134,7 +134,7 @@ double rel_err = 0.0, abs_err = 0.0;
 PQP_Distance(&dres, R1, T1, m1, R2, T2, m2, rel_err, abs_err);  
 distance_pqp = dres.Distance();  
 ```  
-Voor een collision query zoals beschreven op github  
+For a collision query as described on github:  
 ```c
 int colliding;  
 //colliding querry with pqp  
@@ -142,38 +142,38 @@ PQP_CollideResult cres;
 QP_Collide(&cres, R1, T1, m1, R2, T2, m2);  
 colliding = cres.Colliding();    
 ```
-Bij elke beweging of rotatie moeten zoals bij collisie detectie met ISTs of AABBs ook de positie en de rotatie van de modellen worden geset:  
+With every movement or rotation, we have to, just likes with collision detection with ISTs or AABBs, set the position and rotation of the models.  
 ```c	
 setPosAndRot(T1, R1, object1);  
 setPosAndRot(T2, R2, object2);  
 ```
-- **Hoe grotere snelheden behalen:**  
-Door in de Haptic thread enkel naar collisies te zoeken wanneer een zekere minimum afstand is afgelegd. We voeren een globale variabele in:  
+- **How to achieve greater speeds:**  
+Only search for collisions in the haptics thread when the models have moved a certain distance. We add a global variable:  
 ```c
 cVector3d traveledDistance;  
 ```
-Bij elke verplaatsing wordt deze vector aangepast:  
+With every movement the variable is altered:  
 ```c
 traveledDistance += displacement;  
 ```
 
 ---
-**_In de Haptic Thread_**  
+**_In the Haptics Thread_**  
   
 ---
-We make een variabele aan:  
+A variable is declared:  
 ```c
 float minDist = 0;  
 ```
   
 ---  
-**_In de Haptic loop krijgen (while lus in Haptic Thread)_**  
+**_In the Haptics loop we get (while loop ins Haptic Thread)_**  
   
 ---
 
 ```c
 If(traveledDistance.length() > minDist){  
-	//Doe collisie detectie => een schatting van de min. afstand door het collisie detectie algoritme = schattingD  
+	//Do a collision detection => an approximation of the minimum distance by the collision detection algorithm = schattingD  
 	minDist = schattingD;  
 	traveledDistance->zero();  
 }  
