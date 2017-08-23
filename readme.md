@@ -2,7 +2,7 @@
 The CHAI3D-library can be downloaded here: http://www.chai3d.org/download/releases/ .
 ## How to:
 Note: in the following text **object** is a pointer to a **cMesh**.
-- **Building an IST**
+- **Building an IST** 
   Include following header files:  
 ```c
 #include <ist/InnerSphereTree.h>  
@@ -19,17 +19,17 @@ using namespace chai3d;
 
 ---
 
-  1. Maak an AABBtree of the object.  
+  1. Make an AABBtree of the object.  
     **object->createAABBCollisionDetector(double radius);**  
     **//creates a box-hierarchy**  
-    **//radius => if building a box around a vertex, this box will become a cube with the sides equal to the radius**
+    **//radius => if building a box around a vertex, this box will become a cube with the edges equal to the radius**
 
-  2. Make a voxelizer for the object.
+  2. Make a voxelizer for the object.  
     **Voxelizer\* voxelizerObject = new Voxelizer();**  
     **//Make a distance map between the voxels and the object which is represented in the box-hierarchy(AABBtree)**  
     **//Build inner sphere trees out of this.**
 
-  3. Set the object in the voxelizer.
+  3. Set the object in the voxelizer.  
     **cCollisionAABB\* colliderObject = dynamic_cast<cCollisionAABB\*>(object->getCollisionDetector());**  
     **voxelizerObject->setObject(colliderObject);**  
 
@@ -39,20 +39,20 @@ using namespace chai3d;
     //The distance between the voxels in the x-direction (dx) is equal to the length in the x-direction of the oriented bounding box of the object divided by n.**  
     **//The same goes for the y- and z-direction.**  
 
-  5. Start the distance mapping.
+  5. Start the distance mapping.  
     **voxelizerObject->initialize();**  
 
-  6. Build the inner sphere trees, and out of this build the inner sphere trees with the BNG algorithm.
+  6. Build the inner sphere trees, and out of this build the inner sphere trees with the BNG algorithm.  
     **InnerSphereTree\* istObject;**  
     **istObject = voxelizerObject->buildInnerTree(depth, local pos object, maximum length object);**  
 
-  7. Delete the voxelizer.
+  7. Delete the voxelizer.  
     **delete voxelizerObject;**  
 
-  8. Save the inner sphere tree, this way the IST only has to be build once and can be loaded afterwards. 
+  8. Save the inner sphere tree, this way the IST only has to be build once and can be loaded afterwards.  
     **saveIST(istObject, "filename");**  
 
-  Step 1-8 can be skipped if the IST has been build and saved before.
+  Step 1-8 can be skipped if the IST has been build and saved before.  
   **InnerSphereTree\* istObject;**  
   **istObject = loadIST("filename");**  
 
